@@ -11,13 +11,8 @@ import { getSession } from "@/lib/auth/session";
 
 type Params = Promise<{ id: string }>;
 
-export async function generateMetadata({
-  params,
-}: {
-  params: Params;
-}): Promise<Metadata> {
+export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations();
-  const { id } = await params;
   return {
     title: t("offers.title"),
     robots: { index: false, follow: false },

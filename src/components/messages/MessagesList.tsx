@@ -1,24 +1,17 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useMemo, useState } from "react";
 import { ChevronRight, MessageCircle, Store } from "lucide-react";
 
 import { useTranslations } from "@/i18n/client";
-import {
-  listConversations,
-  type MessageConversation,
-} from "@/lib/messages";
+import { listConversations } from "@/lib/messages";
 import { buildWhatsAppUrl } from "@/lib/whatsapp";
 
 export default function MessagesList({ userId }: { userId: number }) {
   const t = useTranslations();
-  const [items, setItems] = useState<MessageConversation[]>([]);
+  const items = useMemo(() => listConversations(userId), [userId]);
   const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    setItems(listConversations(userId));
-  }, [userId]);
 
   if (items.length === 0) {
     return (

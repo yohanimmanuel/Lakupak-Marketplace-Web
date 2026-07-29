@@ -2,6 +2,7 @@
  * Shared invoice snapshot for print-friendly HTML (ported from mobile utils/orderInvoice).
  */
 
+import type { Locale } from "@/i18n/config";
 import type { Order } from "@/lib/api/types";
 import { formatCurrency } from "@/lib/format";
 import { displayPackageType } from "@/lib/packageLabel";
@@ -30,7 +31,7 @@ export type OrderInvoiceSnapshot = {
   total: string;
 };
 
-function formatIssuedAt(orderDate: string, locale: string): string {
+function formatIssuedAt(orderDate: string, locale: Locale): string {
   const date = new Date(orderDate);
   if (Number.isNaN(date.getTime())) {
     return new Date().toLocaleString(locale === "id" ? "id-ID" : "en-GB");
@@ -46,7 +47,7 @@ function formatIssuedAt(orderDate: string, locale: string): string {
 
 export function buildInvoiceSnapshot(
   order: Order,
-  locale: string,
+  locale: Locale,
 ): OrderInvoiceSnapshot {
   const lines: OrderInvoiceLine[] = order.orderItems.map((item) => {
     const qty = Math.max(1, item.packageQuantity ?? 1);

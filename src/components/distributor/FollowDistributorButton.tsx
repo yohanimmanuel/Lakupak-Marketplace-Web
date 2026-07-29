@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useState, useTransition } from "react";
+import { useState, useTransition } from "react";
 import { UserPlus, UserCheck } from "lucide-react";
 
 import { toggleFollowDistributorAction } from "@/app/actions/following";
@@ -19,13 +19,10 @@ export default function FollowDistributorButton({
 }) {
   const t = useTranslations();
   const router = useRouter();
-  const [following, setFollowing] = useState(initiallyFollowing);
+  const [optimistic, setOptimistic] = useState<boolean | null>(null);
   const [pending, startTransition] = useTransition();
+  const following = optimistic ?? initiallyFollowing;
   const loginHref = `/login?next=${encodeURIComponent(`/distributor/${distributorId}`)}`;
-
-  useEffect(() => {
-    setFollowing(initiallyFollowing);
-  }, [initiallyFollowing]);
 
   if (!signedIn) {
     return (
@@ -50,19 +47,20 @@ export default function FollowDistributorButton({
       }
       onClick={() => {
         const next = !following;
-        setFollowing(next);
+        setOptimistic(next);
         startTransition(async () => {
           const result = await toggleFollowDistributorAction({
             distributorId,
             shouldFollow: next,
           });
           if (!result.ok) {
-            setFollowing(!next);
+            setOptimistic(null);
             if (result.error === "unauthenticated") {
               router.push(loginHref);
             }
             return;
           }
+          setOptimistic(null);
           router.refresh();
         });
       }}
