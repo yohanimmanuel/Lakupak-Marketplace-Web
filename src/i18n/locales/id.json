@@ -166,8 +166,22 @@
       "minPrice": "Harga min",
       "maxPrice": "Harga maks",
       "salesChannel": "Saluran penjualan",
+      "shippingOption": "Opsi pengiriman",
+      "shippedFrom": "Dikirim dari",
+      "category": "Kategori",
       "reset": "Reset filter"
-    }
+    },
+    "shippingOption": {
+      "selfPickup": "Ambil sendiri",
+      "sellerDelivery": "Pengiriman penjual",
+      "buyerCourier": "Kurir pembeli"
+    },
+    "recentSearches": "Pencarian terbaru",
+    "clearRecent": "Hapus semua",
+    "removeRecent": "Hapus",
+    "popularCategories": "Kategori populer",
+    "topBrands": "Merek teratas",
+    "topDistributors": "Distributor teratas"
   },
   "product": {
     "notFound": "Produk tidak ditemukan",
@@ -344,6 +358,9 @@
     "title": "Pesanan berhasil dibuat!",
     "subtitleSingle": "Distributor sudah menerima pesanan Anda.",
     "subtitleMulti": "{{count}} pesanan dibuat karena produk berasal dari distributor berbeda.",
+    "partialTitle": "Sebagian pesanan berhasil",
+    "partialBody": "{{created}} dari {{expected}} pesanan distributor berhasil dibuat.",
+    "partialWarning": "Satu atau lebih distributor tidak dapat dijangkau. Lanjutkan dengan pesanan di bawah, lalu tambahkan kembali item yang belum terpesan dan coba lagi.",
     "awaitingTransfer": "Menunggu transfer bank",
     "codNote": "Dibayar tunai saat pesanan tiba",
     "viewDetail": "Lihat detail",
@@ -676,6 +693,39 @@
       "followA11y": "Ikuti distributor ini",
       "unfollowA11y": "Berhenti mengikuti distributor ini",
       "error": "Gagal memperbarui status mengikuti."
+    },
+    "rateReview": "Beri penilaian"
+  },
+  "distributorRating": {
+    "metaTitle": "Nilai distributor",
+    "title": "Nilai distributor ini",
+    "subtitle": "Ulasan Anda membantu pembeli lain memilih mitra terpercaya.",
+    "back": "Kembali ke toko",
+    "signedOutTitle": "Masuk untuk memberi ulasan",
+    "signedOutBody": "Anda perlu akun untuk menilai distributor.",
+    "distributorLabel": "Distributor",
+    "overall": "Rating keseluruhan",
+    "communication": "Komunikasi",
+    "delivery": "Pengiriman",
+    "quality": "Kualitas produk",
+    "starA11y": "{{label}}, {{rating}} bintang",
+    "starA11ySelected": "{{label}}, {{rating}} bintang, dipilih. Aktifkan untuk menghapus",
+    "wouldOrderAgain": "Apakah Anda akan order lagi?",
+    "would": {
+      "yes": "Ya",
+      "no": "Tidak",
+      "maybe": "Mungkin"
+    },
+    "comment": "Komentar (opsional)",
+    "commentPlaceholder": "Ceritakan pengalaman Anda…",
+    "submit": "Kirim ulasan",
+    "submitting": "Mengirim…",
+    "submitted": "Terima kasih atas ulasan Anda.",
+    "errors": {
+      "signIn": "Silakan masuk untuk mengirim ulasan.",
+      "invalid": "Distributor tidak valid.",
+      "ratingRequired": "Pilih rating keseluruhan.",
+      "submit": "Gagal mengirim ulasan. Coba lagi."
     }
   },
   "distributorDetails": {

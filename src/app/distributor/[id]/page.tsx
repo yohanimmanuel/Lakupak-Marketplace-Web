@@ -151,6 +151,21 @@ export default async function DistributorShopPage({
                 initiallyFollowing={isFollowing}
                 signedIn={Boolean(session)}
               />
+              {session ? (
+                <Link
+                  href={`/distributor/${distributorId}/rate`}
+                  className="inline-flex items-center gap-1 rounded-lg bg-laku-blue/10 px-3.5 py-2 text-sm font-semibold text-laku-blue transition-colors hover:bg-laku-blue/15"
+                >
+                  {t("distributor.rateReview")}
+                </Link>
+              ) : (
+                <Link
+                  href={`/login?next=${encodeURIComponent(`/distributor/${distributorId}/rate`)}`}
+                  className="inline-flex items-center gap-1 rounded-lg bg-laku-blue/10 px-3.5 py-2 text-sm font-semibold text-laku-blue transition-colors hover:bg-laku-blue/15"
+                >
+                  {t("distributor.rateReview")}
+                </Link>
+              )}
               <Link
                 href={`/seller/${distributorId}`}
                 className="inline-flex items-center gap-1 rounded-lg border border-laku-line px-3.5 py-2 text-sm font-semibold text-laku-ink transition-colors hover:border-laku-blue/20 hover:bg-laku-blue/5"

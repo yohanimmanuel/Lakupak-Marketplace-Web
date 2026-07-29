@@ -19,6 +19,7 @@ import {
   getDistributor,
   getDistributorReviews,
 } from "@/lib/api/marketplace";
+import { getSession } from "@/lib/auth/session";
 import { formatDate, formatNumber } from "@/lib/format";
 
 type Params = Promise<{ id: string }>;
@@ -69,9 +70,10 @@ export default async function SellerInformationPage({
 
   if (!Number.isFinite(sellerId) || sellerId <= 0) notFound();
 
-  const [profile, reviewsData] = await Promise.all([
+  const [profile, reviewsData, session] = await Promise.all([
     getDistributor(sellerId),
     getDistributorReviews(sellerId),
+    getSession(),
   ]);
 
   if (!profile) notFound();
@@ -291,6 +293,16 @@ export default async function SellerInformationPage({
           className="inline-flex rounded-lg bg-laku-blue px-5 py-3 text-sm font-bold text-white transition-colors hover:bg-laku-blue-dark"
         >
           {t("sellerInfo.browseShop")}
+        </Link>
+        <Link
+          href={
+            session
+              ? `/distributor/${sellerId}/rate`
+              : `/login?next=${encodeURIComponent(`/distributor/${sellerId}/rate`)}`
+          }
+          className="inline-flex rounded-lg border border-laku-line px-5 py-3 text-sm font-semibold text-laku-ink transition-colors hover:bg-laku-surface"
+        >
+          {t("distributor.rateReview")}
         </Link>
         <Link
           href={`/seller/${sellerId}/report`}

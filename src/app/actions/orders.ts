@@ -22,8 +22,10 @@ import type { MarketplaceProduct } from "@/lib/api/types";
 import {
   generateOrderId,
   getDeliveryOption,
+  getDistributorGroupKey,
   getMinPackageQuantity,
   getPaymentTerms,
+  type DeliveryOptionId,
   type PaymentMethodId,
 } from "@/lib/checkout";
 import { resolveVariantPricing } from "@/lib/variants";
@@ -34,6 +36,12 @@ type LineItem = {
   product: MarketplaceProduct;
   quantity: number;
   variant?: string;
+};
+
+type GroupShippingInput = {
+  delivery: string;
+  preferredDate?: string;
+  preferredTime?: string;
 };
 
 function toOrderItem({ product, quantity, variant }: LineItem): CreateOrderItemPayload {
@@ -95,6 +103,29 @@ async function resolveLineItems(params: {
   }));
 }
 
+function parseShippingByDistributor(
+  raw: string,
+): Record<string, GroupShippingInput> {
+  try {
+    const parsed = JSON.parse(raw) as unknown;
+    if (!parsed || typeof parsed !== "object") return {};
+    return parsed as Record<string, GroupShippingInput>;
+  } catch {
+    return {};
+  }
+}
+
+/** Detect Dashboard/Prisma unique-orderId collisions so retries can recover. */
+function isDuplicateOrderError(error: string): boolean {
+  const msg = error.toLowerCase();
+  return (
+    msg.includes("unique constraint") ||
+    msg.includes("duplicate key") ||
+    msg.includes("already exists") ||
+    (msg.includes("duplicate") && msg.includes("order"))
+  );
+}
+
 export async function placeOrderAction(
   _prev: ActionState,
   formData: FormData,
@@ -107,17 +138,19 @@ export async function placeOrderAction(
   const productId = formData.get("productId")?.toString() || null;
   const quantity = Number(formData.get("quantity") ?? 1);
   const variant = formData.get("variant")?.toString() || null;
-  const deliveryOptionId = String(formData.get("deliveryOption") ?? "");
   const paymentMethodId = String(formData.get("paymentMethod") ?? "") as PaymentMethodId;
   const contactPerson = String(formData.get("contactPerson") ?? "").trim();
   const contactPhone = String(formData.get("contactPhone") ?? "").trim();
   const deliveryAddress = String(formData.get("deliveryAddress") ?? "").trim();
   const storeName = String(formData.get("storeName") ?? "").trim();
-  const preferredDate = String(formData.get("preferredDate") ?? "").trim();
-  const preferredTime = String(formData.get("preferredTime") ?? "").trim();
+  const shippingByDistributor = parseShippingByDistributor(
+    String(formData.get("shippingByDistributor") ?? ""),
+  );
+  // Legacy single delivery fallback for older clients / single-group carts.
+  const legacyDeliveryOptionId = String(formData.get("deliveryOption") ?? "");
+  const legacyPreferredDate = String(formData.get("preferredDate") ?? "").trim();
+  const legacyPreferredTime = String(formData.get("preferredTime") ?? "").trim();
 
-  const deliveryOption = getDeliveryOption(deliveryOptionId);
-  if (!deliveryOption) return { ok: false, error: t("checkout.errors.delivery") };
   if (!contactPerson) return { ok: false, error: t("checkout.errors.name") };
   if (!contactPhone) return { ok: false, error: t("checkout.errors.phone") };
   if (!deliveryAddress) return { ok: false, error: t("checkout.errors.address") };
@@ -135,21 +168,115 @@ export async function placeOrderAction(
     return { ok: false, error: t("checkout.errors.empty") };
   }
 
-  const orderItems = lineItems.map(toOrderItem);
-  const subtotal = orderItems.reduce((total, item) => total + item.subtotal, 0);
-  const totalOrders = orderItems.reduce(
-    (total, item) => total + item.packageQuantity * item.piecesPerPackage,
-    0,
-  );
+  const groups = new Map<string, LineItem[]>();
+  for (const line of lineItems) {
+    const key = getDistributorGroupKey(line.product);
+    groups.set(key, [...(groups.get(key) ?? []), line]);
+  }
 
-  const isPickup = deliveryOption.id === "self_pickup";
-  const scheduledDate = preferredDate ? new Date(preferredDate).toISOString() : null;
-  const shippingLabel = t(deliveryOption.labelKey);
+  const expectedGroupCount = groups.size;
+  const orderIds: string[] = [];
+  let totalAmount = 0;
+  // Stable per checkout submit so a retry of the same attempt cannot mint
+  // new IDs for groups that already persisted (Dashboard enforces unique orderId).
+  const checkoutAttemptId =
+    String(formData.get("checkoutAttemptId") ?? "").trim() || generateOrderId();
+  let groupIndex = 0;
 
-  const result = await createOrders(
-    {
-      orderId: generateOrderId(),
+  const finishPlacedOrders = async (partial: boolean): Promise<never> => {
+    await updateProfile({
       userId: session.user.id,
+      token: session.token,
+      input: {
+        name: contactPerson,
+        phone: contactPhone,
+        chosenAddress: deliveryAddress,
+      },
+    });
+
+    if (source !== "direct") {
+      await clearCart({
+        userId: session.user.id,
+        token: session.token,
+        trackAbandonment: false,
+      });
+    }
+
+    revalidatePath("/cart");
+    revalidatePath("/orders");
+    revalidatePath("/", "layout");
+
+    const params = new URLSearchParams({
+      orders: orderIds.join(","),
+      total: String(totalAmount),
+      payment: paymentMethodId,
+    });
+    if (partial) {
+      params.set("partial", "1");
+      params.set("expected", String(expectedGroupCount));
+    }
+    redirect(`/checkout/success?${params.toString()}`);
+  };
+
+  for (const [groupKey, groupLines] of groups) {
+    const shipping =
+      shippingByDistributor[groupKey] ??
+      ({
+        delivery: legacyDeliveryOptionId || "seller_delivery",
+        preferredDate: legacyPreferredDate,
+        preferredTime: legacyPreferredTime,
+      } satisfies GroupShippingInput);
+
+    const deliveryOption = getDeliveryOption(shipping.delivery);
+    if (!deliveryOption) {
+      if (orderIds.length > 0) await finishPlacedOrders(true);
+      return { ok: false, error: t("checkout.errors.delivery") };
+    }
+
+    const orderItems = groupLines.map(toOrderItem);
+    const subtotal = orderItems.reduce((sum, item) => sum + item.subtotal, 0);
+    const totalOrders = orderItems.reduce(
+      (sum, item) => sum + item.packageQuantity * item.piecesPerPackage,
+      0,
+    );
+
+    const isPickup = deliveryOption.id === ("self_pickup" as DeliveryOptionId);
+    const preferredDate = String(shipping.preferredDate ?? "").trim();
+    const preferredTime = String(shipping.preferredTime ?? "").trim();
+    const parsedDate = preferredDate ? new Date(preferredDate) : null;
+    const scheduledDate =
+      parsedDate && !Number.isNaN(parsedDate.getTime())
+        ? parsedDate.toISOString()
+        : null;
+    const shippingLabel = t(deliveryOption.labelKey);
+
+    const groupUserId = groupLines[0]?.product.userId;
+    const distributorUserId =
+      typeof groupUserId === "number" &&
+      Number.isFinite(groupUserId) &&
+      groupUserId > 0
+        ? groupUserId
+        : null;
+    if (distributorUserId == null) {
+      console.warn(
+        "[placeOrderAction] Missing or invalid product.userId for distributor group; omitting distributorUserId from payload",
+        {
+          groupKey,
+          productId: groupLines[0]?.product.id ?? null,
+          userId: groupUserId ?? null,
+        },
+      );
+    }
+    const orderId =
+      expectedGroupCount > 1
+        ? `${checkoutAttemptId}-${groupIndex}`
+        : checkoutAttemptId;
+    groupIndex += 1;
+
+    const payload = {
+      orderId,
+      userId: session.user.id,
+      ...(distributorUserId ? { distributorUserId } : {}),
       orderDate: new Date().toISOString(),
       orderItems,
       subtotal,
@@ -170,44 +297,40 @@ export async function placeOrderAction(
       preferredDeliveryTime: isPickup ? null : preferredTime || null,
       preferredPickupDate: isPickup ? scheduledDate : null,
       preferredPickupTime: isPickup ? preferredTime || null : null,
-      orderStatus: "Pending",
-      paymentStatus: "Unpaid",
+      orderStatus: "Pending" as const,
+      paymentStatus: "Unpaid" as const,
       paymentTerms: getPaymentTerms(paymentMethodId),
-    },
-    session.token,
-  );
+    };
 
-  if (!result.ok) return { ok: false, error: result.error };
+    const result = await createOrders(payload, session.token);
+    if (!result.ok) {
+      // Same checkoutAttemptId retry: this groupId may already be persisted.
+      if (isDuplicateOrderError(result.error)) {
+        orderIds.push(orderId);
+        totalAmount += subtotal;
+        continue;
+      }
+      // Earlier groups may already be persisted — surface them instead of an
+      // error that hides the created orders.
+      if (orderIds.length > 0) await finishPlacedOrders(true);
+      return { ok: false, error: result.error };
+    }
 
-  const created = result.data.orders ?? [result.data.order];
-  const orderIds = created.map((order) => order.orderId).filter(Boolean);
-
-  // Keep the checkout address for next time, the way saving a default address
-  // does in the app.
-  await updateProfile({
-    userId: session.user.id,
-    token: session.token,
-    input: { name: contactPerson, phone: contactPhone, chosenAddress: deliveryAddress },
-  });
-
-  if (source !== "direct") {
-    await clearCart({
-      userId: session.user.id,
-      token: session.token,
-      trackAbandonment: false,
-    });
+    const created = result.data?.orders ?? (result.data?.order ? [result.data.order] : []);
+    let added = false;
+    for (const order of created) {
+      if (order?.orderId) {
+        orderIds.push(order.orderId);
+        added = true;
+      }
+    }
+    if (!added) orderIds.push(orderId);
+    totalAmount += subtotal;
   }
 
-  revalidatePath("/cart");
-  revalidatePath("/orders");
-  revalidatePath("/", "layout");
-
-  const params = new URLSearchParams({
-    orders: orderIds.join(","),
-    total: String(subtotal),
-    payment: paymentMethodId,
-  });
-  redirect(`/checkout/success?${params.toString()}`);
+  await finishPlacedOrders(false);
+  // redirect() never returns; keep a typed fallback for TypeScript.
+  return { ok: false, error: t("checkout.errors.empty") };
 }
 
 export async function submitPaymentAction(

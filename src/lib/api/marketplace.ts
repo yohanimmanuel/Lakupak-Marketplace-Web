@@ -1,6 +1,6 @@
 import "server-only";
 
-import { graphqlRequest, restRequest } from "@/lib/api/graphql";
+import { graphqlRequest, restMutate, restRequest } from "@/lib/api/graphql";
 import type {
   Distributor,
   DistributorReviews,
@@ -309,6 +309,33 @@ export async function getDistributorReviews(
   } catch {
     return null;
   }
+}
+
+export async function submitDistributorReview(params: {
+  token: string;
+  distributorId: number;
+  overallRating: number;
+  communicationRating?: number;
+  deliveryRating?: number;
+  productQualityRating?: number;
+  wouldOrderAgain?: "yes" | "no" | "maybe" | null;
+  comment?: string;
+}): Promise<{ ok: true } | { ok: false; error: string }> {
+  const result = await restMutate<unknown>("/api/mobile/reviews/distributor", {
+    method: "POST",
+    token: params.token,
+    body: {
+      id: String(params.distributorId),
+      overallRating: params.overallRating,
+      communicationRating: params.communicationRating ?? 0,
+      deliveryRating: params.deliveryRating ?? 0,
+      productQualityRating: params.productQualityRating ?? 0,
+      wouldOrderAgain: params.wouldOrderAgain,
+      comment: params.comment?.trim() || "",
+    },
+  });
+  if (!result.ok) return { ok: false, error: result.error };
+  return { ok: true };
 }
 
 /**

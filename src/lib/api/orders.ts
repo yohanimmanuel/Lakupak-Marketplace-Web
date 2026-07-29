@@ -92,6 +92,8 @@ export type CreateOrderItemPayload = {
 export type CreateOrderPayload = {
   orderId: string;
   userId: number;
+  /** When set, Dashboard uses the single-distributor path for this payload. */
+  distributorUserId?: number;
   orderDate: string;
   orderItems: CreateOrderItemPayload[];
   subtotal: number;
@@ -118,9 +120,9 @@ export type CreateOrderPayload = {
 };
 
 /**
- * `distributorUserId` is deliberately omitted: without it the Dashboard groups
- * items by product owner, creates one order per seller, and runs the stock and
- * MOQ checks that the single-distributor fast path skips.
+ * Pass `distributorUserId` when creating one order per seller (multi-seller
+ * carts with different shipping). Omit it to let the Dashboard split a mixed
+ * basket itself using one shared shipping choice.
  */
 export async function createOrders(
   payload: CreateOrderPayload,

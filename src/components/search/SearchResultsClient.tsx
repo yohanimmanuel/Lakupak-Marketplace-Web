@@ -7,12 +7,49 @@ import ProductGrid from "@/components/product/ProductGrid";
 import { useTranslations } from "@/i18n/client";
 import type { MarketplaceProduct } from "@/lib/api/types";
 import { getProductPriceRange } from "@/lib/format";
+import {
+  availableShippingOptionKeys,
+  productShippedFrom,
+  productSupportsShipping,
+  uniqueShippedFromOptions,
+  type ShippingOptionKey,
+} from "@/lib/searchDiscovery";
+import { translateCategory } from "@/lib/categories";
 
 type SortKey = "relevance" | "newest" | "price_low" | "price_high" | "top_sales";
 
 function parseSold(soldCount: string): number {
   const n = Number.parseInt(String(soldCount).replace(/[^\d]/g, ""), 10);
   return Number.isFinite(n) ? n : 0;
+}
+
+function toggleValue<T extends string>(list: T[], value: T): T[] {
+  return list.includes(value)
+    ? list.filter((item) => item !== value)
+    : [...list, value];
+}
+
+function pillClass(active: boolean) {
+  return `rounded-lg border px-3 py-1.5 text-xs font-semibold ${
+    active
+      ? "border-laku-blue bg-laku-blue/10 text-laku-blue"
+      : "border-laku-line text-laku-ink"
+  }`;
+}
+
+function FilterPills({
+  title,
+  children,
+}: {
+  title: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div>
+      <p className="mb-2 text-xs font-semibold text-laku-muted">{title}</p>
+      <div className="flex flex-wrap gap-2">{children}</div>
+    </div>
+  );
 }
 
 export default function SearchResultsClient({
@@ -31,6 +68,25 @@ export default function SearchResultsClient({
   const [minPrice, setMinPrice] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
   const [salesChannels, setSalesChannels] = useState<string[]>([]);
+  const [shippedFrom, setShippedFrom] = useState<string[]>([]);
+  const [shippingOption, setShippingOption] = useState<ShippingOptionKey[]>([]);
+  const [categories, setCategories] = useState<string[]>([]);
+
+  const shippedFromOptions = useMemo(
+    () => uniqueShippedFromOptions(products),
+    [products],
+  );
+  const shippingKeys = useMemo(
+    () => availableShippingOptionKeys(products),
+    [products],
+  );
+  const categoryOptions = useMemo(() => {
+    const set = new Set<string>();
+    for (const product of products) {
+      if (product.category?.trim()) set.add(product.category.trim());
+    }
+    return [...set].sort((a, b) => a.localeCompare(b));
+  }, [products]);
 
   const filtered = useMemo(() => {
     let list = [...products];
@@ -38,7 +94,12 @@ export default function SearchResultsClient({
     const min = Number.parseFloat(minPrice);
     const max = Number.parseFloat(maxPrice);
     list = list.filter((product) => {
-      const rating = product.reviews?.overallRating ?? product.rating ?? 0;
+      // Prefer seller rating when present (mobile filter), else product rating.
+      const rating =
+        product.seller?.rating ??
+        product.reviews?.overallRating ??
+        product.rating ??
+        0;
       if (ratingMin > 0 && rating < ratingMin) return false;
 
       const price = getProductPriceRange(product).min || product.sellingPrice || 0;
@@ -52,6 +113,25 @@ export default function SearchResultsClient({
       ) {
         return false;
       }
+
+      if (shippedFrom.length > 0) {
+        const loc = productShippedFrom(product);
+        if (!shippedFrom.includes(loc)) return false;
+      }
+
+      if (shippingOption.length > 0) {
+        const anyAvailable = shippingOption.some((key) =>
+          productSupportsShipping(product, key),
+        );
+        if (!anyAvailable) return false;
+      }
+
+      if (categories.length > 0) {
+        if (!product.category || !categories.includes(product.category)) {
+          return false;
+        }
+      }
+
       return true;
     });
 
@@ -76,15 +156,17 @@ export default function SearchResultsClient({
     }
 
     return list;
-  }, [products, sort, ratingMin, minPrice, maxPrice, salesChannels]);
-
-  const toggleChannel = (channel: string) => {
-    setSalesChannels((prev) =>
-      prev.includes(channel)
-        ? prev.filter((item) => item !== channel)
-        : [...prev, channel],
-    );
-  };
+  }, [
+    products,
+    sort,
+    ratingMin,
+    minPrice,
+    maxPrice,
+    salesChannels,
+    shippedFrom,
+    shippingOption,
+    categories,
+  ]);
 
   return (
     <div>
@@ -120,29 +202,20 @@ export default function SearchResultsClient({
 
       {filtersOpen ? (
         <div className="mb-5 space-y-4 rounded-2xl border border-laku-line bg-white p-4">
-          <div>
-            <p className="mb-2 text-xs font-semibold text-laku-muted">
-              {t("search.filterSheet.ratingMin")}
-            </p>
-            <div className="flex flex-wrap gap-2">
-              {[0, 3, 4, 5].map((value) => (
-                <button
-                  key={value}
-                  type="button"
-                  onClick={() => setRatingMin(value)}
-                  className={`rounded-lg border px-3 py-1.5 text-xs font-semibold ${
-                    ratingMin === value
-                      ? "border-laku-blue bg-laku-blue/10 text-laku-blue"
-                      : "border-laku-line text-laku-ink"
-                  }`}
-                >
-                  {value === 0
-                    ? t("common.all")
-                    : t("search.filterSheet.ratingPlus", { rating: value })}
-                </button>
-              ))}
-            </div>
-          </div>
+          <FilterPills title={t("search.filterSheet.ratingMin")}>
+            {[0, 3, 4, 5].map((value) => (
+              <button
+                key={value}
+                type="button"
+                onClick={() => setRatingMin(value)}
+                className={pillClass(ratingMin === value)}
+              >
+                {value === 0
+                  ? t("common.all")
+                  : t("search.filterSheet.ratingPlus", { rating: value })}
+              </button>
+            ))}
+          </FilterPills>
 
           <div className="grid gap-3 sm:grid-cols-2">
             <label className="block text-xs font-semibold text-laku-muted">
@@ -167,27 +240,65 @@ export default function SearchResultsClient({
             </label>
           </div>
 
-          <div>
-            <p className="mb-2 text-xs font-semibold text-laku-muted">
-              {t("search.filterSheet.salesChannel")}
-            </p>
-            <div className="flex flex-wrap gap-2">
-              {["Wholesale", "Retail"].map((channel) => (
+          <FilterPills title={t("search.filterSheet.salesChannel")}>
+            {["Wholesale", "Retail"].map((channel) => (
+              <button
+                key={channel}
+                type="button"
+                onClick={() => setSalesChannels((prev) => toggleValue(prev, channel))}
+                className={pillClass(salesChannels.includes(channel))}
+              >
+                {t(`search.salesChannel.${channel.toLowerCase()}`)}
+              </button>
+            ))}
+          </FilterPills>
+
+          {shippingKeys.length > 0 ? (
+            <FilterPills title={t("search.filterSheet.shippingOption")}>
+              {shippingKeys.map((key) => (
                 <button
-                  key={channel}
+                  key={key}
                   type="button"
-                  onClick={() => toggleChannel(channel)}
-                  className={`rounded-lg border px-3 py-1.5 text-xs font-semibold ${
-                    salesChannels.includes(channel)
-                      ? "border-laku-blue bg-laku-blue/10 text-laku-blue"
-                      : "border-laku-line text-laku-ink"
-                  }`}
+                  onClick={() =>
+                    setShippingOption((prev) => toggleValue(prev, key))
+                  }
+                  className={pillClass(shippingOption.includes(key))}
                 >
-                  {t(`search.salesChannel.${channel.toLowerCase()}`)}
+                  {t(`search.shippingOption.${key}`)}
                 </button>
               ))}
-            </div>
-          </div>
+            </FilterPills>
+          ) : null}
+
+          {shippedFromOptions.length > 0 ? (
+            <FilterPills title={t("search.filterSheet.shippedFrom")}>
+              {shippedFromOptions.map((loc) => (
+                <button
+                  key={loc}
+                  type="button"
+                  onClick={() => setShippedFrom((prev) => toggleValue(prev, loc))}
+                  className={pillClass(shippedFrom.includes(loc))}
+                >
+                  {loc}
+                </button>
+              ))}
+            </FilterPills>
+          ) : null}
+
+          {categoryOptions.length > 0 ? (
+            <FilterPills title={t("search.filterSheet.category")}>
+              {categoryOptions.map((name) => (
+                <button
+                  key={name}
+                  type="button"
+                  onClick={() => setCategories((prev) => toggleValue(prev, name))}
+                  className={pillClass(categories.includes(name))}
+                >
+                  {translateCategory(name, t)}
+                </button>
+              ))}
+            </FilterPills>
+          ) : null}
 
           <button
             type="button"
@@ -196,6 +307,9 @@ export default function SearchResultsClient({
               setMinPrice("");
               setMaxPrice("");
               setSalesChannels([]);
+              setShippedFrom([]);
+              setShippingOption([]);
+              setCategories([]);
             }}
             className="text-sm font-semibold text-laku-blue hover:underline"
           >

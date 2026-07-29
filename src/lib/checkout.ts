@@ -70,6 +70,21 @@ function supportsOption(product: MarketplaceProduct, id: DeliveryOptionId): bool
 }
 
 /**
+ * Prefer stable distributor user id for multi-seller shipping groups.
+ * Falls back to display name when userId is missing from the catalog payload.
+ */
+export function getDistributorGroupKey(product: MarketplaceProduct): string {
+  if (product.userId != null && Number.isFinite(product.userId)) {
+    return String(product.userId);
+  }
+  return getSellerKey(product);
+}
+
+export function getDistributorGroupLabel(product: MarketplaceProduct): string {
+  return getSellerKey(product);
+}
+
+/**
  * One delivery choice covers the whole checkout, so only the options every
  * product supports are offered. Falls back to all options when the intersection
  * is empty rather than blocking the order.

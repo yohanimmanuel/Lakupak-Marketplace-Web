@@ -14,7 +14,13 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-type SearchParams = Promise<{ orders?: string; total?: string; payment?: string }>;
+type SearchParams = Promise<{
+  orders?: string;
+  total?: string;
+  payment?: string;
+  partial?: string;
+  expected?: string;
+}>;
 
 export default async function CheckoutSuccessPage({
   searchParams,
@@ -22,13 +28,15 @@ export default async function CheckoutSuccessPage({
   searchParams: SearchParams;
 }) {
   const t = await getTranslations();
-  const { orders, total, payment } = await searchParams;
+  const { orders, total, payment, partial, expected } = await searchParams;
   const orderIds = (orders ?? "").split(",").filter(Boolean);
 
   if (orderIds.length === 0) redirect("/orders");
 
   const amount = Number(total) || 0;
   const isBankTransfer = payment === "bank_transfer";
+  const isPartial = partial === "1";
+  const expectedCount = Number(expected) || 0;
   const payHref = `/orders/${encodeURIComponent(orderIds[0])}/pay`;
 
   const nextSteps = [
@@ -57,13 +65,28 @@ export default async function CheckoutSuccessPage({
         </span>
 
         <h1 className="mt-5 text-2xl font-bold text-laku-ink">
-          {t("checkoutSuccess.title")}
+          {isPartial
+            ? t("checkoutSuccess.partialTitle")
+            : t("checkoutSuccess.title")}
         </h1>
         <p className="mt-2 text-sm/6 text-laku-muted">
-          {orderIds.length > 1
-            ? t("checkoutSuccess.subtitleMulti", { count: orderIds.length })
-            : t("checkoutSuccess.subtitleSingle")}
+          {isPartial
+            ? t("checkoutSuccess.partialBody", {
+                created: orderIds.length,
+                expected: expectedCount || orderIds.length,
+              })
+            : orderIds.length > 1
+              ? t("checkoutSuccess.subtitleMulti", { count: orderIds.length })
+              : t("checkoutSuccess.subtitleSingle")}
         </p>
+        {isPartial ? (
+          <p
+            role="status"
+            className="mt-4 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm/6 text-amber-950"
+          >
+            {t("checkoutSuccess.partialWarning")}
+          </p>
+        ) : null}
 
         <p className="mt-5 text-3xl font-bold text-laku-blue">
           {formatCurrency(amount, t.locale)}

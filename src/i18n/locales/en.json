@@ -166,8 +166,22 @@
       "minPrice": "Min price",
       "maxPrice": "Max price",
       "salesChannel": "Sales channel",
+      "shippingOption": "Shipping option",
+      "shippedFrom": "Shipped from",
+      "category": "Category",
       "reset": "Reset filters"
-    }
+    },
+    "shippingOption": {
+      "selfPickup": "Self pickup",
+      "sellerDelivery": "Seller delivery",
+      "buyerCourier": "Buyer courier"
+    },
+    "recentSearches": "Recent searches",
+    "clearRecent": "Clear all",
+    "removeRecent": "Remove",
+    "popularCategories": "Popular categories",
+    "topBrands": "Top brands",
+    "topDistributors": "Top distributors"
   },
   "product": {
     "notFound": "Product not found",
@@ -344,6 +358,9 @@
     "title": "Order placed successfully!",
     "subtitleSingle": "The distributor has received your order.",
     "subtitleMulti": "{{count}} orders were created because the products come from different distributors.",
+    "partialTitle": "Some orders were placed",
+    "partialBody": "{{created}} of {{expected}} distributor orders were created.",
+    "partialWarning": "One or more distributors could not be reached. Continue with the orders listed below, then re-add any missing items and try again.",
     "awaitingTransfer": "Awaiting bank transfer",
     "codNote": "Paid in cash on arrival",
     "viewDetail": "View details",
@@ -676,6 +693,39 @@
       "followA11y": "Follow this distributor",
       "unfollowA11y": "Unfollow this distributor",
       "error": "Could not update follow status."
+    },
+    "rateReview": "Rate & review"
+  },
+  "distributorRating": {
+    "metaTitle": "Rate distributor",
+    "title": "Rate this distributor",
+    "subtitle": "Your review helps other buyers choose trustworthy partners.",
+    "back": "Back to shop",
+    "signedOutTitle": "Log in to leave a review",
+    "signedOutBody": "You need an account to rate distributors.",
+    "distributorLabel": "Distributor",
+    "overall": "Overall rating",
+    "communication": "Communication",
+    "delivery": "Delivery",
+    "quality": "Product quality",
+    "starA11y": "{{label}}, {{rating}} stars",
+    "starA11ySelected": "{{label}}, {{rating}} stars, selected. Activate to clear",
+    "wouldOrderAgain": "Would you order again?",
+    "would": {
+      "yes": "Yes",
+      "no": "No",
+      "maybe": "Maybe"
+    },
+    "comment": "Comment (optional)",
+    "commentPlaceholder": "Share details about your experience…",
+    "submit": "Submit review",
+    "submitting": "Submitting…",
+    "submitted": "Thanks for your review.",
+    "errors": {
+      "signIn": "Please sign in to submit a review.",
+      "invalid": "Invalid distributor.",
+      "ratingRequired": "Please choose an overall rating.",
+      "submit": "Could not submit the review. Try again."
     }
   },
   "distributorDetails": {

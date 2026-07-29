@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import SearchPagination from "@/components/search/SearchPagination";
+import SearchDiscovery from "@/components/search/SearchDiscovery";
 import SearchResultsClient from "@/components/search/SearchResultsClient";
 import { getTranslations } from "@/i18n/server";
 import { getProductsSafe } from "@/lib/api/marketplace";
@@ -11,6 +12,11 @@ import {
   resolveProductTypeKey,
   resolveSearchQuery,
 } from "@/lib/resolveSearchQuery";
+import {
+  generatePopularCategories,
+  generateTopBrands,
+  generateTopDistributors,
+} from "@/lib/searchDiscovery";
 
 export const revalidate = 30;
 
@@ -85,6 +91,8 @@ export default async function SearchPage({
     category: effectiveCategory || undefined,
   });
 
+  const isEmptyQuery = !displayQuery && !effectiveCategory;
+
   const categories = buildCategories(facets.productTypes, products, t, 12);
   const categoryLabel = effectiveCategory
     ? translateCategory(effectiveCategory, t)
@@ -101,6 +109,12 @@ export default async function SearchPage({
   const didYouMeanLabel = didYouMeanKey
     ? translateCategory(didYouMeanKey, t) || didYouMeanKey
     : null;
+
+  const topBrands = isEmptyQuery ? generateTopBrands(products) : [];
+  const topDistributors = isEmptyQuery ? generateTopDistributors(products) : [];
+  const popularCategories = isEmptyQuery
+    ? generatePopularCategories(products)
+    : [];
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-10 md:px-6">
@@ -169,6 +183,16 @@ export default async function SearchPage({
         </nav>
       ) : null}
 
+      {isEmptyQuery ? (
+        <div className="mb-10">
+          <SearchDiscovery
+            brands={topBrands}
+            distributors={topDistributors}
+            categories={popularCategories}
+          />
+        </div>
+      ) : null}
+
       {products.length > 0 ? (
         <>
           <SearchResultsClient
@@ -183,7 +207,7 @@ export default async function SearchPage({
             category={effectiveCategory || undefined}
           />
         </>
-      ) : (
+      ) : !isEmptyQuery ? (
         <div className="rounded-2xl bg-white p-12 text-center">
           <h2 className="text-lg font-bold text-laku-ink">
             {t("search.emptyTitle")}
@@ -198,7 +222,7 @@ export default async function SearchPage({
             {t("search.viewCategories")}
           </Link>
         </div>
-      )}
+      ) : null}
     </div>
   );
 }
