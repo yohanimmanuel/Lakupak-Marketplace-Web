@@ -1,0 +1,1335 @@
+{
+  "common": {
+    "loading": "Memuat…",
+    "error": "Terjadi kesalahan",
+    "tryAgain": "Coba lagi",
+    "close": "Tutup",
+    "save": "Simpan",
+    "edit": "Ubah",
+    "cancel": "Batal",
+    "confirm": "Konfirmasi",
+    "send": "Kirim",
+    "processing": "Memproses…",
+    "viewAll": "Lihat Semua",
+    "viewAllLower": "Lihat semua",
+    "all": "Semua",
+    "back": "Kembali",
+    "optional": "opsional"
+  },
+  "nav": {
+    "home": "Beranda",
+    "categories": "Kategori",
+    "orders": "Pesanan",
+    "notifications": "Notifikasi",
+    "account": "Akun",
+    "cart": "Keranjang",
+    "login": "Masuk",
+    "register": "Daftar",
+    "registerFree": "Daftar gratis",
+    "logout": "Keluar",
+    "settings": "Pengaturan",
+    "profile": "Profil saya",
+    "myOrders": "Pesanan saya",
+    "myCart": "Keranjang saya",
+    "openInApp": "Buka di aplikasi",
+    "allProducts": "Semua produk",
+    "iAmDistributor": "Saya distributor",
+    "accountFallback": "Akun"
+  },
+  "header": {
+    "searchPlaceholder": "Cari produk…",
+    "searchLabel": "Cari produk",
+    "homeAria": "Laku Marketplace, beranda",
+    "cartAria": "Keranjang",
+    "cartCountAria": "Keranjang, {{count}} item",
+    "messagesAria": "Pesan",
+    "mainNavAria": "Navigasi utama",
+    "utilityNavAria": "Tautan situs",
+    "downloadApp": "Unduh Aplikasi Mobile Laku",
+    "downloadAppShort": "Unduh aplikasi",
+    "downloadAppAria": "Unduh aplikasi mobile Laku"
+  },
+  "home": {
+    "greeting": "Halo, {{name}}",
+    "guestLabel": "Pasar grosir Laku",
+    "heroTitle": "Belanja stok warung langsung dari distributor terverifikasi",
+    "specialOffers": "Penawaran Spesial",
+    "featured": "Produk Unggulan",
+    "emptyCatalog": "Katalog belum tersedia. Coba muat ulang halaman ini sebentar lagi.",
+    "distributorCta": {
+      "title": "Punya produk untuk didistribusikan?",
+      "body": "Distributor mengelola katalog, harga, dan pesanan lewat Laku Dashboard.",
+      "action": "Mulai jual di Laku"
+    }
+  },
+  "offers": {
+    "title": "Penawaran Spesial",
+    "intro": "Promo terbatas dari Laku untuk pembeli marketplace.",
+    "states": {
+      "signInToView": "Masuk untuk melihat penawaran spesial",
+      "emptyTitle": "Belum ada penawaran",
+      "emptyHint": "Cek lagi nanti untuk promo baru.",
+      "noLongerAvailable": "Penawaran ini sudah tidak tersedia.",
+      "noDetails": "Tidak ada detail tambahan untuk penawaran ini."
+    }
+  },
+  "addresses": {
+    "title": "Alamat Saya",
+    "addNew": "Tambah alamat",
+    "editTitle": "Edit alamat",
+    "emptyTitle": "Belum ada alamat",
+    "emptyBody": "Tambahkan alamat pengiriman agar checkout lebih cepat.",
+    "defaultBadge": "Utama",
+    "delete": "Hapus alamat",
+    "deleteConfirm": "Hapus alamat ini?",
+    "saved": "Alamat disimpan.",
+    "deleted": "Alamat dihapus.",
+    "fields": {
+      "fullName": "Nama penerima",
+      "phone": "Telepon",
+      "address": "Alamat lengkap",
+      "label": "Label",
+      "isDefault": "Jadikan alamat utama"
+    },
+    "labels": {
+      "home": "Rumah",
+      "work": "Kantor",
+      "store": "Toko"
+    },
+    "errors": {
+      "required": "Nama, telepon, dan alamat wajib diisi.",
+      "save": "Gagal menyimpan alamat.",
+      "delete": "Gagal menghapus alamat."
+    }
+  },
+  "whatIsLaku": {
+    "title": "Apa itu Laku?",
+    "body": "Laku menghubungkan warung dan toko ritel dengan distributor FMCG di Indonesia. Jelajahi katalog, lalu selesaikan pesanan langsung di sini.",
+    "verifiedTitle": "Distributor terverifikasi",
+    "verifiedBody": "Setiap penjual di Laku diverifikasi lebih dulu, jadi Anda tahu asal barangnya.",
+    "wholesaleTitle": "Harga grosir per karton",
+    "wholesaleBody": "Lihat harga per pak dan per karton sebelum memesan, tanpa perlu tanya satu per satu.",
+    "deliveryTitle": "Pesanan sampai ke toko",
+    "deliveryBody": "Pesan, bayar, dan pantau pengiriman sampai barang tiba di warung Anda.",
+    "browseCategories": "Jelajahi kategori"
+  },
+  "footer": {
+    "about": "Pasar grosir untuk warung dan toko ritel. Pesan langsung dari distributor terverifikasi, bandingkan harga, dan pantau pengiriman dalam satu tempat.",
+    "exploreTitle": "Jelajahi",
+    "appTitle": "Laku di ponsel Anda",
+    "appBody": "Aplikasi menambahkan notifikasi langsung, pelacakan pengiriman, dan chat distributor.",
+    "copyright": "© {{year}} Laku. Marketplace grosir untuk peritel Indonesia."
+  },
+  "categories": {
+    "title": "Kategori",
+    "description": "Jelajahi kategori produk grosir di Laku: makanan & minuman, kebersihan, peralatan rumah, dan lainnya.",
+    "browseByCategory": "Jelajahi berdasarkan kategori",
+    "newThisWeek": "Baru Minggu Ini",
+    "empty": "Belum ada produk untuk ditampilkan."
+  },
+  "search": {
+    "allProducts": "Semua produk",
+    "resultsFor": "Hasil untuk \"{{query}}\"",
+    "metaResultsFor": "Hasil pencarian \"{{query}}\"",
+    "categoryWholesale": "{{category}} grosir",
+    "found": "{{count}} produk ditemukan",
+    "noMatch": "Tidak ada produk yang cocok",
+    "didYouMean": "Mungkin maksud Anda",
+    "emptyTitle": "Belum ada yang cocok",
+    "emptyBody": "Coba kata kunci lain, atau jelajahi kategori untuk melihat produk yang tersedia dari distributor terdekat.",
+    "viewCategories": "Lihat kategori",
+    "filterAria": "Filter kategori",
+    "paginationAria": "Navigasi halaman hasil",
+    "previous": "Sebelumnya",
+    "next": "Berikutnya",
+    "pageOf": "Halaman {{page}} dari {{total}}",
+    "metaDescriptionQuery": "Produk grosir yang cocok dengan \"{{query}}\" dari distributor terverifikasi di Laku.",
+    "metaDescriptionCategory": "Jelajahi produk grosir kategori {{category}} di Laku.",
+    "metaDescriptionAll": "Jelajahi produk grosir di Laku.",
+    "sortLabel": "Urutkan",
+    "filters": "Filter",
+    "showingCount": "Menampilkan {{count}}",
+    "sort": {
+      "relevance": "Relevansi",
+      "latest": "Terbaru",
+      "topSales": "Terlaris",
+      "priceLow": "Harga: terendah",
+      "priceHigh": "Harga: tertinggi"
+    },
+    "salesChannel": {
+      "wholesale": "Grosir",
+      "retail": "Eceran"
+    },
+    "filterSheet": {
+      "ratingMin": "Rating minimum",
+      "ratingPlus": "{{rating}}+",
+      "minPrice": "Harga min",
+      "maxPrice": "Harga maks",
+      "salesChannel": "Saluran penjualan",
+      "reset": "Reset filter"
+    }
+  },
+  "product": {
+    "notFound": "Produk tidak ditemukan",
+    "sold": "{{count}} terjual",
+    "inStock": "Stok tersedia",
+    "outOfStock": "Stok habis",
+    "promoBuyGet": "Beli {{min}} gratis {{free}}",
+    "freeItems": "+{{count}} gratis",
+    "description": "Deskripsi produk",
+    "reviewsTitle": "Ulasan Pembeli",
+    "reviewsSummary": "dari {{count}} ulasan",
+    "reviewsCount": "ulasan",
+    "moreReviews": "Lihat ulasan lainnya",
+    "moreReviewsA11y": "Buka halaman ulasan",
+    "noReviewsYet": "Belum ada ulasan",
+    "relativeTime": {
+      "today": "Hari ini",
+      "yesterday": "Kemarin",
+      "daysAgo": "{{count}} hari lalu",
+      "weekAgo": "1 minggu lalu",
+      "weeksAgo": "{{count}} minggu lalu",
+      "recently": "Baru-baru ini"
+    },
+    "related": "Anda mungkin juga suka",
+    "sellerInfo": "Informasi penjual",
+    "distributorFallback": "Distributor Laku",
+    "sellerReviews": "{{count}} ulasan",
+    "viewShop": "Lihat toko",
+    "viewSellerInfo": "Detail penjual",
+    "quantity": "Jumlah",
+    "quantityAria": "Jumlah",
+    "decrease": "Kurangi jumlah",
+    "increase": "Tambah jumlah",
+    "total": "Total",
+    "unitBreakdown": "{{count}} · {{price}}",
+    "buyNow": "Beli sekarang",
+    "addToCart": "Keranjang",
+    "chatNow": "Chat Sekarang",
+    "addedToCart": "Masuk keranjang",
+    "addFavorite": "Tambahkan ke favorit",
+    "removeFavorite": "Hapus dari favorit",
+    "outOfStockNote": "Stok produk ini sedang habis.",
+    "minimumOrder": "Minimal pembelian: {{count}}",
+    "assuranceTitle": "Jaminan produk",
+    "assurance": {
+      "halalCertified": "Bersertifikat Halal",
+      "bpomApproved": "Disetujui BPOM",
+      "returnDays": "Retur {{count}} hari",
+      "originalProduct": "Produk original"
+    },
+    "addToCartError": "Gagal menambahkan ke keranjang.",
+    "favoriteError": "Gagal memperbarui favorit.",
+    "notProvided": "Belum tersedia",
+    "leadDaysRange": "{{min}}-{{max}} hari",
+    "leadDaysSingle": "{{days}} hari",
+    "leadDaysMin": "{{days}}+ hari",
+    "estimatedDays": "{{min}}-{{max}} hari kerja",
+    "estimatedDaysSingle": "{{days}} hari kerja",
+    "estimatedDaysMin": "{{days}}+ hari kerja",
+    "share": "Bagikan",
+    "linkCopied": "Tautan disalin",
+    "noImage": "Tidak ada gambar",
+    "viewImage": "Lihat gambar {{index}}",
+    "estimatedDelivery": "Estimasi pengiriman",
+    "shippedFrom": "Dikirim dari",
+    "brand": "Merek",
+    "shareText": "{{name}} — {{price}} di Laku",
+    "metaDescription": "Produk grosir di Laku."
+  },
+  "productReviewsList": {
+    "title": "Ulasan",
+    "titleWithName": "Ulasan · {{productName}}",
+    "back": "Kembali ke produk",
+    "overall": "Rating keseluruhan",
+    "latest": "Ulasan Terbaru",
+    "failed": "Gagal memuat ulasan.",
+    "openImage": "Buka gambar ulasan",
+    "close": "Tutup",
+    "pagination": "Navigasi halaman ulasan",
+    "prev": "Sebelumnya",
+    "next": "Berikutnya",
+    "pageOf": "Halaman {{page}} dari {{total}}"
+  },
+  "cart": {
+    "title": "Keranjang",
+    "emptyTitle": "Keranjang masih kosong",
+    "emptyBody": "Tambahkan produk grosir favorit Anda, lalu selesaikan pesanan langsung dari situs ini.",
+    "startShopping": "Mulai belanja",
+    "summaryTitle": "Ringkasan belanja",
+    "subtotal": "Subtotal",
+    "shipping": "Ongkos kirim",
+    "shippingNote": "Disepakati dengan distributor",
+    "total": "Total",
+    "checkout": "Lanjut ke checkout",
+    "remove": "Hapus",
+    "packageInfo": "{{packageType}}",
+    "freeItems": "+{{count}} gratis",
+    "updateError": "Gagal memperbarui keranjang.",
+    "splitNote": "Produk dari {{count}} distributor akan dipecah menjadi {{count}} pesanan terpisah.",
+    "signedOutTitle": "Masuk untuk melihat keranjang",
+    "signedOutBody": "Keranjang Anda tersinkron dengan aplikasi Laku setelah masuk.",
+    "metaDescription": "Produk grosir yang siap Anda pesan di Laku."
+  },
+  "checkout": {
+    "title": "Checkout",
+    "signedOutTitle": "Masuk untuk checkout",
+    "signedOutBody": "Buat pesanan langsung dari situs Laku setelah Anda masuk.",
+    "emptyTitle": "Tidak ada produk untuk dipesan",
+    "emptyBody": "Tambahkan produk ke keranjang terlebih dahulu.",
+    "findProducts": "Cari produk",
+    "addressTitle": "Alamat pengiriman",
+    "recipientName": "Nama penerima",
+    "phone": "Nomor telepon",
+    "storeName": "Nama toko (opsional)",
+    "fullAddress": "Alamat lengkap",
+    "addressPlaceholder": "Jalan, nomor, kelurahan, kecamatan, kota, kode pos",
+    "addressSaveNote": "Alamat ini juga disimpan di profil Anda untuk pesanan berikutnya.",
+    "deliveryTitle": "Metode pengiriman",
+    "pickupDate": "Tanggal pengambilan (opsional)",
+    "pickupTime": "Jam pengambilan (opsional)",
+    "deliveryDate": "Tanggal pengiriman (opsional)",
+    "deliveryTime": "Jam pengiriman (opsional)",
+    "scheduleNote": "Jadwal bersifat permintaan. Distributor akan mengonfirmasi ketersediaannya.",
+    "paymentTitle": "Metode pembayaran",
+    "summaryTitle": "Ringkasan pesanan",
+    "subtotal": "Subtotal",
+    "shipping": "Ongkos kirim",
+    "shippingNote": "Disepakati dengan distributor",
+    "totalPayment": "Total pembayaran",
+    "splitNote": "Pesanan akan dipecah menjadi {{count}} pesanan, satu untuk tiap distributor.",
+    "placeOrder": "Buat pesanan",
+    "placing": "Memproses pesanan…",
+    "terms": "Dengan membuat pesanan, Anda menyetujui syarat pembelian grosir Laku.",
+    "lineSummary": "{{quantity}} · {{price}}",
+    "lineSummaryWithPackage": "{{quantity}} {{packageType}} · {{price}}",
+    "freeItems": "+{{count}} gratis",
+    "metaDescription": "Selesaikan pesanan grosir Anda di Laku.",
+    "errors": {
+      "sessionExpired": "Sesi Anda berakhir. Masuk kembali.",
+      "delivery": "Pilih metode pengiriman.",
+      "name": "Nama penerima wajib diisi.",
+      "phone": "Nomor telepon wajib diisi.",
+      "address": "Alamat pengiriman wajib diisi.",
+      "empty": "Tidak ada produk untuk dipesan.",
+      "productMissing": "Produk tidak ditemukan."
+    }
+  },
+  "delivery": {
+    "self_pickup": {
+      "label": "Ambil sendiri",
+      "description": "Ambil pesanan langsung di gudang atau toko distributor."
+    },
+    "seller_delivery": {
+      "label": "Pengiriman penjual/distributor",
+      "description": "Distributor mengatur pengiriman ke alamat Anda."
+    },
+    "buyer_courier": {
+      "label": "Kurir diatur pembeli",
+      "description": "Anda mengatur sendiri kurir untuk mengambil pesanan."
+    }
+  },
+  "payment": {
+    "bank_transfer": {
+      "label": "Transfer bank",
+      "description": "Transfer manual ke rekening distributor, lalu unggah bukti."
+    },
+    "cod": {
+      "label": "Cash on Delivery (COD)",
+      "description": "Bayar tunai saat pesanan diterima."
+    }
+  },
+  "checkoutSuccess": {
+    "metaTitle": "Pesanan Berhasil Dibuat",
+    "title": "Pesanan berhasil dibuat!",
+    "subtitleSingle": "Distributor sudah menerima pesanan Anda.",
+    "subtitleMulti": "{{count}} pesanan dibuat karena produk berasal dari distributor berbeda.",
+    "awaitingTransfer": "Menunggu transfer bank",
+    "codNote": "Dibayar tunai saat pesanan tiba",
+    "viewDetail": "Lihat detail",
+    "payNow": "Bayar sekarang",
+    "myOrders": "Pesanan saya",
+    "keepShopping": "Lanjut belanja",
+    "nextSteps": "Langkah berikutnya",
+    "stepPayTitle": "Selesaikan pembayaran",
+    "stepPayBody": "Untuk transfer bank, unggah bukti pembayaran agar distributor bisa memverifikasi pesanan.",
+    "stepProcessTitle": "Distributor memproses pesanan",
+    "stepProcessBody": "Pesanan dikonfirmasi lalu dikemas oleh distributor.",
+    "stepShipTitle": "Pengiriman berjalan",
+    "stepShipBody": "Pantau status pengiriman di halaman detail pesanan."
+  },
+  "orders": {
+    "title": "Pesanan",
+    "count": "{{count}} pesanan",
+    "none": "Belum ada pesanan",
+    "tabAria": "Filter pesanan",
+    "tabs": {
+      "all": "Semua",
+      "to_pay": "Belum bayar",
+      "to_ship": "Dikemas",
+      "to_receive": "Dalam pengiriman",
+      "completed": "Selesai",
+      "cancelled": "Dibatalkan",
+      "returned": "Retur"
+    },
+    "emptyTitle": "Belum ada pesanan",
+    "emptyBody": "Jelajahi katalog grosir, lalu selesaikan pesanan pertama Anda langsung di sini.",
+    "emptyFilteredTitle": "Belum ada pesanan di tab ini",
+    "emptyFilteredBody": "Pesanan yang cocok dengan filter ini akan muncul di sini.",
+    "startShopping": "Mulai belanja",
+    "syncNote": "Pesanan Anda tersinkron dengan aplikasi Laku Marketplace.",
+    "viewDetails": "Lihat detail",
+    "payOrder": "Bayar pesanan",
+    "itemsTotal": "{{count}} item · {{amount}}",
+    "moreProducts": "+{{count}} produk lainnya",
+    "freeItems": "+{{count}} gratis",
+    "signedOutTitle": "Masuk untuk melihat pesanan",
+    "signedOutBody": "Riwayat pesanan, status pengiriman, dan pesan ulang tersedia setelah Anda masuk.",
+    "expiredTitle": "Sesi Anda sudah berakhir",
+    "expiredBody": "Masuk kembali untuk melihat riwayat pesanan Anda.",
+    "metaDescription": "Pantau status pesanan grosir Anda di Laku."
+  },
+  "orderStatus": {
+    "pending": "Pending",
+    "confirmed": "Confirmed",
+    "packed": "Packed",
+    "shipped": "Shipped",
+    "delivered": "Delivered",
+    "received": "Received",
+    "cancelled": "Cancelled",
+    "returned": "Returned",
+    "failed": "Failed",
+    "unknown": "Unknown status"
+  },
+  "orderStatusMessage": {
+    "pending": "Pesanan Anda menunggu diproses",
+    "confirmed": "Pesanan Anda sudah dikonfirmasi",
+    "packed": "Pesanan Anda sudah dikemas",
+    "shipped": "Pesanan Anda sedang dikirim",
+    "delivered": "Pesanan Anda sudah terkirim",
+    "received": "Pesanan Anda selesai",
+    "cancelled": "Pesanan Anda dibatalkan",
+    "returned": "Pesanan Anda diretur",
+    "failed": "Pengiriman gagal",
+    "unknown": "Pesanan Anda diperbarui"
+  },
+  "orderTimeline": {
+    "Pending": "Pesanan dibuat",
+    "Confirmed": "Dikonfirmasi distributor",
+    "Packed": "Sedang dikemas",
+    "Shipped": "Dalam pengiriman",
+    "Delivered": "Sampai tujuan",
+    "Received": "Pesanan selesai"
+  },
+  "orderDetails": {
+    "metaTitle": "Detail Pesanan",
+    "title": "Detail pesanan",
+    "backToOrders": "Kembali ke pesanan",
+    "estimatedArrival": "Estimasi tiba {{date}}",
+    "recipient": "Penerima",
+    "phone": "Telepon",
+    "address": "Alamat",
+    "schedule": "Jadwal",
+    "logistics": "Logistik",
+    "trackingNumber": "No. resi",
+    "note": "Catatan",
+    "distributorInfo": "Informasi distributor",
+    "productInfo": "Informasi produk",
+    "productTotal": "Total produk",
+    "shippingSeparate": "Biaya disepakati terpisah",
+    "shipping": "Pengiriman",
+    "discount": "Diskon",
+    "orderTotal": "Total pesanan",
+    "orderInfo": "Informasi pesanan",
+    "orderId": "ID pesanan",
+    "paymentMethod": "Metode pembayaran",
+    "paymentStatus": "Status pembayaran",
+    "paid": "Lunas",
+    "unpaid": "Belum dibayar",
+    "orderDate": "Tanggal pesanan",
+    "proofSubmitted": "Bukti pembayaran dikirim",
+    "receivedAt": "Pesanan diterima",
+    "cancelReason": "Alasan pembatalan",
+    "returnStatus": "Status retur",
+    "itemUnits": "{{quantity}} {{packageType}}",
+    "freeItems": "+{{count}} gratis",
+    "actionsTitle": "Tindakan",
+    "payOrder": "Bayar pesanan",
+    "markReceived": "Pesanan diterima",
+    "requestReturn": "Ajukan retur",
+    "cancelOrder": "Batalkan pesanan",
+    "writeReview": "Tulis ulasan",
+    "editReview": "Edit ulasan",
+    "viewSellerInfo": "Informasi penjual",
+    "viewDistributorDetails": "Detail distributor",
+    "cancelReasonTitle": "Alasan pembatalan",
+    "returnReasonTitle": "Alasan retur",
+    "detailPlaceholder": "Tambahkan keterangan (opsional)",
+    "actionSuccess": "Berhasil diproses.",
+    "actionError": "Gagal memproses permintaan.",
+    "receivedSuccess": "Pesanan ditandai diterima.",
+    "cancelSuccess": "Pesanan dibatalkan.",
+    "returnSuccess": "Permintaan retur dikirim.",
+    "signedOutTitle": "Masuk untuk melihat pesanan",
+    "signedOutBody": "Detail pesanan hanya tersedia untuk akun yang membuat pesanan tersebut.",
+    "supportTitle": "Pusat bantuan",
+    "supportReturnInfo": "Info retur & refund",
+    "supportHelpCenter": "Bantuan pesanan",
+    "supportInvoice": "Lihat invoice",
+    "supportReport": "Laporkan distributor"
+  },
+  "orderHelpCenter": {
+    "metaTitle": "Bantuan Pesanan",
+    "title": "Bantuan Pesanan",
+    "backToOrder": "Kembali ke pesanan",
+    "overviewTitle": "Ringkasan bantuan pesanan",
+    "overviewBody": "Halaman ini memberi panduan singkat untuk melacak pesanan dan mengetahui siapa yang harus dihubungi. Aksi seperti batal, rating, atau retur/refund dilakukan di halaman detail pesanan.",
+    "orderId": "ID Pesanan",
+    "openHelpCenter": "Buka Pusat Bantuan",
+    "sections": {
+      "deliveryStatusTitle": "Lihat status pengiriman",
+      "deliveryStatusBody": "Buka halaman detail pesanan untuk melihat status terbaru, mitra logistik, nomor resi, dan catatan pengiriman.",
+      "statusBasicsTitle": "Dasar status pesanan",
+      "statusBasicsNote": "Beberapa opsi (seperti rating atau retur/refund) hanya muncul setelah status tertentu untuk melindungi pembeli dan penjual.",
+      "contactSellerTitle": "Hubungi penjual",
+      "contactSellerBody": "Gunakan Hubungi penjual dari detail pesanan jika pengiriman terlambat, detail produk kurang jelas, atau barang tidak sesuai pesanan.",
+      "contactSupportTitle": "Hubungi dukungan Laku",
+      "contactSupportBody": "Hubungi dukungan Laku lewat Pusat Bantuan jika Anda tidak bisa menghubungi penjual, ada masalah pembayaran/refund, status tertahan terlalu lama, atau mencurigai penipuan."
+    },
+    "statusBullets": {
+      "pendingConfirmedTitle": "Pending / Confirmed",
+      "pendingConfirmedDesc": "penjual sedang menyiapkan pesanan",
+      "packedShippedTitle": "Packed / Shipped",
+      "packedShippedDesc": "paket sudah di mitra logistik",
+      "deliveredTitle": "Delivered",
+      "deliveredDesc": "paket sampai di alamat pengiriman",
+      "receivedTitle": "Received",
+      "receivedDesc": "Anda mengonfirmasi pesanan sudah sesuai"
+    }
+  },
+  "returnRefundInfo": {
+    "metaTitle": "Info Retur & Refund",
+    "title": "Info Retur & Refund",
+    "backToOrder": "Kembali ke pesanan",
+    "requestReturn": "Ajukan retur",
+    "cards": {
+      "basicsTitle": "Dasar retur & refund",
+      "basicsBody": "Anda bisa mengajukan retur untuk item yang memenuhi syarat dan mendapat refund setelah permintaan disetujui serta, jika diperlukan, barang diterima kembali dalam kondisi baik.",
+      "policyTitle": "Kebijakan mengikuti data produk",
+      "policyBody1": "Setiap produk punya kebijakan retur sendiri di data produk. Kebijakan itu menentukan apakah bisa diretur, berapa hari setelah diterima, dan syarat spesifik lainnya.",
+      "policyBody2": "Laku memeriksa setiap permintaan retur/refund terhadap kebijakan ini. Item berbeda dalam pesanan yang sama bisa punya kelayakan dan jumlah refund yang berbeda.",
+      "policyStrong": "Persetujuan dan jumlah refund selalu bergantung pada hari retur dan aturan di setiap produk, bukan hanya status pesanan.",
+      "quickFlowTitle": "Alur singkat",
+      "steps": {
+        "1": "Cek kebijakan retur dan batas waktu produk sebelum membeli.",
+        "2": "Retur dan refund hanya tersedia setelah produk dikirim dan diterima.",
+        "3": "Mulai permintaan retur/refund dari detail pesanan.",
+        "4": "Ikuti instruksi pengembalian barang dengan bukti yang kuat.",
+        "5": "Tunggu review dan refund ke metode pembayaran atau wallet Anda."
+      }
+    }
+  },
+  "orderInvoice": {
+    "metaTitle": "Invoice Pesanan",
+    "title": "Invoice",
+    "backToOrder": "Kembali ke pesanan",
+    "print": "Cetak / simpan PDF",
+    "subtitle": "Faktur pajak / Tanda terima",
+    "orderId": "ID Pesanan",
+    "date": "Tanggal",
+    "status": "Status",
+    "payment": "Pembayaran",
+    "terms": "Syarat",
+    "billTo": "Ditagihkan ke",
+    "shipTo": "Dikirim ke",
+    "item": "Item",
+    "amount": "Jumlah",
+    "noItems": "Tidak ada item",
+    "subtotal": "Subtotal",
+    "discounts": "Diskon",
+    "shipping": "Pengiriman",
+    "total": "Total",
+    "supportNote": "Untuk bantuan pesanan, hubungi penjual atau Pusat Bantuan Laku."
+  },
+  "reportDistributor": {
+    "metaTitle": "Laporkan Distributor",
+    "title": "Laporkan Distributor",
+    "backToSeller": "Kembali ke penjual",
+    "signedOutTitle": "Masuk untuk mengirim laporan",
+    "signedOutBody": "Anda perlu akun untuk melaporkan distributor.",
+    "distributorLabel": "Distributor",
+    "warning": "Pilih alasan dan tambahkan minimal satu foto bukti (maks. 5). Tim kami akan meninjau laporan Anda.",
+    "whyTitle": "Mengapa Anda melaporkan distributor ini?",
+    "customReasonLabel": "Jelaskan alasan Anda",
+    "customReasonPlaceholder": "Tulis alasan…",
+    "photosLabel": "Foto (wajib, maks {{max}})",
+    "photosHint": "Tambahkan setidaknya satu gambar: screenshot, chat, atau foto produk membantu investigasi.",
+    "addPhotos": "Tambah foto",
+    "submit": "Kirim Laporan",
+    "submitting": "Mengirim…",
+    "submitted": "Terima kasih atas laporan Anda.",
+    "errors": {
+      "signIn": "Silakan masuk untuk mengirim laporan.",
+      "invalidDistributor": "Distributor tidak valid.",
+      "selectReason": "Silakan pilih alasan.",
+      "provideReason": "Silakan tulis alasan khusus.",
+      "photosRequired": "Tambahkan minimal satu foto sebagai bukti.",
+      "submit": "Gagal mengirim laporan. Coba lagi."
+    },
+    "reasons": {
+      "fraud": {
+        "label": "Aktivitas mencurigakan atau penipuan",
+        "description": "Listing palsu, klaim menyesatkan, atau scam"
+      },
+      "poor_service": {
+        "label": "Pelayanan buruk",
+        "description": "Tidak responsif, tidak sopan, atau komunikasi tidak membantu"
+      },
+      "quality": {
+        "label": "Masalah kualitas produk",
+        "description": "Masalah kualitas berulang atau deskripsi tidak akurat"
+      },
+      "policy": {
+        "label": "Pelanggaran kebijakan",
+        "description": "Perilaku yang melanggar aturan marketplace"
+      },
+      "other": {
+        "label": "Alasan lain",
+        "description": "Jelaskan alasan Anda di bawah"
+      }
+    }
+  },
+  "orderReason": {
+    "cancelMetaTitle": "Batalkan Pesanan",
+    "returnMetaTitle": "Ajukan Retur",
+    "cancelTitle": "Batalkan pesanan",
+    "returnTitle": "Ajukan retur",
+    "cancelBody": "Beritahu kami alasan pembatalan pesanan ini.",
+    "returnBody": "Beritahu kami alasan pengajuan retur.",
+    "backToOrder": "Kembali ke detail pesanan",
+    "selectReason": "Pilih alasan",
+    "detailLabel": "Keterangan tambahan",
+    "photosLabel": "Foto (opsional, maks {{max}})",
+    "photosHint": "Tambahkan foto jelas tentang masalahnya agar permintaan lebih cepat diproses.",
+    "submitCancel": "Batalkan pesanan",
+    "submitReturn": "Kirim permintaan retur",
+    "errors": {
+      "detailRequired": "Mohon jelaskan alasan Anda."
+    }
+  },
+  "orderReview": {
+    "metaTitle": "Ulasan Produk",
+    "title": "Nilai pesanan Anda",
+    "editTitle": "Edit ulasan Anda",
+    "body": "Bagikan pengalaman Anda tentang produk dan pengiriman.",
+    "backToOrder": "Kembali ke detail pesanan",
+    "productRating": "Rating produk",
+    "titlePlaceholder": "Judul ulasan (opsional)",
+    "commentPlaceholder": "Apa yang Anda sukai atau tidak sukai?",
+    "photosLabel": "Foto (opsional, maks {{max}})",
+    "photosHint": "Tunjukkan produk seperti yang Anda terima.",
+    "deliveryTitle": "Pengalaman pengiriman",
+    "deliveryBody": "Bagaimana proses pengiriman dan penerimaan?",
+    "deliveryCommentPlaceholder": "Komentar tentang pengiriman (opsional)",
+    "submit": "Kirim ulasan",
+    "update": "Perbarui ulasan",
+    "success": "Terima kasih atas ulasan Anda.",
+    "errors": {
+      "ratingRequired": "Mohon beri rating untuk setiap produk sebelum mengirim."
+    }
+  },
+  "photoUpload": {
+    "add": "Tambah",
+    "uploading": "…",
+    "remove": "Hapus foto",
+    "waitToSubmit": "Tunggu hingga unggahan foto selesai.",
+    "errors": {
+      "signIn": "Masuk untuk mengunggah foto.",
+      "fileMissing": "Pilih foto untuk diunggah.",
+      "folder": "Tujuan unggahan tidak valid.",
+      "fileTooLarge": "Ukuran foto maksimal 10MB.",
+      "fileType": "Gunakan gambar JPG, PNG, WEBP, atau GIF.",
+      "upload": "Gagal mengunggah foto."
+    }
+  },
+  "distributor": {
+    "metaTitle": "Distributor",
+    "metaTitleNamed": "{{name}}",
+    "followers": "{{count}} pengikut",
+    "sellerInfo": "Informasi penjual",
+    "viewDetails": "Detail distributor",
+    "productsTitle": "Produk dari toko ini",
+    "productCount": "{{count}} produk",
+    "emptyProducts": "Belum ada produk yang ditampilkan.",
+    "sortAria": "Urutkan produk",
+    "sort": {
+      "popular": "Populer",
+      "latest": "Terbaru",
+      "top_sales": "Terlaris",
+      "price": "Harga",
+      "category": "Kategori",
+      "categoryAll": "Semua"
+    },
+    "follow": {
+      "follow": "Ikuti",
+      "following": "Mengikuti",
+      "followA11y": "Ikuti distributor ini",
+      "unfollowA11y": "Berhenti mengikuti distributor ini",
+      "error": "Gagal memperbarui status mengikuti."
+    }
+  },
+  "distributorDetails": {
+    "metaTitle": "Detail Distributor",
+    "metaTitleNamed": "{{name}} · Detail",
+    "backToShop": "Kembali ke toko",
+    "about": "Tentang",
+    "infoTitle": "Informasi perusahaan",
+    "industry": "Industri",
+    "years": "Tahun beroperasi",
+    "address": "Alamat",
+    "phone": "Telepon",
+    "email": "Email",
+    "noInfo": "Belum ada detail perusahaan tambahan.",
+    "reviewsCount": "({{count}} ulasan)",
+    "browseProducts": "Jelajahi produk"
+  },
+  "sellerInfo": {
+    "metaTitle": "Informasi Penjual",
+    "metaTitleNamed": "{{name}} · Penjual",
+    "title": "Informasi penjual",
+    "backToShop": "Kembali ke toko",
+    "companyTitle": "Informasi perusahaan",
+    "companyName": "Nama perusahaan",
+    "registration": "Nomor registrasi bisnis",
+    "industry": "Industri",
+    "years": "Tahun beroperasi",
+    "description": "Deskripsi bisnis",
+    "address": "Alamat bisnis",
+    "shippingTitle": "Preferensi pengiriman & pengantaran",
+    "shippingOptions": "Opsi pengiriman",
+    "shipping": {
+      "selfPickup": "Ambil sendiri",
+      "sellerDelivery": "Pengiriman penjual / distributor",
+      "buyerCourier": "Kurir diatur pembeli"
+    },
+    "timeSlots": "Slot waktu pengiriman",
+    "deliveryDays": "Hari pengiriman yang disukai",
+    "pickupAddress": "Alamat pengambilan",
+    "reviewsTitle": "Ulasan pembeli",
+    "reviewsSummary": "dari {{count}} ulasan",
+    "noReviews": "Belum ada ulasan.",
+    "browseShop": "Jelajahi toko",
+    "reportDistributor": "Laporkan distributor"
+  },
+  "cancelReasons": {
+    "changed_mind": "Berubah pikiran",
+    "found_cheaper": "Menemukan harga lebih murah",
+    "wrong_item": "Salah memesan produk",
+    "delivery_issues": "Masalah pengiriman",
+    "payment_issues": "Masalah pembayaran",
+    "seller_issues": "Masalah dengan penjual",
+    "other": "Lainnya"
+  },
+  "returnReasons": {
+    "wrong_item": "Produk tidak sesuai pesanan",
+    "defective": "Produk rusak atau cacat",
+    "not_as_described": "Tidak sesuai deskripsi",
+    "changed_mind": "Berubah pikiran",
+    "late_delivery": "Pengiriman terlambat",
+    "other": "Lainnya"
+  },
+  "payOrder": {
+    "metaTitle": "Bayar Pesanan",
+    "title": "Bayar pesanan",
+    "backToDetails": "Kembali ke detail pesanan",
+    "totalPayment": "Total pembayaran",
+    "productCount": "{{count}} produk · {{terms}}",
+    "payTo": "Dibayarkan kepada",
+    "bankTitle": "Rekening bank (transfer manual)",
+    "bank": "Bank",
+    "accountName": "Nama rekening",
+    "accountNumber": "Nomor rekening",
+    "copyAccount": "Salin nomor rekening",
+    "paymentTerm": "Tempo pembayaran",
+    "days": "{{count}} hari",
+    "bankMissing": "Distributor belum melengkapi rekening bank. Hubungi distributor untuk instruksi pembayaran, lalu unggah buktinya di sini.",
+    "proofTitle": "Bukti pembayaran",
+    "uploadCta": "Unggah bukti transfer (JPG, PNG, atau PDF)",
+    "uploading": "Mengunggah…",
+    "changeFile": "Ganti berkas",
+    "selectedFile": "Bukti terpilih",
+    "submittedTitle": "Bukti pembayaran sudah dikirim",
+    "submittedBody": "Distributor akan memverifikasi pembayaran Anda. Status pesanan diperbarui setelah verifikasi selesai.",
+    "viewProof": "Lihat bukti",
+    "editProof": "Ubah bukti pembayaran",
+    "viewOrder": "Lihat pesanan",
+    "pay": "Bayar",
+    "updatePayment": "Perbarui pembayaran",
+    "sending": "Mengirim…",
+    "codTitle": "Cash on Delivery (COD)",
+    "codBody": "Siapkan uang tunai sebesar total pesanan. Pembayaran dilakukan langsung kepada distributor atau kurir saat pesanan tiba. Tidak ada bukti transfer yang perlu diunggah.",
+    "backToOrder": "Kembali ke detail pesanan",
+    "securityNote": "Laku tidak pernah meminta pembayaran ke rekening pribadi. Pastikan nama rekening sesuai dengan nama distributor di atas.",
+    "signedOutTitle": "Masuk untuk membayar pesanan",
+    "signedOutBody": "Pembayaran hanya bisa dilakukan oleh akun yang membuat pesanan.",
+    "successMessage": "Bukti pembayaran terkirim. Distributor akan memverifikasi pesanan Anda.",
+    "errors": {
+      "invalidOrder": "Pesanan tidak valid.",
+      "noProof": "Unggah bukti transfer terlebih dahulu.",
+      "submit": "Gagal mengirim bukti pembayaran.",
+      "upload": "Gagal mengunggah bukti pembayaran.",
+      "fileMissing": "Berkas tidak ditemukan.",
+      "fileTooLarge": "Ukuran berkas maksimal 10MB.",
+      "fileType": "Gunakan berkas JPG, PNG, WEBP, atau PDF.",
+      "signIn": "Silakan masuk kembali."
+    }
+  },
+  "notifications": {
+    "title": "Notifikasi",
+    "metaDescription": "Update pesanan dan kabar terbaru dari Laku.",
+    "orderUpdates": "Update pesanan",
+    "noOrders": "Belum ada pesanan.",
+    "signedOutTitle": "Masuk untuk update pesanan",
+    "signedOutBody": "Setelah masuk, status pesanan Anda muncul di sini. Kabar platform di bawah bisa dibaca tanpa akun.",
+    "latestUpdates": "Update terbaru",
+    "emptyCategory": "Belum ada update di kategori ini.",
+    "filterAria": "Filter kategori update",
+    "categories": {
+      "all": "Semua",
+      "update": "Update",
+      "promotion": "Promo",
+      "maintenance": "Perawatan",
+      "policy": "Kebijakan"
+    }
+  },
+  "account": {
+    "title": "Akun",
+    "metaDescription": "Kelola profil, pesanan, dan produk favorit Anda di Laku.",
+    "editProfile": "Edit profil",
+    "addressNotSet": "Alamat belum diatur",
+    "purchases": "Pembelian saya",
+    "orderHistory": "Riwayat pesanan",
+    "toPay": "Belum bayar",
+    "toShip": "Dikemas",
+    "toReceive": "Dalam pengiriman",
+    "completed": "Selesai",
+    "moreServices": "Layanan lainnya",
+    "favouritesLabel": "Favorit",
+    "favouritesDescription": "Produk yang Anda sukai",
+    "recentlyViewedLabel": "Terakhir dilihat",
+    "recentlyViewedDescription": "Produk yang baru Anda buka",
+    "buyAgainLabel": "Beli lagi",
+    "buyAgainDescription": "Produk dari pesanan sebelumnya",
+    "myNetworks": "Jaringan Saya",
+    "viewAllNetworks": "Lihat semua jaringan",
+    "viewAllFollowings": "Lihat semua yang diikuti",
+    "noNetworksYet": "Belum ada jaringan",
+    "networksOrdersCount": "{{count}} pesanan",
+    "signedOutTitle": "Masuk ke akun Laku",
+    "signedOutBody": "Gunakan akun yang sama dengan aplikasi untuk melihat pesanan dan update Anda."
+  },
+  "myNetworks": {
+    "title": "Jaringan Saya",
+    "orders": "{{count}} pesanan",
+    "lastLabel": "Terakhir: {{date}}",
+    "states": {
+      "emptyTitle": "Belum Ada Jaringan",
+      "emptyBody": "Mulai belanja dari distributor untuk membangun jaringan Anda"
+    }
+  },
+  "followingsPage": {
+    "title": "Mengikuti",
+    "a11y": {
+      "openStore": "Buka toko {{name}}"
+    },
+    "states": {
+      "loginRequiredTitle": "Perlu masuk",
+      "loginRequiredBody": "Silakan masuk untuk melihat distributor yang Anda ikuti.",
+      "emptyTitle": "Belum ada yang diikuti",
+      "emptyBody": "Ikuti distributor agar mereka muncul di sini."
+    },
+    "row": {
+      "followed": "Diikuti"
+    }
+  },
+  "messages": {
+    "title": "Pesan",
+    "contactSeller": "Hubungi penjual",
+    "signedOutTitle": "Masuk untuk melihat pesan",
+    "signedOutBody": "Chat dengan distributor dari halaman produk dan pesanan, lalu temukan mereka di sini.",
+    "list": {
+      "emptyTitle": "Belum ada pesan",
+      "emptyBody": "Chat dengan distributor dari halaman produk agar muncul di sini.",
+      "noBusinessPhone": "Tidak ada nomor telepon bisnis"
+    },
+    "errors": {
+      "businessPhoneUnavailable": "Nomor telepon bisnis tidak tersedia.",
+      "sellerPhoneUnavailable": "Nomor telepon penjual tidak tersedia untuk produk ini.",
+      "sellerPhoneUnavailableForOrder": "Nomor telepon distributor tidak tersedia untuk pesanan {{orderId}}."
+    },
+    "a11y": {
+      "openChatWith": "Buka chat dengan {{name}}"
+    },
+    "whatsapp": {
+      "distributorMessage": "Halo {{name}}, saya ingin bertanya tentang produk Anda di Laku Marketplace.",
+      "productInquiry": "Halo, saya tertarik dengan \"{{productName}}\" di Laku Marketplace. Apakah masih tersedia?",
+      "orderUpdate": "Halo, saya ingin menanyakan update pesanan {{orderId}} di Laku Marketplace. Terima kasih!"
+    }
+  },
+  "profile": {
+    "metaTitle": "Edit Profil",
+    "title": "Profil pembeli",
+    "subtitle": "Data ini dipakai untuk pesanan dan pengiriman Anda.",
+    "backToAccount": "Kembali ke akun",
+    "identity": "Identitas",
+    "username": "Username",
+    "name": "Nama lengkap",
+    "storeName": "Nama toko",
+    "country": "Negara",
+    "bio": "Bio",
+    "bioPlaceholder": "Ceritakan sedikit tentang usaha Anda",
+    "contact": "Kontak & pengiriman",
+    "email": "Email",
+    "phone": "Telepon",
+    "mainAddress": "Alamat utama",
+    "addressPlaceholder": "Alamat yang dipakai saat checkout",
+    "noAddress": "Belum ada alamat pengiriman. Pilih dari buku alamat Anda.",
+    "manageAddresses": "Kelola buku alamat",
+    "changePhoto": "Ganti foto",
+    "photoHint": "JPG, PNG, atau WEBP, maks 5MB.",
+    "uploading": "Mengunggah…",
+    "save": "Simpan perubahan",
+    "saving": "Menyimpan…",
+    "saved": "Profil diperbarui.",
+    "signedOutTitle": "Masuk untuk mengelola profil",
+    "signedOutBody": "Profil pembeli tersinkron dengan aplikasi Laku.",
+    "errors": {
+      "username": "Username wajib diisi.",
+      "email": "Format email tidak valid.",
+      "upload": "Gagal mengunggah foto.",
+      "photoTooLarge": "Ukuran gambar maksimal 5MB.",
+      "photoType": "Gunakan gambar JPG, PNG, atau WEBP.",
+      "sessionExpired": "Sesi Anda berakhir. Masuk kembali.",
+      "signIn": "Silakan masuk kembali.",
+      "fileMissing": "Berkas tidak ditemukan."
+    }
+  },
+  "moreService": {
+    "youMayAlsoLike": "Anda mungkin juga suka",
+    "browse": "Jelajahi produk",
+    "view": "Lihat",
+    "addToCart": "Keranjang",
+    "added": "Ditambahkan",
+    "removeFavorite": "Hapus dari favorit",
+    "favourites": {
+      "title": "Favorit",
+      "subtitle": "{{count}} produk disimpan",
+      "subtitleEmpty": "Produk yang Anda sukai muncul di sini",
+      "emptyTitle": "Belum ada favorit",
+      "emptyBody": "Mulai sukai produk agar muncul di sini!",
+      "signedOutTitle": "Masuk untuk melihat favorit",
+      "signedOutBody": "Produk yang Anda sukai tersinkron dengan aplikasi Laku."
+    },
+    "recentlyViewed": {
+      "title": "Terakhir dilihat",
+      "subtitle": "{{count}} produk terakhir Anda buka",
+      "subtitleEmpty": "Riwayat produk yang Anda buka",
+      "emptyTitle": "Belum ada yang dilihat",
+      "emptyBody": "Mulai jelajahi produk agar muncul di sini!",
+      "signedOutTitle": "Masuk untuk melihat riwayat",
+      "signedOutBody": "Produk yang baru Anda buka tersinkron dengan aplikasi Laku."
+    },
+    "buyAgain": {
+      "title": "Beli lagi",
+      "subtitle": "{{count}} produk dari pesanan sebelumnya",
+      "subtitleEmpty": "Produk dari riwayat pesanan Anda",
+      "emptyTitle": "Belum ada pesanan sebelumnya",
+      "emptyBody": "Mulai belanja untuk melihat riwayat pesanan Anda di sini!",
+      "signedOutTitle": "Masuk untuk melihat pesanan sebelumnya",
+      "signedOutBody": "Produk yang pernah Anda beli muncul di sini setelah masuk."
+    }
+  },
+  "settings": {
+    "title": "Pengaturan",
+    "sections": {
+      "myAccount": "Akun Saya",
+      "settings": "Pengaturan",
+      "support": "Bantuan"
+    },
+    "rows": {
+      "accountSecurity": "Akun & Keamanan",
+      "myAddresses": "Alamat Saya",
+      "linkedPayments": "Metode Pembayaran Tertaut",
+      "notificationSettings": "Pengaturan Notifikasi",
+      "languageSettings": "Pengaturan Bahasa",
+      "helpCenter": "Pusat Bantuan",
+      "communityRules": "Aturan Komunitas",
+      "policies": "Kebijakan"
+    },
+    "logout": "Keluar",
+    "comingSoon": "Segera hadir",
+    "pages": {
+      "language": {
+        "title": "Bahasa",
+        "subtitle": "Pilih bahasa aplikasi"
+      }
+    },
+    "languages": {
+      "id": "Bahasa Indonesia",
+      "en": "English"
+    },
+    "selected": "Terpilih",
+    "notSelected": "Tidak terpilih",
+    "signedOutTitle": "Masuk untuk membuka pengaturan",
+    "signedOutBody": "Pengaturan akun tersedia setelah Anda masuk."
+  },
+  "auth": {
+    "loginTitle": "Masuk ke Laku",
+    "loginSubtitle": "Gunakan akun yang sama dengan aplikasi Laku Marketplace.",
+    "loginMetaDescription": "Masuk ke akun Laku Anda untuk melanjutkan belanja grosir.",
+    "noAccount": "Belum punya akun?",
+    "registerTitle": "Buat Akun",
+    "registerSubtitle": "Bergabung di Laku Marketplace dan mulai perjalanan Anda",
+    "registerMetaDescription": "Buat akun Laku untuk memesan stok grosir dari distributor terverifikasi.",
+    "hasAccount": "Sudah punya akun?",
+    "usernameOrEmail": "Email atau username",
+    "usernamePlaceholder": "nama@toko.com",
+    "password": "Kata sandi",
+    "passwordHint": "Minimal 6 karakter.",
+    "showPassword": "Tampilkan kata sandi",
+    "hidePassword": "Sembunyikan kata sandi",
+    "fullName": "Nama lengkap",
+    "storeName": "Nama toko",
+    "storeNameHint": "Kosongkan jika sama dengan nama Anda.",
+    "username": "Username",
+    "email": "Email",
+    "phone": "Nomor HP",
+    "phonePlaceholder": "08xxxxxxxxxx",
+    "address": "Alamat pengiriman",
+    "submitLogin": "Masuk",
+    "submitRegister": "Buat Akun",
+    "submitting": "Memproses…",
+    "loginError": "Email atau kata sandi salah",
+    "loginFailed": "Gagal masuk. Coba lagi.",
+    "registerError": "Pendaftaran gagal.",
+    "registerFailed": "Pendaftaran gagal. Periksa kembali data Anda.",
+    "networkError": "Tidak dapat terhubung ke server Laku.",
+    "invalidRequest": "Permintaan tidak valid",
+    "forgotPassword": {
+      "link": "Lupa kata sandi?",
+      "title": "Lupa Kata Sandi",
+      "passwordHint": "Minimal 8 karakter, dengan huruf besar, huruf kecil, angka, dan karakter khusus.",
+      "backToLogin": "Kembali ke Masuk",
+      "alerts": {
+        "enterEmailBody": "Silakan masukkan alamat email Anda.",
+        "invalidEmailBody": "Silakan masukkan alamat email yang valid.",
+        "genericErrorBody": "Terjadi kesalahan. Silakan coba lagi.",
+        "codeRequiredBody": "Silakan masukkan kode 6 digit yang kami kirim ke email Anda.",
+        "enterNewPasswordBody": "Silakan masukkan kata sandi baru.",
+        "mismatchBody": "Kata sandi baru dan konfirmasi tidak sama.",
+        "passwordResetTitle": "Kata sandi direset",
+        "passwordResetBody": "Kata sandi Anda berhasil direset. Sekarang Anda bisa masuk dengan kata sandi baru.",
+        "invalidOrExpiredCodeBody": "Kode verifikasi tidak valid atau sudah kedaluwarsa. Silakan minta reset kata sandi lagi dan coba kembali.",
+        "rateLimitedBody": "Terlalu banyak permintaan reset kata sandi. Silakan coba lagi sekitar satu jam lagi."
+      },
+      "step1": {
+        "heading": "Reset kata sandi",
+        "subheading": "Masukkan email yang Anda gunakan untuk masuk. Setelah itu Anda bisa membuat kata sandi baru.",
+        "emailLabel": "Email Anda",
+        "emailPlaceholder": "contoh@gmail.com",
+        "sending": "Mengirim…",
+        "continue": "Lanjut"
+      },
+      "step2": {
+        "heading": "Verifikasi email Anda",
+        "subheading": "Masukkan kode 6 digit yang kami kirim ke email Anda.",
+        "codeLabel": "Kode verifikasi",
+        "codePlaceholder": "mis. 123456",
+        "verifying": "Memverifikasi…",
+        "continue": "Lanjut"
+      },
+      "step3": {
+        "heading": "Buat kata sandi baru",
+        "subheading": "Pilih kata sandi baru yang kuat untuk akun Anda.",
+        "newPasswordLabel": "Kata sandi baru",
+        "newPasswordPlaceholder": "Kata sandi baru",
+        "confirmPasswordLabel": "Konfirmasi kata sandi",
+        "confirmPasswordPlaceholder": "Konfirmasi kata sandi baru",
+        "resetting": "Mereset…",
+        "resetPassword": "Reset kata sandi"
+      }
+    },
+    "signup": {
+      "title": "Buat Akun",
+      "subtitle": "Bergabung di Laku Marketplace dan mulai perjalanan Anda",
+      "ctaCreateAccount": "Buat Akun",
+      "creating": "Membuat akun…",
+      "alreadyHaveAccount": "Sudah punya akun? Masuk",
+      "continue": "Lanjut",
+      "back": "Kembali",
+      "stepAria": "Langkah {{step}} dari 4",
+      "fullName": "Nama Lengkap",
+      "fullNamePlaceholder": "Masukkan nama lengkap",
+      "email": "Alamat Email",
+      "emailPlaceholder": "contoh@gmail.com",
+      "storeName": "Nama Toko",
+      "storeNamePlaceholder": "Masukkan nama toko",
+      "bioOptional": "Bio (Opsional)",
+      "bioPlaceholder": "Ceritakan tentang toko Anda",
+      "shippingAddress": "Alamat Pengiriman",
+      "locationDetails": "Detail Lokasi",
+      "deliveryAddress": "Alamat",
+      "deliveryAddressPlaceholder": "Jalan, gedung, unit, kode pos",
+      "recipientName": "Nama lengkap",
+      "recipientNamePlaceholder": "Masukkan nama lengkap penerima",
+      "deliveryPhone": "Nomor HP",
+      "deliveryPhonePlaceholder": "Masukkan nomor HP untuk pengiriman",
+      "deliveryPhoneHint": "Digunakan untuk pembaruan pengiriman dan kontak pesanan.",
+      "mapTitle": "Pratinjau peta alamat",
+      "mapLoading": "Mencari lokasi…",
+      "mapEnterAddress": "Masukkan alamat untuk lihat di peta",
+      "mapHint": "Peta akan diperbarui saat Anda mengetik alamat pengiriman",
+      "mapNotFound": "Alamat tidak ditemukan di peta",
+      "mapApproximate": "Pin menunjukkan perkiraan lokasi — tambahkan detail alamat untuk akurasi lebih baik",
+      "setDefault": "Jadikan alamat utama",
+      "labelAs": "Label sebagai:",
+      "labels": {
+        "work": "Kantor",
+        "store": "Toko",
+        "home": "Rumah"
+      },
+      "username": "Username",
+      "usernamePlaceholder": "Buat username",
+      "password": "Kata sandi",
+      "passwordPlaceholder": "Buat kata sandi",
+      "confirmPassword": "Konfirmasi kata sandi",
+      "confirmPasswordPlaceholder": "Ulangi kata sandi",
+      "footerBefore": "Dengan mendaftar, Anda menyetujui ",
+      "footerLink": "Keamanan & Privasi",
+      "footerAfter": ".",
+      "errors": {
+        "missingNameEmail": "Mohon isi nama dan email.",
+        "invalidEmail": "Silakan masukkan alamat email yang valid.",
+        "missingStoreName": "Mohon isi nama toko.",
+        "missingAddress": "Mohon isi alamat pengiriman Anda.",
+        "missingFullName": "Mohon isi nama lengkap penerima.",
+        "missingPhone": "Mohon isi nomor telepon untuk pengiriman.",
+        "missingCredentials": "Mohon lengkapi semua field.",
+        "passwordMismatch": "Kata sandi tidak sama.",
+        "weakPassword": "Kata sandi minimal 6 karakter."
+      }
+    }
+  },
+  "app": {
+    "metaTitle": "Aplikasi Laku",
+    "metaDescription": "Unduh aplikasi Laku untuk notifikasi langsung, pelacakan pengiriman, dan chat distributor.",
+    "title": "Bawa Laku ke mana saja",
+    "body": "Belanja, checkout, dan pembayaran sudah bisa dilakukan di website ini. Aplikasi menambahkan notifikasi langsung, pelacakan pengiriman real time, dan chat dengan distributor."
+  },
+  "notFound": {
+    "title": "Halaman tidak ditemukan",
+    "body": "Produk mungkin sudah tidak dipublikasikan oleh distributor, atau tautannya salah.",
+    "home": "Ke beranda"
+  },
+  "promo": {
+    "notFound": "Promo tidak ditemukan",
+    "back": "Kembali ke beranda",
+    "browse": "Jelajahi produk"
+  },
+  "meta": {
+    "siteTitle": "Laku | Marketplace Jual Beli Grosir dan Eceran di Indonesia",
+    "siteDescription": "Jelajahi produk grosir dari distributor terverifikasi di Laku. Bandingkan harga, lihat stok, dan pesan langsung dari website atau aplikasi Laku."
+  },
+  "category": {
+    "Food & Beverage": "Makanan & Minuman",
+    "Technology": "Teknologi",
+    "Fashion": "Fashion",
+    "Home & Garden": "Rumah & Taman",
+    "Sports": "Olahraga",
+    "Beauty": "Kecantikan",
+    "Books": "Buku",
+    "Automotive": "Otomotif",
+    "Health": "Kesehatan",
+    "Toys": "Mainan",
+    "Office": "Kantor",
+    "Garden": "Taman",
+    "Jewelry": "Perhiasan",
+    "Music": "Musik",
+    "Pets": "Hewan Peliharaan",
+    "Travel": "Perjalanan",
+    "Art": "Seni",
+    "Photography": "Fotografi",
+    "Gaming": "Gaming",
+    "Furniture": "Furnitur",
+    "Tools": "Peralatan",
+    "Baby": "Bayi",
+    "Outdoor": "Luar Ruangan",
+    "Kitchen": "Dapur",
+    "Bathroom": "Kamar Mandi",
+    "Bedroom": "Kamar Tidur",
+    "Living Room": "Ruang Tamu",
+    "Dining": "Ruang Makan",
+    "Storage": "Penyimpanan",
+    "Lighting": "Pencahayaan",
+    "Decor": "Dekorasi",
+    "Appliances": "Peralatan Rumah",
+    "Cleaning": "Kebersihan",
+    "Organization": "Organisasi",
+    "Safety": "Keamanan"
+  },
+  "helpCenter": {
+    "title": "Pusat Bantuan",
+    "faqTitle": "Pertanyaan yang Sering Ditanyakan",
+    "done": "Selesai",
+    "faqs": {
+      "verifyPhone": {
+        "q": "Bagaimana cara memverifikasi nomor HP?",
+        "a": "Pilih WhatsApp atau SMS saat daftar, pilih kode negara, masukkan nomor Anda, lalu ketuk \"Kirim kode\". Masukkan kode verifikasi untuk menyelesaikan."
+      },
+      "googleLogin": {
+        "q": "Saya tidak bisa masuk dengan Google",
+        "a": "Di web, Anda bisa memilih akun yang berbeda setiap kali. Jika masih melihat sesi lama, keluar terlebih dulu lalu coba lagi."
+      },
+      "whereIsMyOrder": {
+        "q": "Di mana pesanan saya?",
+        "a": "Buka Akun → Pembelian Saya untuk melihat status: Menunggu bayar, Dikemas, Dalam pengiriman, Selesai, Retur/Refund, atau Dibatalkan."
+      },
+      "walletRefunds": {
+        "q": "Dompet dan refund",
+        "a": "Refund dikembalikan ke metode pembayaran awal atau LakuPay tergantung channel dan kelayakan."
+      },
+      "contactSupport": {
+        "q": "Hubungi dukungan",
+        "a": "Untuk masalah yang belum terselesaikan, hubungi kami via support@laku.com. Sertakan ID pesanan dan deskripsi singkat."
+      }
+    },
+    "backToSettings": "Kembali ke pengaturan",
+    "metaTitle": "Pusat Bantuan"
+  },
+  "communityRules": {
+    "title": "Aturan komunitas",
+    "tabs": {
+      "overview": "Pengantar",
+      "dos": "Boleh",
+      "donts": "Tidak Boleh",
+      "summary": "Ringkasan"
+    },
+    "overview": {
+      "p1": "Selamat datang di Laku Marketplace! Aturan komunitas kami membantu menciptakan lingkungan yang aman, saling menghormati, dan produktif untuk semua pengguna.",
+      "p2": "Pedoman ini berlaku untuk semua interaksi di platform kami, termasuk listing produk, ulasan, pesan, dan diskusi komunitas.",
+      "p3": "Dengan menggunakan Laku, Anda setuju untuk mengikuti standar komunitas ini dan membantu kami menjaga pengalaman marketplace yang positif untuk semua orang.",
+      "p4": "Pelanggaran aturan dapat berakibat peringatan, penghapusan konten, pembatasan akun, atau penangguhan permanen."
+    },
+    "dos": {
+      "title": "Yang sebaiknya Anda lakukan",
+      "sections": {
+        "respect": {
+          "title": "Bersikap sopan & profesional",
+          "body": "• Perlakukan semua pengguna dengan hormat dan sopan\\n• Gunakan bahasa yang santun di semua komunikasi\\n• Berikan masukan yang membantu dan konstruktif\\n• Bersabar dan saling memahami dengan pengguna lain"
+        },
+        "accurate": {
+          "title": "Berikan informasi yang akurat",
+          "body": "• Cantumkan produk dengan deskripsi yang jujur\\n• Gunakan foto produk yang jelas dan berkualitas\\n• Berikan harga dan ketersediaan yang akurat\\n• Perbarui informasi produk secara berkala"
+        },
+        "quality": {
+          "title": "Jaga standar kualitas",
+          "body": "• Pastikan produk memenuhi standar keamanan\\n• Kemas barang dengan aman untuk pengiriman\\n• Berikan layanan pelanggan yang baik\\n• Patuhi kebijakan retur dan refund"
+        },
+        "report": {
+          "title": "Laporkan masalah dengan bertanggung jawab",
+          "body": "• Laporkan perilaku mencurigakan atau tidak pantas\\n• Tandai produk palsu atau ilegal\\n• Hubungi dukungan untuk masalah teknis\\n• Bantu menjaga integritas platform"
+        }
+      }
+    },
+    "donts": {
+      "title": "Yang sebaiknya tidak Anda lakukan",
+      "sections": {
+        "prohibited": {
+          "title": "Konten & perilaku terlarang",
+          "body": "• Dilarang melecehkan, membully, atau ujaran kebencian\\n• Dilarang spam, penipuan, atau aktivitas curang\\n• Dilarang produk palsu atau ilegal\\n• Dilarang konten yang tidak pantas atau menyinggung"
+        },
+        "misleading": {
+          "title": "Praktik menyesatkan",
+          "body": "• Jangan gunakan ulasan atau rating palsu\\n• Jangan memanipulasi hasil pencarian\\n• Jangan membuat akun duplikat\\n• Jangan menyesatkan kualitas produk"
+        },
+        "privacy": {
+          "title": "Pelanggaran privasi & keamanan",
+          "body": "• Jangan membagikan informasi pribadi di ruang publik\\n• Jangan mencoba meretas atau mengeksploitasi platform\\n• Jangan gunakan metode pembayaran yang tidak resmi\\n• Jangan melanggar hak kekayaan intelektual"
+        },
+        "abuse": {
+          "title": "Penyalahgunaan platform",
+          "body": "• Jangan mengakali kebijakan platform\\n• Jangan gunakan alat otomatis tanpa izin\\n• Jangan melakukan manipulasi harga\\n• Jangan mengganggu transaksi pengguna lain"
+        }
+      }
+    },
+    "summary": {
+      "title": "Ringkasan",
+      "coreTitle": "Prinsip inti",
+      "coreBody": "Laku Marketplace dibangun di atas kepercayaan, rasa hormat, dan manfaat bersama. Kami berharap semua pengguna berkontribusi positif di komunitas.",
+      "takeawaysTitle": "Poin penting:",
+      "takeaways": "• Bersikap jujur, sopan, dan profesional dalam semua interaksi\\n• Berikan informasi produk yang akurat dan layanan yang baik\\n• Laporkan pelanggaran dan bantu menjaga integritas platform\\n• Hormati privasi dan kekayaan intelektual orang lain\\n• Patuhi hukum dan peraturan yang berlaku",
+      "enforcementTitle": "Penegakan",
+      "enforcementBody": "Pelanggaran ditinjau per kasus. Kami dapat memberikan peringatan, menghapus konten, membatasi akun, atau menangguhkan pengguna yang berulang kali melanggar aturan.",
+      "questionsTitle": "Ada pertanyaan?",
+      "questionsBody": "Jika Anda punya pertanyaan tentang aturan ini atau perlu melaporkan pelanggaran, silakan hubungi tim dukungan melalui Pusat Bantuan."
+    },
+    "backToSettings": "Kembali ke pengaturan",
+    "metaTitle": "Aturan komunitas"
+  },
+  "policies": {
+    "headerTitle": "Keamanan & privasi",
+    "tabs": {
+      "privacy": "Kebijakan privasi",
+      "terms": "Syarat & ketentuan"
+    },
+    "privacy": {
+      "title": "Kebijakan privasi",
+      "intro": "Kebijakan Privasi ini menjelaskan bagaimana Laku mengumpulkan, menggunakan, mengungkapkan, dan melindungi informasi pribadi Anda ketika Anda menggunakan aplikasi dan layanan marketplace kami.",
+      "sections": {
+        "collectTitle": "1. Informasi yang kami kumpulkan",
+        "collectBody": "• Data akun: nama, nomor telepon, negara/wilayah, email, detail profil.\\n• Data autentikasi: kode verifikasi (WhatsApp/SMS), pengenal perangkat untuk pencegahan penipuan.\\n• Data transaksi: pesanan, pembayaran, refund, voucher, saldo dompet (LakuPay), diskon dan bonus.\\n• Data penggunaan: halaman yang dilihat, tombol yang diklik, versi perangkat dan aplikasi, lokasi perkiraan (negara/wilayah).\\n• Komunikasi: pesan dengan dukungan dan preferensi notifikasi.",
+        "useTitle": "2. Bagaimana kami menggunakan informasi",
+        "useBody": "• Menyediakan dan meningkatkan fitur inti termasuk pembuatan akun, pemrosesan pesanan, dan pengelolaan dompet.\\n• Mengautentikasi identitas Anda, mengirim kode verifikasi, dan melindungi dari penipuan/penyalahgunaan.\\n• Mempersonalisasi pengalaman (mis. terakhir dilihat, beli lagi) sesuai standar Laku.\\n• Berkomunikasi tentang pesanan, promo, dan update layanan.\\n• Memenuhi kewajiban hukum dan menegakkan Syarat & Ketentuan.",
+        "shareTitle": "3. Berbagi dan pengungkapan",
+        "shareBody": "• Penyedia layanan: pemrosesan pembayaran, analitik, hosting cloud, dan komunikasi sesuai kontrak.\\n• Mitra bisnis: bila Anda ikut serta layanan tertentu, kami dapat membagikan data minimal untuk memenuhi permintaan Anda.\\n• Kewajiban hukum: untuk mematuhi hukum/peraturan atau permintaan yang sah.\\n• Pengalihan: dalam merger, akuisisi, atau penjualan aset, kami akan memberi tahu Anda bila diwajibkan secara hukum.",
+        "retentionTitle": "4. Retensi data",
+        "retentionBody": "Kami menyimpan informasi pribadi hanya selama diperlukan untuk menyediakan layanan, memenuhi kewajiban hukum, menyelesaikan sengketa, dan menegakkan perjanjian. Periode retensi berbeda sesuai jenis data dan persyaratan regulasi.",
+        "rightsTitle": "5. Hak Anda",
+        "rightsBody": "Tergantung hukum setempat, Anda dapat meminta akses, koreksi, penghapusan, pembatasan, atau portabilitas data. Anda juga dapat menolak pemrosesan tertentu atau menarik persetujuan.",
+        "securityTitle": "6. Keamanan",
+        "securityBody": "Kami menggunakan pengamanan standar industri termasuk enkripsi saat transmisi, penyimpanan kredensial yang aman, autentikasi berbasis risiko, dan kontrol akses. Walau tidak ada sistem yang sempurna, kami terus meningkatkan perlindungan.",
+        "childrenTitle": "7. Anak-anak",
+        "childrenBody": "Laku tidak ditujukan untuk anak di bawah 13 tahun (atau usia minimum di yurisdiksi Anda). Kami tidak dengan sengaja mengumpulkan informasi pribadi dari anak-anak.",
+        "changesTitle": "8. Perubahan kebijakan ini",
+        "changesBody": "Kami dapat memperbarui kebijakan ini untuk mencerminkan perubahan praktik atau kebutuhan hukum. Kami akan memposting pembaruan di aplikasi dan memperbarui tanggal efektif."
+      }
+    },
+    "terms": {
+      "title": "Syarat & ketentuan",
+      "intro": "Syarat ini mengatur akses dan penggunaan Anda atas aplikasi dan layanan marketplace Laku. Dengan menggunakan layanan kami, Anda menyetujui Syarat ini.",
+      "sections": {
+        "accountsTitle": "1. Akun",
+        "accountsBody": "• Anda harus memberikan informasi yang akurat dan terbaru. Anda bertanggung jawab menjaga keamanan akun.\\n• Login sosial (mis. Google) harus terhubung ke email yang valid. Kami dapat meminta verifikasi tambahan.",
+        "ordersTitle": "2. Pesanan dan pembayaran",
+        "ordersBody": "• Harga, promo, dan ketersediaan stok dapat berubah.\\n• Pembayaran dapat diproses oleh penyedia pihak ketiga. Refund mengikuti aturan produk dan channel.\\n• Sengketa dan chargeback akan ditinjau sesuai kebijakan dan bukti yang diberikan.",
+        "walletTitle": "3. Dompet dan voucher",
+        "walletBody": "• Saldo LakuPay, bonus, dan diskon mengikuti aturan kelayakan dan masa berlaku.\\n• Penyalahgunaan, penipuan, atau pelanggaran kebijakan dapat menyebabkan penangguhan atau hangusnya benefit sesuai hukum.",
+        "useTitle": "4. Penggunaan yang diperbolehkan",
+        "useBody": "Anda setuju untuk tidak: melanggar hukum; melanggar HKI; reverse engineer; spam; merugikan pengguna; atau mengganggu layanan. Kami dapat menangguhkan akun yang terlibat aktivitas terlarang.",
+        "ipTitle": "5. Hak kekayaan intelektual",
+        "ipBody": "Merek dagang, logo, dan konten Laku dilindungi hukum. Anda tidak boleh menggunakan branding kami tanpa izin tertulis sebelumnya.",
+        "liabilityTitle": "6. Tanggung jawab",
+        "liabilityBody": "Sejauh diizinkan hukum, Laku tidak bertanggung jawab atas kerugian tidak langsung/insidental/konsekuensial. Tanggung jawab agregat kami dibatasi pada jumlah yang Anda bayar dalam 6 bulan terakhir.",
+        "terminationTitle": "7. Penghentian",
+        "terminationBody": "Kami dapat menangguhkan atau menghentikan akses Anda karena pelanggaran kebijakan, aktivitas ilegal, atau risiko bagi pengguna. Anda dapat berhenti menggunakan layanan kapan saja.",
+        "lawTitle": "8. Hukum yang berlaku",
+        "lawBody": "Syarat ini diatur oleh hukum setempat yang berlaku di wilayah operasi Laku atau sesuai hukum perlindungan konsumen yang wajib."
+      }
+    },
+    "actions": {
+      "understand": "Saya mengerti"
+    },
+    "metaTitle": "Kebijakan",
+    "backToSettings": "Kembali ke pengaturan"
+  }
+}

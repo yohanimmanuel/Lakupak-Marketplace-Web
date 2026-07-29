@@ -1,0 +1,1335 @@
+{
+  "common": {
+    "loading": "Loading…",
+    "error": "Something went wrong",
+    "tryAgain": "Try again",
+    "close": "Close",
+    "save": "Save",
+    "edit": "Edit",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "send": "Send",
+    "processing": "Processing…",
+    "viewAll": "View All",
+    "viewAllLower": "View all",
+    "all": "All",
+    "back": "Back",
+    "optional": "optional"
+  },
+  "nav": {
+    "home": "Home",
+    "categories": "Categories",
+    "orders": "Orders",
+    "notifications": "Notifications",
+    "account": "Account",
+    "cart": "Cart",
+    "login": "Log in",
+    "register": "Sign up",
+    "registerFree": "Sign up free",
+    "logout": "Log out",
+    "settings": "Settings",
+    "profile": "My profile",
+    "myOrders": "My orders",
+    "myCart": "My cart",
+    "openInApp": "Open in app",
+    "allProducts": "All products",
+    "iAmDistributor": "I'm a distributor",
+    "accountFallback": "Account"
+  },
+  "header": {
+    "searchPlaceholder": "Search products…",
+    "searchLabel": "Search products",
+    "homeAria": "Laku Marketplace, home",
+    "cartAria": "Cart",
+    "cartCountAria": "Cart, {{count}} items",
+    "messagesAria": "Messages",
+    "mainNavAria": "Main navigation",
+    "utilityNavAria": "Site links",
+    "downloadApp": "Download Laku Mobile app",
+    "downloadAppShort": "Download app",
+    "downloadAppAria": "Download the Laku mobile app"
+  },
+  "home": {
+    "greeting": "Hi, {{name}}",
+    "guestLabel": "Laku wholesale marketplace",
+    "heroTitle": "Stock your store straight from verified distributors",
+    "specialOffers": "Special Offers",
+    "featured": "Featured Products",
+    "emptyCatalog": "The catalog is unavailable right now. Please reload this page shortly.",
+    "distributorCta": {
+      "title": "Have products to distribute?",
+      "body": "Distributors manage their catalog, pricing, and orders in the Laku Dashboard.",
+      "action": "Start selling on Laku"
+    }
+  },
+  "offers": {
+    "title": "Special Offers",
+    "intro": "Limited-time promotions from Laku for marketplace buyers.",
+    "states": {
+      "signInToView": "Log in to view special offers",
+      "emptyTitle": "No offers right now",
+      "emptyHint": "Check back soon for new promotions.",
+      "noLongerAvailable": "This offer is no longer available.",
+      "noDetails": "No additional details for this offer."
+    }
+  },
+  "addresses": {
+    "title": "My Addresses",
+    "addNew": "Add address",
+    "editTitle": "Edit address",
+    "emptyTitle": "No addresses yet",
+    "emptyBody": "Add a delivery address for faster checkout.",
+    "defaultBadge": "Default",
+    "delete": "Delete address",
+    "deleteConfirm": "Delete this address?",
+    "saved": "Address saved.",
+    "deleted": "Address deleted.",
+    "fields": {
+      "fullName": "Recipient name",
+      "phone": "Phone",
+      "address": "Full address",
+      "label": "Label",
+      "isDefault": "Use as default address"
+    },
+    "labels": {
+      "home": "Home",
+      "work": "Work",
+      "store": "Store"
+    },
+    "errors": {
+      "required": "Name, phone, and address are required.",
+      "save": "Could not save the address.",
+      "delete": "Could not delete the address."
+    }
+  },
+  "whatIsLaku": {
+    "title": "What is Laku?",
+    "body": "Laku connects warungs and retail stores with FMCG distributors across Indonesia. Browse the catalog and complete your order right here.",
+    "verifiedTitle": "Verified distributors",
+    "verifiedBody": "Every seller on Laku is verified first, so you always know where your stock comes from.",
+    "wholesaleTitle": "Wholesale carton pricing",
+    "wholesaleBody": "See per-pack and per-carton pricing before you order, without asking around.",
+    "deliveryTitle": "Delivered to your store",
+    "deliveryBody": "Order, pay, and track delivery until the goods reach your store.",
+    "browseCategories": "Browse categories"
+  },
+  "footer": {
+    "about": "A wholesale marketplace for warungs and retail stores. Order directly from verified distributors, compare prices, and track deliveries in one place.",
+    "exploreTitle": "Explore",
+    "appTitle": "Laku on your phone",
+    "appBody": "The app adds instant notifications, live delivery tracking, and distributor chat.",
+    "copyright": "© {{year}} Laku. Wholesale marketplace for Indonesian retailers."
+  },
+  "categories": {
+    "title": "Categories",
+    "description": "Browse wholesale product categories on Laku: food & beverage, cleaning, home appliances, and more.",
+    "browseByCategory": "Browse by category",
+    "newThisWeek": "New This Week",
+    "empty": "No products to show yet."
+  },
+  "search": {
+    "allProducts": "All products",
+    "resultsFor": "Results for \"{{query}}\"",
+    "metaResultsFor": "Search results for \"{{query}}\"",
+    "categoryWholesale": "Wholesale {{category}}",
+    "found": "{{count}} products found",
+    "noMatch": "No matching products",
+    "didYouMean": "Did you mean",
+    "emptyTitle": "Nothing matched yet",
+    "emptyBody": "Try a different keyword, or browse categories to see what nearby distributors have in stock.",
+    "viewCategories": "View categories",
+    "filterAria": "Category filter",
+    "paginationAria": "Results pagination",
+    "previous": "Previous",
+    "next": "Next",
+    "pageOf": "Page {{page}} of {{total}}",
+    "metaDescriptionQuery": "Wholesale products matching \"{{query}}\" from verified distributors on Laku.",
+    "metaDescriptionCategory": "Browse wholesale {{category}} products on Laku.",
+    "metaDescriptionAll": "Browse wholesale products on Laku.",
+    "sortLabel": "Sort",
+    "filters": "Filters",
+    "showingCount": "Showing {{count}}",
+    "sort": {
+      "relevance": "Relevance",
+      "latest": "Newest",
+      "topSales": "Top sales",
+      "priceLow": "Price: low to high",
+      "priceHigh": "Price: high to low"
+    },
+    "salesChannel": {
+      "wholesale": "Wholesale",
+      "retail": "Retail"
+    },
+    "filterSheet": {
+      "ratingMin": "Minimum rating",
+      "ratingPlus": "{{rating}}+",
+      "minPrice": "Min price",
+      "maxPrice": "Max price",
+      "salesChannel": "Sales channel",
+      "reset": "Reset filters"
+    }
+  },
+  "product": {
+    "notFound": "Product not found",
+    "sold": "{{count}} sold",
+    "inStock": "In stock",
+    "outOfStock": "Out of stock",
+    "promoBuyGet": "Buy {{min}} get {{free}} free",
+    "freeItems": "+{{count}} free",
+    "description": "Product description",
+    "reviewsTitle": "Customer Reviews",
+    "reviewsSummary": "from {{count}} reviews",
+    "reviewsCount": "reviews",
+    "moreReviews": "More reviews",
+    "moreReviewsA11y": "Open more reviews",
+    "noReviewsYet": "No Reviews Yet",
+    "relativeTime": {
+      "today": "Today",
+      "yesterday": "Yesterday",
+      "daysAgo": "{{count}} days ago",
+      "weekAgo": "1 week ago",
+      "weeksAgo": "{{count}} weeks ago",
+      "recently": "Recently"
+    },
+    "related": "You may also like",
+    "sellerInfo": "Seller information",
+    "distributorFallback": "Laku distributor",
+    "sellerReviews": "{{count}} reviews",
+    "viewShop": "View shop",
+    "viewSellerInfo": "Seller details",
+    "quantity": "Quantity",
+    "quantityAria": "Quantity",
+    "decrease": "Decrease quantity",
+    "increase": "Increase quantity",
+    "total": "Total",
+    "unitBreakdown": "{{count}} · {{price}}",
+    "buyNow": "Buy now",
+    "addToCart": "Add to cart",
+    "chatNow": "Chat Now",
+    "addedToCart": "Added to cart",
+    "addFavorite": "Add to favourites",
+    "removeFavorite": "Remove from favourites",
+    "outOfStockNote": "This product is currently out of stock.",
+    "minimumOrder": "Minimum order: {{count}}",
+    "assuranceTitle": "Product assurance",
+    "assurance": {
+      "halalCertified": "Halal certified",
+      "bpomApproved": "BPOM approved",
+      "returnDays": "{{count}}-day returns",
+      "originalProduct": "Original product"
+    },
+    "addToCartError": "Could not add this product to your cart.",
+    "favoriteError": "Could not update your favourites.",
+    "notProvided": "Not provided",
+    "leadDaysRange": "{{min}}-{{max}} days",
+    "leadDaysSingle": "{{days}} days",
+    "leadDaysMin": "{{days}}+ days",
+    "estimatedDays": "{{min}}-{{max}} business days",
+    "estimatedDaysSingle": "{{days}} business days",
+    "estimatedDaysMin": "{{days}}+ business days",
+    "share": "Share",
+    "linkCopied": "Link copied",
+    "noImage": "No image",
+    "viewImage": "View image {{index}}",
+    "estimatedDelivery": "Estimated delivery",
+    "shippedFrom": "Ships from",
+    "brand": "Brand",
+    "shareText": "{{name}} — {{price}} on Laku",
+    "metaDescription": "Wholesale product on Laku."
+  },
+  "productReviewsList": {
+    "title": "Reviews",
+    "titleWithName": "Reviews · {{productName}}",
+    "back": "Back to product",
+    "overall": "Overall rating",
+    "latest": "Latest Reviews",
+    "failed": "Failed to load reviews.",
+    "openImage": "Open review image",
+    "close": "Close",
+    "pagination": "Reviews pagination",
+    "prev": "Previous",
+    "next": "Next",
+    "pageOf": "Page {{page}} of {{total}}"
+  },
+  "cart": {
+    "title": "Cart",
+    "emptyTitle": "Your cart is empty",
+    "emptyBody": "Add the wholesale products you need, then complete the order right here.",
+    "startShopping": "Start shopping",
+    "summaryTitle": "Order summary",
+    "subtotal": "Subtotal",
+    "shipping": "Shipping",
+    "shippingNote": "Agreed with the distributor",
+    "total": "Total",
+    "checkout": "Continue to checkout",
+    "remove": "Remove",
+    "packageInfo": "{{packageType}}",
+    "freeItems": "+{{count}} free",
+    "updateError": "Could not update your cart.",
+    "splitNote": "Products from {{count}} distributors will be split into {{count}} separate orders.",
+    "signedOutTitle": "Log in to see your cart",
+    "signedOutBody": "Your cart syncs with the Laku app once you log in.",
+    "metaDescription": "Wholesale products ready for you to order on Laku."
+  },
+  "checkout": {
+    "title": "Checkout",
+    "signedOutTitle": "Log in to check out",
+    "signedOutBody": "Place orders directly on the Laku website once you log in.",
+    "emptyTitle": "Nothing to order",
+    "emptyBody": "Add products to your cart first.",
+    "findProducts": "Find products",
+    "addressTitle": "Delivery address",
+    "recipientName": "Recipient name",
+    "phone": "Phone number",
+    "storeName": "Store name (optional)",
+    "fullAddress": "Full address",
+    "addressPlaceholder": "Street, number, village, district, city, postal code",
+    "addressSaveNote": "This address is also saved to your profile for future orders.",
+    "deliveryTitle": "Delivery method",
+    "pickupDate": "Pickup date (optional)",
+    "pickupTime": "Pickup time (optional)",
+    "deliveryDate": "Delivery date (optional)",
+    "deliveryTime": "Delivery time (optional)",
+    "scheduleNote": "The schedule is a request. The distributor will confirm availability.",
+    "paymentTitle": "Payment method",
+    "summaryTitle": "Order summary",
+    "subtotal": "Subtotal",
+    "shipping": "Shipping",
+    "shippingNote": "Agreed with the distributor",
+    "totalPayment": "Total payment",
+    "splitNote": "This will be split into {{count}} orders, one per distributor.",
+    "placeOrder": "Place order",
+    "placing": "Placing your order…",
+    "terms": "By placing this order you agree to Laku's wholesale purchase terms.",
+    "lineSummary": "{{quantity}} · {{price}}",
+    "lineSummaryWithPackage": "{{quantity}} {{packageType}} · {{price}}",
+    "freeItems": "+{{count}} free",
+    "metaDescription": "Complete your wholesale order on Laku.",
+    "errors": {
+      "sessionExpired": "Your session expired. Please log in again.",
+      "delivery": "Choose a delivery method.",
+      "name": "Recipient name is required.",
+      "phone": "Phone number is required.",
+      "address": "Delivery address is required.",
+      "empty": "There is nothing to order.",
+      "productMissing": "Product not found."
+    }
+  },
+  "delivery": {
+    "self_pickup": {
+      "label": "Self pickup",
+      "description": "Collect the order yourself at the distributor's warehouse or store."
+    },
+    "seller_delivery": {
+      "label": "Seller/distributor delivery",
+      "description": "The distributor arranges delivery to your address."
+    },
+    "buyer_courier": {
+      "label": "Buyer-arranged courier",
+      "description": "You arrange your own courier to collect the order."
+    }
+  },
+  "payment": {
+    "bank_transfer": {
+      "label": "Bank transfer",
+      "description": "Transfer manually to the distributor's account, then upload the receipt."
+    },
+    "cod": {
+      "label": "Cash on Delivery (COD)",
+      "description": "Pay in cash when the order arrives."
+    }
+  },
+  "checkoutSuccess": {
+    "metaTitle": "Order Placed",
+    "title": "Order placed successfully!",
+    "subtitleSingle": "The distributor has received your order.",
+    "subtitleMulti": "{{count}} orders were created because the products come from different distributors.",
+    "awaitingTransfer": "Awaiting bank transfer",
+    "codNote": "Paid in cash on arrival",
+    "viewDetail": "View details",
+    "payNow": "Pay now",
+    "myOrders": "My orders",
+    "keepShopping": "Keep shopping",
+    "nextSteps": "What happens next",
+    "stepPayTitle": "Complete the payment",
+    "stepPayBody": "For bank transfers, upload your payment receipt so the distributor can verify the order.",
+    "stepProcessTitle": "The distributor processes your order",
+    "stepProcessBody": "The order is confirmed and then packed by the distributor.",
+    "stepShipTitle": "Delivery is on the way",
+    "stepShipBody": "Track the delivery status on the order details page."
+  },
+  "orders": {
+    "title": "Orders",
+    "count": "{{count}} orders",
+    "none": "No orders yet",
+    "tabAria": "Order filters",
+    "tabs": {
+      "all": "All",
+      "to_pay": "To Pay",
+      "to_ship": "To Ship",
+      "to_receive": "To Receive",
+      "completed": "Completed",
+      "cancelled": "Cancelled",
+      "returned": "Returned"
+    },
+    "emptyTitle": "No orders yet",
+    "emptyBody": "Browse the wholesale catalog, then place your first order right here.",
+    "emptyFilteredTitle": "No orders in this tab yet",
+    "emptyFilteredBody": "Orders matching this filter will appear here.",
+    "startShopping": "Start shopping",
+    "syncNote": "Your orders sync with the Laku Marketplace app.",
+    "viewDetails": "View details",
+    "payOrder": "Pay order",
+    "itemsTotal": "{{count}} items · {{amount}}",
+    "moreProducts": "+{{count}} more products",
+    "freeItems": "+{{count}} free",
+    "signedOutTitle": "Log in to see your orders",
+    "signedOutBody": "Order history, delivery status, and reordering are available once you log in.",
+    "expiredTitle": "Your session has expired",
+    "expiredBody": "Log in again to view your order history.",
+    "metaDescription": "Track your wholesale orders on Laku."
+  },
+  "orderStatus": {
+    "pending": "Pending",
+    "confirmed": "Confirmed",
+    "packed": "Packed",
+    "shipped": "Shipped",
+    "delivered": "Delivered",
+    "received": "Completed",
+    "cancelled": "Cancelled",
+    "returned": "Returned",
+    "failed": "Failed",
+    "unknown": "Unknown status"
+  },
+  "orderStatusMessage": {
+    "pending": "Your order is waiting to be processed",
+    "confirmed": "Your order has been confirmed",
+    "packed": "Your order has been packed",
+    "shipped": "Your order is on the way",
+    "delivered": "Your order has been delivered",
+    "received": "Your order is complete",
+    "cancelled": "Your order was cancelled",
+    "returned": "Your order was returned",
+    "failed": "Delivery failed",
+    "unknown": "Your order was updated"
+  },
+  "orderTimeline": {
+    "Pending": "Order placed",
+    "Confirmed": "Confirmed by distributor",
+    "Packed": "Being packed",
+    "Shipped": "In delivery",
+    "Delivered": "Arrived",
+    "Received": "Order complete"
+  },
+  "orderDetails": {
+    "metaTitle": "Order Details",
+    "title": "Order details",
+    "backToOrders": "Back to orders",
+    "estimatedArrival": "Estimated arrival {{date}}",
+    "recipient": "Recipient",
+    "phone": "Phone",
+    "address": "Address",
+    "schedule": "Schedule",
+    "logistics": "Logistics",
+    "trackingNumber": "Tracking number",
+    "note": "Note",
+    "distributorInfo": "Distributor information",
+    "productInfo": "Product information",
+    "productTotal": "Product total",
+    "shippingSeparate": "Cost agreed separately",
+    "shipping": "Delivery",
+    "discount": "Discount",
+    "orderTotal": "Order total",
+    "orderInfo": "Order information",
+    "orderId": "Order ID",
+    "paymentMethod": "Payment method",
+    "paymentStatus": "Payment status",
+    "paid": "Paid",
+    "unpaid": "Unpaid",
+    "orderDate": "Order date",
+    "proofSubmitted": "Payment receipt sent",
+    "receivedAt": "Order received",
+    "cancelReason": "Cancellation reason",
+    "returnStatus": "Return status",
+    "itemUnits": "{{quantity}} {{packageType}}",
+    "freeItems": "+{{count}} free",
+    "actionsTitle": "Actions",
+    "payOrder": "Pay order",
+    "markReceived": "Order received",
+    "requestReturn": "Request return",
+    "cancelOrder": "Cancel order",
+    "writeReview": "Write a review",
+    "editReview": "Edit review",
+    "viewSellerInfo": "Seller information",
+    "viewDistributorDetails": "Distributor details",
+    "cancelReasonTitle": "Cancellation reason",
+    "returnReasonTitle": "Return reason",
+    "detailPlaceholder": "Add a note (optional)",
+    "actionSuccess": "Done.",
+    "actionError": "Could not process the request.",
+    "receivedSuccess": "Order marked as received.",
+    "cancelSuccess": "Order cancelled.",
+    "returnSuccess": "Return request sent.",
+    "signedOutTitle": "Log in to view this order",
+    "signedOutBody": "Order details are only available to the account that placed the order.",
+    "supportTitle": "Support center",
+    "supportReturnInfo": "Return & refund info",
+    "supportHelpCenter": "Order help center",
+    "supportInvoice": "View invoice",
+    "supportReport": "Report distributor"
+  },
+  "orderHelpCenter": {
+    "metaTitle": "Order Help Center",
+    "title": "Order Help Center",
+    "backToOrder": "Back to order",
+    "overviewTitle": "Order help overview",
+    "overviewBody": "This page gives a short guide for tracking your order and knowing who to contact. Any actions such as cancel, rate, or request return/refund are done in the main order details screen.",
+    "orderId": "Order ID",
+    "openHelpCenter": "Open Help Center",
+    "sections": {
+      "deliveryStatusTitle": "See delivery status",
+      "deliveryStatusBody": "Open the order details page to see the latest status, delivery partner, tracking number, and any delivery notes for this order.",
+      "statusBasicsTitle": "Order status basics",
+      "statusBasicsNote": "Some options (like rate order or request return/refund) only appear after certain statuses for buyer and seller protection.",
+      "contactSellerTitle": "Contact seller",
+      "contactSellerBody": "Use Contact seller from the order details when delivery looks late, product details are unclear, or the parcel you receive does not match the order.",
+      "contactSupportTitle": "Contact Laku support",
+      "contactSupportBody": "Contact Laku support through the main Help Center if you cannot reach the seller, see a payment or refund issue, your status is stuck for too long, or you suspect fraud or policy abuse."
+    },
+    "statusBullets": {
+      "pendingConfirmedTitle": "Pending / Confirmed",
+      "pendingConfirmedDesc": "seller is preparing your order",
+      "packedShippedTitle": "Packed / Shipped",
+      "packedShippedDesc": "parcel is with the logistics partner",
+      "deliveredTitle": "Delivered",
+      "deliveredDesc": "parcel reached the delivery address",
+      "receivedTitle": "Received",
+      "receivedDesc": "you confirmed the order looks good"
+    }
+  },
+  "returnRefundInfo": {
+    "metaTitle": "Return & Refund Info",
+    "title": "Return & Refund Info",
+    "backToOrder": "Back to order",
+    "requestReturn": "Request a return",
+    "cards": {
+      "basicsTitle": "Return & refund basics",
+      "basicsBody": "You can request a return for eligible items and get a refund after the request is approved and, when required, the items are received back in good condition.",
+      "policyTitle": "Policy comes from product data",
+      "policyBody1": "Each product has its own return policy stored in the product data. It defines whether it is returnable, how many days after delivery you can request a return, and any specific conditions.",
+      "policyBody2": "Laku checks every return/refund request against this policy. Different items in the same order can therefore have different eligibility and refund amounts.",
+      "policyStrong": "Refund approval and amount always depend on the return days and rules saved on each product, not only on the order status.",
+      "quickFlowTitle": "Quick flow",
+      "steps": {
+        "1": "Check the product's return policy and time limit before buying a product.",
+        "2": "Returns and refunds are only available when products have been delivered and received.",
+        "3": "Start a return/refund request from order details.",
+        "4": "Follow any instructions to send back the item with strong proof and evidence of return request.",
+        "5": "Wait for review and refund to your payment method or wallet."
+      }
+    }
+  },
+  "orderInvoice": {
+    "metaTitle": "Order Invoice",
+    "title": "Invoice",
+    "backToOrder": "Back to order",
+    "print": "Print / save PDF",
+    "subtitle": "Tax invoice / Receipt",
+    "orderId": "Order ID",
+    "date": "Date",
+    "status": "Status",
+    "payment": "Payment",
+    "terms": "Terms",
+    "billTo": "Bill to",
+    "shipTo": "Ship to",
+    "item": "Item",
+    "amount": "Amount",
+    "noItems": "No line items",
+    "subtotal": "Subtotal",
+    "discounts": "Discounts",
+    "shipping": "Shipping",
+    "total": "Total",
+    "supportNote": "For order support, contact the seller or Laku Help Center."
+  },
+  "reportDistributor": {
+    "metaTitle": "Report Distributor",
+    "title": "Report Distributor",
+    "backToSeller": "Back to seller",
+    "signedOutTitle": "Log in to submit a report",
+    "signedOutBody": "You need an account to report a distributor.",
+    "distributorLabel": "Distributor",
+    "warning": "Please select a reason and add at least one photo as proof (up to 5). Our team will review your report.",
+    "whyTitle": "Why are you reporting this distributor?",
+    "customReasonLabel": "Please specify your reason",
+    "customReasonPlaceholder": "Enter your reason…",
+    "photosLabel": "Photos (required, max {{max}})",
+    "photosHint": "Add at least one image: screenshots, chats, or product photos help us investigate.",
+    "addPhotos": "Add photos",
+    "submit": "Submit Report",
+    "submitting": "Submitting…",
+    "submitted": "Thanks for your report.",
+    "errors": {
+      "signIn": "Please sign in to submit a report.",
+      "invalidDistributor": "Invalid distributor.",
+      "selectReason": "Please select a reason.",
+      "provideReason": "Please provide a custom reason.",
+      "photosRequired": "Please add at least one photo as proof.",
+      "submit": "Failed to submit report. Please try again."
+    },
+    "reasons": {
+      "fraud": {
+        "label": "Suspicious or fraudulent activity",
+        "description": "Fake listings, misleading claims, or scams"
+      },
+      "poor_service": {
+        "label": "Poor service",
+        "description": "Unresponsive, rude, or unhelpful communication"
+      },
+      "quality": {
+        "label": "Product quality concerns",
+        "description": "Repeated quality issues or inaccurate descriptions"
+      },
+      "policy": {
+        "label": "Policy violation",
+        "description": "Behavior that violates marketplace rules"
+      },
+      "other": {
+        "label": "Other reason",
+        "description": "Please specify your reason below"
+      }
+    }
+  },
+  "orderReason": {
+    "cancelMetaTitle": "Cancel Order",
+    "returnMetaTitle": "Return Request",
+    "cancelTitle": "Cancel order",
+    "returnTitle": "Request a return",
+    "cancelBody": "Tell us why you want to cancel this order.",
+    "returnBody": "Tell us why you want to return this order.",
+    "backToOrder": "Back to order details",
+    "selectReason": "Select a reason",
+    "detailLabel": "Additional details",
+    "photosLabel": "Photos (optional, max {{max}})",
+    "photosHint": "Add clear photos of the issue to help us process your request faster.",
+    "submitCancel": "Cancel order",
+    "submitReturn": "Submit return request",
+    "errors": {
+      "detailRequired": "Please describe your reason."
+    }
+  },
+  "orderReview": {
+    "metaTitle": "Product Review",
+    "title": "Rate your order",
+    "editTitle": "Edit your review",
+    "body": "Share your experience with the products and delivery.",
+    "backToOrder": "Back to order details",
+    "productRating": "Product rating",
+    "titlePlaceholder": "Review title (optional)",
+    "commentPlaceholder": "What did you like or dislike?",
+    "photosLabel": "Photos (optional, max {{max}})",
+    "photosHint": "Show the product as you received it.",
+    "deliveryTitle": "Delivery experience",
+    "deliveryBody": "How was the shipping and delivery?",
+    "deliveryCommentPlaceholder": "Comments about delivery (optional)",
+    "submit": "Submit review",
+    "update": "Update review",
+    "success": "Thank you for your review.",
+    "errors": {
+      "ratingRequired": "Please rate every product before submitting."
+    }
+  },
+  "photoUpload": {
+    "add": "Add",
+    "uploading": "…",
+    "remove": "Remove photo",
+    "waitToSubmit": "Please wait until photo upload finishes.",
+    "errors": {
+      "signIn": "Please sign in to upload photos.",
+      "fileMissing": "Choose a photo to upload.",
+      "folder": "Invalid upload destination.",
+      "fileTooLarge": "Photos must be 10MB or smaller.",
+      "fileType": "Use a JPG, PNG, WEBP, or GIF image.",
+      "upload": "Could not upload the photo."
+    }
+  },
+  "distributor": {
+    "metaTitle": "Distributor",
+    "metaTitleNamed": "{{name}}",
+    "followers": "{{count}} followers",
+    "sellerInfo": "Seller information",
+    "viewDetails": "Distributor details",
+    "productsTitle": "Products from this shop",
+    "productCount": "{{count}} products",
+    "emptyProducts": "No products listed yet.",
+    "sortAria": "Sort products",
+    "sort": {
+      "popular": "Popular",
+      "latest": "Latest",
+      "top_sales": "Top sales",
+      "price": "Price",
+      "category": "Category",
+      "categoryAll": "All"
+    },
+    "follow": {
+      "follow": "Follow",
+      "following": "Following",
+      "followA11y": "Follow this distributor",
+      "unfollowA11y": "Unfollow this distributor",
+      "error": "Could not update follow status."
+    }
+  },
+  "distributorDetails": {
+    "metaTitle": "Distributor Details",
+    "metaTitleNamed": "{{name}} · Details",
+    "backToShop": "Back to shop",
+    "about": "About",
+    "infoTitle": "Company information",
+    "industry": "Industry",
+    "years": "Years in operation",
+    "address": "Address",
+    "phone": "Phone",
+    "email": "Email",
+    "noInfo": "No additional company details available.",
+    "reviewsCount": "({{count}} reviews)",
+    "browseProducts": "Browse products"
+  },
+  "sellerInfo": {
+    "metaTitle": "Seller Information",
+    "metaTitleNamed": "{{name}} · Seller",
+    "title": "Seller information",
+    "backToShop": "Back to shop",
+    "companyTitle": "Company information",
+    "companyName": "Company name",
+    "registration": "Business registration number",
+    "industry": "Industry",
+    "years": "Years in operation",
+    "description": "Business description",
+    "address": "Business address",
+    "shippingTitle": "Shipping & delivery preferences",
+    "shippingOptions": "Shipping options",
+    "shipping": {
+      "selfPickup": "Self pickup",
+      "sellerDelivery": "Seller / distributor delivery",
+      "buyerCourier": "Buyer-arranged courier"
+    },
+    "timeSlots": "Delivery time slots",
+    "deliveryDays": "Preferred delivery days",
+    "pickupAddress": "Pickup address",
+    "reviewsTitle": "Buyer reviews",
+    "reviewsSummary": "from {{count}} reviews",
+    "noReviews": "No reviews yet.",
+    "browseShop": "Browse shop",
+    "reportDistributor": "Report distributor"
+  },
+  "cancelReasons": {
+    "changed_mind": "Changed my mind",
+    "found_cheaper": "Found a cheaper price",
+    "wrong_item": "Ordered the wrong product",
+    "delivery_issues": "Delivery issues",
+    "payment_issues": "Payment issues",
+    "seller_issues": "Issues with the seller",
+    "other": "Other"
+  },
+  "returnReasons": {
+    "wrong_item": "Product does not match the order",
+    "defective": "Product is damaged or defective",
+    "not_as_described": "Not as described",
+    "changed_mind": "Changed my mind",
+    "late_delivery": "Delivery was late",
+    "other": "Other"
+  },
+  "payOrder": {
+    "metaTitle": "Pay Order",
+    "title": "Pay order",
+    "backToDetails": "Back to order details",
+    "totalPayment": "Total payment",
+    "productCount": "{{count}} products · {{terms}}",
+    "payTo": "Paid to",
+    "bankTitle": "Bank account (manual transfer)",
+    "bank": "Bank",
+    "accountName": "Account name",
+    "accountNumber": "Account number",
+    "copyAccount": "Copy account number",
+    "paymentTerm": "Payment term",
+    "days": "{{count}} days",
+    "bankMissing": "The distributor has not added bank details yet. Contact them for payment instructions, then upload your receipt here.",
+    "proofTitle": "Payment receipt",
+    "uploadCta": "Upload transfer receipt (JPG, PNG, or PDF)",
+    "uploading": "Uploading…",
+    "changeFile": "Change file",
+    "selectedFile": "Receipt selected",
+    "submittedTitle": "Payment receipt sent",
+    "submittedBody": "The distributor will verify your payment. The order status updates once verification is done.",
+    "viewProof": "View receipt",
+    "editProof": "Change payment receipt",
+    "viewOrder": "View order",
+    "pay": "Pay",
+    "updatePayment": "Update payment",
+    "sending": "Sending…",
+    "codTitle": "Cash on Delivery (COD)",
+    "codBody": "Prepare cash for the order total. Payment goes directly to the distributor or courier when the order arrives. No receipt upload is needed.",
+    "backToOrder": "Back to order details",
+    "securityNote": "Laku never asks for payments to a personal account. Make sure the account name matches the distributor above.",
+    "signedOutTitle": "Log in to pay this order",
+    "signedOutBody": "Only the account that placed the order can pay for it.",
+    "successMessage": "Payment receipt sent. The distributor will verify your order.",
+    "errors": {
+      "invalidOrder": "Invalid order.",
+      "noProof": "Upload your transfer receipt first.",
+      "submit": "Could not send the payment receipt.",
+      "upload": "Could not upload the payment receipt.",
+      "fileMissing": "No file selected.",
+      "fileTooLarge": "Files must be 10MB or smaller.",
+      "fileType": "Use a JPG, PNG, WEBP, or PDF file.",
+      "signIn": "Please log in again."
+    }
+  },
+  "notifications": {
+    "title": "Notifications",
+    "metaDescription": "Order updates and the latest news from Laku.",
+    "orderUpdates": "Order updates",
+    "noOrders": "No orders yet.",
+    "signedOutTitle": "Log in for order updates",
+    "signedOutBody": "Once you log in, your order status appears here. Platform news below is readable without an account.",
+    "latestUpdates": "Latest updates",
+    "emptyCategory": "No updates in this category yet.",
+    "filterAria": "Update category filter",
+    "categories": {
+      "all": "All",
+      "update": "Updates",
+      "promotion": "Promos",
+      "maintenance": "Maintenance",
+      "policy": "Policies"
+    }
+  },
+  "account": {
+    "title": "Account",
+    "metaDescription": "Manage your profile, orders, and favourite products on Laku.",
+    "editProfile": "Edit profile",
+    "addressNotSet": "No address set",
+    "purchases": "My purchases",
+    "orderHistory": "Order history",
+    "toPay": "To pay",
+    "toShip": "Packing",
+    "toReceive": "In delivery",
+    "completed": "Completed",
+    "moreServices": "More services",
+    "favouritesLabel": "Favourites",
+    "favouritesDescription": "Products you liked",
+    "recentlyViewedLabel": "Recently viewed",
+    "recentlyViewedDescription": "Products you opened recently",
+    "buyAgainLabel": "Buy again",
+    "buyAgainDescription": "Products from previous orders",
+    "myNetworks": "My Networks",
+    "viewAllNetworks": "View all networks",
+    "viewAllFollowings": "View all followings",
+    "noNetworksYet": "No networks yet",
+    "networksOrdersCount": "{{count}} orders",
+    "signedOutTitle": "Log in to your Laku account",
+    "signedOutBody": "Use the same account as the app to see your orders and updates."
+  },
+  "myNetworks": {
+    "title": "My Networks",
+    "orders": "{{count}} orders",
+    "lastLabel": "Last: {{date}}",
+    "states": {
+      "emptyTitle": "No Networks Yet",
+      "emptyBody": "Start purchasing from distributors to build your network"
+    }
+  },
+  "followingsPage": {
+    "title": "Followings",
+    "a11y": {
+      "openStore": "Open {{name}} store"
+    },
+    "states": {
+      "loginRequiredTitle": "Login required",
+      "loginRequiredBody": "Please login to view distributors you follow.",
+      "emptyTitle": "No followings yet",
+      "emptyBody": "Follow a distributor to see them here."
+    },
+    "row": {
+      "followed": "Followed"
+    }
+  },
+  "messages": {
+    "title": "Messages",
+    "contactSeller": "Contact seller",
+    "signedOutTitle": "Log in to see messages",
+    "signedOutBody": "Chat with distributors from product and order pages, then find them here.",
+    "list": {
+      "emptyTitle": "No messages yet",
+      "emptyBody": "Chat with distributors from product pages to see them here.",
+      "noBusinessPhone": "No business phone number"
+    },
+    "errors": {
+      "businessPhoneUnavailable": "Business phone number is not available.",
+      "sellerPhoneUnavailable": "Seller phone number is not available for this product.",
+      "sellerPhoneUnavailableForOrder": "Distributor phone number is not available for order {{orderId}}."
+    },
+    "a11y": {
+      "openChatWith": "Open chat with {{name}}"
+    },
+    "whatsapp": {
+      "distributorMessage": "Hi {{name}}, I'd like to ask about your products on Laku Marketplace.",
+      "productInquiry": "Hi, I'm interested in \"{{productName}}\" on Laku Marketplace. Is it available?",
+      "orderUpdate": "Hi, I'd like to ask for an update on my order {{orderId}} on Laku Marketplace. Thank you!"
+    }
+  },
+  "profile": {
+    "metaTitle": "Edit Profile",
+    "title": "Buyer profile",
+    "subtitle": "This information is used for your orders and deliveries.",
+    "backToAccount": "Back to account",
+    "identity": "Identity",
+    "username": "Username",
+    "name": "Full name",
+    "storeName": "Store name",
+    "country": "Country",
+    "bio": "Bio",
+    "bioPlaceholder": "Tell us a little about your business",
+    "contact": "Contact & delivery",
+    "email": "Email",
+    "phone": "Phone",
+    "mainAddress": "Primary address",
+    "addressPlaceholder": "The address used at checkout",
+    "noAddress": "No delivery address selected yet. Pick one from your address book.",
+    "manageAddresses": "Manage address book",
+    "changePhoto": "Change photo",
+    "photoHint": "JPG, PNG, or WEBP, max 5MB.",
+    "uploading": "Uploading…",
+    "save": "Save changes",
+    "saving": "Saving…",
+    "saved": "Profile updated.",
+    "signedOutTitle": "Log in to manage your profile",
+    "signedOutBody": "Your buyer profile syncs with the Laku app.",
+    "errors": {
+      "username": "Username is required.",
+      "email": "That email address is not valid.",
+      "upload": "Could not upload the photo.",
+      "photoTooLarge": "Images must be 5MB or smaller.",
+      "photoType": "Use a JPG, PNG, or WEBP image.",
+      "sessionExpired": "Your session has ended. Please log in again.",
+      "signIn": "Please log in again.",
+      "fileMissing": "File not found."
+    }
+  },
+  "moreService": {
+    "youMayAlsoLike": "You may also like",
+    "browse": "Browse products",
+    "view": "View",
+    "addToCart": "Add to cart",
+    "added": "Added",
+    "removeFavorite": "Remove from favourites",
+    "favourites": {
+      "title": "Favourites",
+      "subtitle": "{{count}} products saved",
+      "subtitleEmpty": "Products you like appear here",
+      "emptyTitle": "No favourites yet",
+      "emptyBody": "Start liking products and they will show up here!",
+      "signedOutTitle": "Log in to see your favourites",
+      "signedOutBody": "Products you like sync with the Laku app."
+    },
+    "recentlyViewed": {
+      "title": "Recently viewed",
+      "subtitle": "{{count}} products you opened recently",
+      "subtitleEmpty": "A history of the products you opened",
+      "emptyTitle": "Nothing viewed yet",
+      "emptyBody": "Start exploring products and they will show up here!",
+      "signedOutTitle": "Log in to see your history",
+      "signedOutBody": "The products you open sync with the Laku app."
+    },
+    "buyAgain": {
+      "title": "Buy again",
+      "subtitle": "{{count}} products from previous orders",
+      "subtitleEmpty": "Products from your order history",
+      "emptyTitle": "No previous orders yet",
+      "emptyBody": "Start shopping to see your order history here!",
+      "signedOutTitle": "Log in to see previous orders",
+      "signedOutBody": "Products you have bought appear here once you log in."
+    }
+  },
+  "settings": {
+    "title": "Settings",
+    "sections": {
+      "myAccount": "My Account",
+      "settings": "Settings",
+      "support": "Support"
+    },
+    "rows": {
+      "accountSecurity": "Account & Security",
+      "myAddresses": "My Addresses",
+      "linkedPayments": "Linked Payment Methods",
+      "notificationSettings": "Notification Settings",
+      "languageSettings": "Language Settings",
+      "helpCenter": "Help Center",
+      "communityRules": "Community Rules",
+      "policies": "Policies"
+    },
+    "logout": "Log out",
+    "comingSoon": "Coming soon",
+    "pages": {
+      "language": {
+        "title": "Language",
+        "subtitle": "Choose the app language"
+      }
+    },
+    "languages": {
+      "id": "Bahasa Indonesia",
+      "en": "English"
+    },
+    "selected": "Selected",
+    "notSelected": "Not selected",
+    "signedOutTitle": "Log in to open settings",
+    "signedOutBody": "Account settings are available once you log in."
+  },
+  "auth": {
+    "loginTitle": "Log in to Laku",
+    "loginSubtitle": "Use the same account as the Laku Marketplace app.",
+    "loginMetaDescription": "Log in to your Laku account to continue buying wholesale.",
+    "noAccount": "Don't have an account?",
+    "registerTitle": "Create Account",
+    "registerSubtitle": "Join Laku Marketplace and start your journey",
+    "registerMetaDescription": "Create a Laku account to order wholesale stock from verified distributors.",
+    "hasAccount": "Already have an account?",
+    "usernameOrEmail": "Email or username",
+    "usernamePlaceholder": "name@store.com",
+    "password": "Password",
+    "passwordHint": "At least 6 characters.",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password",
+    "fullName": "Full name",
+    "storeName": "Store name",
+    "storeNameHint": "Leave blank if it matches your own name.",
+    "username": "Username",
+    "email": "Email",
+    "phone": "Phone number",
+    "phonePlaceholder": "08xxxxxxxxxx",
+    "address": "Delivery address",
+    "submitLogin": "Log in",
+    "submitRegister": "Create Account",
+    "submitting": "Processing…",
+    "loginError": "Incorrect email or password",
+    "loginFailed": "Could not log in. Please try again.",
+    "registerError": "Sign up failed.",
+    "registerFailed": "Sign up failed. Please check your details.",
+    "networkError": "Could not reach the Laku server.",
+    "invalidRequest": "Invalid request",
+    "forgotPassword": {
+      "link": "Forgot password?",
+      "title": "Forgot Password",
+      "passwordHint": "At least 8 characters, with uppercase, lowercase, number, and special character.",
+      "backToLogin": "Back to Login",
+      "alerts": {
+        "enterEmailBody": "Please enter your email address.",
+        "invalidEmailBody": "Please enter a valid email address.",
+        "genericErrorBody": "Something went wrong. Please try again.",
+        "codeRequiredBody": "Please enter the 6-digit code we sent to your email.",
+        "enterNewPasswordBody": "Please enter a new password.",
+        "mismatchBody": "New password and confirmation do not match.",
+        "passwordResetTitle": "Password Reset",
+        "passwordResetBody": "Your password has been reset. You can now log in with your new password.",
+        "invalidOrExpiredCodeBody": "The verification code is invalid or has expired. Please request a new password reset and try again.",
+        "rateLimitedBody": "Too many password reset requests. Please try again in about an hour."
+      },
+      "step1": {
+        "heading": "Reset your password",
+        "subheading": "Enter the email address you use to log in. We'll let you set a new password.",
+        "emailLabel": "Your Email",
+        "emailPlaceholder": "Example@gmail.com",
+        "sending": "Sending…",
+        "continue": "Continue"
+      },
+      "step2": {
+        "heading": "Verify your email",
+        "subheading": "Enter the 6-digit code we sent to your email.",
+        "codeLabel": "Verification Code",
+        "codePlaceholder": "e.g. 123456",
+        "verifying": "Verifying…",
+        "continue": "Continue"
+      },
+      "step3": {
+        "heading": "Create new password",
+        "subheading": "Choose a strong new password for your account.",
+        "newPasswordLabel": "New Password",
+        "newPasswordPlaceholder": "New password",
+        "confirmPasswordLabel": "Confirm Password",
+        "confirmPasswordPlaceholder": "Confirm new password",
+        "resetting": "Resetting…",
+        "resetPassword": "Reset password"
+      }
+    },
+    "signup": {
+      "title": "Create Account",
+      "subtitle": "Join Laku Marketplace and start your journey",
+      "ctaCreateAccount": "Create Account",
+      "creating": "Creating account…",
+      "alreadyHaveAccount": "Already have an account? Log in",
+      "continue": "Continue",
+      "back": "Back",
+      "stepAria": "Step {{step}} of 4",
+      "fullName": "Full Name",
+      "fullNamePlaceholder": "Enter your full name",
+      "email": "Email Address",
+      "emailPlaceholder": "example@gmail.com",
+      "storeName": "Store Name",
+      "storeNamePlaceholder": "Enter your store name",
+      "bioOptional": "Bio (Optional)",
+      "bioPlaceholder": "Tell us about your store",
+      "shippingAddress": "Shipping Address",
+      "locationDetails": "Location Details",
+      "deliveryAddress": "Address",
+      "deliveryAddressPlaceholder": "Street, building, unit, postal code",
+      "recipientName": "Full name",
+      "recipientNamePlaceholder": "Enter the recipient's full name",
+      "deliveryPhone": "Phone Number",
+      "deliveryPhonePlaceholder": "Enter a phone number for delivery",
+      "deliveryPhoneHint": "Used for delivery updates and order contact.",
+      "mapTitle": "Address map preview",
+      "mapLoading": "Finding location…",
+      "mapEnterAddress": "Enter an address to see it on the map",
+      "mapHint": "The map updates as you type your delivery address",
+      "mapNotFound": "Address not found on the map",
+      "mapApproximate": "The pin is approximate — add more address detail for better accuracy",
+      "setDefault": "Make this the primary address",
+      "labelAs": "Label as:",
+      "labels": {
+        "work": "Office",
+        "store": "Store",
+        "home": "Home"
+      },
+      "username": "Username",
+      "usernamePlaceholder": "Create a username",
+      "password": "Password",
+      "passwordPlaceholder": "Create a password",
+      "confirmPassword": "Confirm password",
+      "confirmPasswordPlaceholder": "Repeat your password",
+      "footerBefore": "By signing up, you agree to our ",
+      "footerLink": "Security & Privacy",
+      "footerAfter": ".",
+      "errors": {
+        "missingNameEmail": "Please fill in your name and email.",
+        "invalidEmail": "Please enter a valid email address.",
+        "missingStoreName": "Please fill in your store name.",
+        "missingAddress": "Please fill in your shipping address.",
+        "missingFullName": "Please fill in the recipient's full name.",
+        "missingPhone": "Please fill in a phone number for delivery.",
+        "missingCredentials": "Please complete all fields.",
+        "passwordMismatch": "Passwords do not match.",
+        "weakPassword": "Password must be at least 6 characters."
+      }
+    }
+  },
+  "app": {
+    "metaTitle": "Laku App",
+    "metaDescription": "Download the Laku app for instant notifications, delivery tracking, and distributor chat.",
+    "title": "Take Laku anywhere",
+    "body": "Shopping, checkout, and payment all work on this website. The app adds instant notifications, real-time delivery tracking, and chat with distributors."
+  },
+  "notFound": {
+    "title": "Page not found",
+    "body": "The product may have been unpublished by the distributor, or the link is wrong.",
+    "home": "Go to home"
+  },
+  "promo": {
+    "notFound": "Promo not found",
+    "back": "Back to home",
+    "browse": "Browse products"
+  },
+  "meta": {
+    "siteTitle": "Laku | Marketplace to Buy and Sell Wholesale and Retail Products in Indonesia",
+    "siteDescription": "Browse wholesale products from verified distributors on Laku. Compare prices, check stock, and order straight from the website or the Laku app."
+  },
+  "category": {
+    "Food & Beverage": "Food & Beverage",
+    "Technology": "Technology",
+    "Fashion": "Fashion",
+    "Home & Garden": "Home & Garden",
+    "Sports": "Sports",
+    "Beauty": "Beauty",
+    "Books": "Books",
+    "Automotive": "Automotive",
+    "Health": "Health",
+    "Toys": "Toys",
+    "Office": "Office",
+    "Garden": "Garden",
+    "Jewelry": "Jewelry",
+    "Music": "Music",
+    "Pets": "Pets",
+    "Travel": "Travel",
+    "Art": "Art",
+    "Photography": "Photography",
+    "Gaming": "Gaming",
+    "Furniture": "Furniture",
+    "Tools": "Tools",
+    "Baby": "Baby",
+    "Outdoor": "Outdoor",
+    "Kitchen": "Kitchen",
+    "Bathroom": "Bathroom",
+    "Bedroom": "Bedroom",
+    "Living Room": "Living Room",
+    "Dining": "Dining",
+    "Storage": "Storage",
+    "Lighting": "Lighting",
+    "Decor": "Decor",
+    "Appliances": "Appliances",
+    "Cleaning": "Cleaning",
+    "Organization": "Organization",
+    "Safety": "Safety"
+  },
+  "helpCenter": {
+    "title": "Help Center",
+    "faqTitle": "Frequently Asked Questions",
+    "done": "Done",
+    "faqs": {
+      "verifyPhone": {
+        "q": "How do I verify my phone?",
+        "a": "Choose WhatsApp or SMS in Sign Up, select your country code, enter your number, then tap \"Send code\". Enter the verification code to complete."
+      },
+      "googleLogin": {
+        "q": "I can’t log in with Google",
+        "a": "On web, you can pick a different account each time. If you still see an old session, sign out first and try again."
+      },
+      "whereIsMyOrder": {
+        "q": "Where is my order?",
+        "a": "Go to Account → My Purchases to view status: To Pay, To Ship, To Receive, Completed, Return/Refund, or Cancelled."
+      },
+      "walletRefunds": {
+        "q": "Wallet and refunds",
+        "a": "Refunds are returned to the original payment method or LakuPay depending on the channel and eligibility."
+      },
+      "contactSupport": {
+        "q": "Contact support",
+        "a": "For unresolved issues, contact us via support@laku.com. Provide your order ID and a brief description."
+      }
+    },
+    "backToSettings": "Back to settings",
+    "metaTitle": "Help Center"
+  },
+  "communityRules": {
+    "title": "Community Rules",
+    "tabs": {
+      "overview": "Overview",
+      "dos": "Dos",
+      "donts": "Don'ts",
+      "summary": "Summary"
+    },
+    "overview": {
+      "p1": "Welcome to Laku Marketplace! Our community rules ensure a safe, respectful, and productive environment for all users.",
+      "p2": "These guidelines apply to all interactions on our platform, including product listings, reviews, messages, and community discussions.",
+      "p3": "By using Laku, you agree to follow these community standards and help us maintain a positive marketplace experience for everyone.",
+      "p4": "Violations of these rules may result in warnings, content removal, account restrictions, or permanent suspension."
+    },
+    "dos": {
+      "title": "What You Should Do",
+      "sections": {
+        "respect": {
+          "title": "Be Respectful & Professional",
+          "body": "• Treat all users with respect and courtesy\\n• Use polite language in all communications\\n• Provide helpful and constructive feedback\\n• Be patient and understanding with other users"
+        },
+        "accurate": {
+          "title": "Provide Accurate Information",
+          "body": "• List products with honest descriptions\\n• Use clear, high-quality product photos\\n• Provide accurate pricing and availability\\n• Update product information regularly"
+        },
+        "quality": {
+          "title": "Maintain Quality Standards",
+          "body": "• Ensure products meet safety standards\\n• Package items securely for shipping\\n• Provide excellent customer service\\n• Honor return and refund policies"
+        },
+        "report": {
+          "title": "Report Issues Responsibly",
+          "body": "• Report suspicious or inappropriate behavior\\n• Flag counterfeit or illegal products\\n• Contact support for technical issues\\n• Help maintain platform integrity"
+        }
+      }
+    },
+    "donts": {
+      "title": "What You Shouldn't Do",
+      "sections": {
+        "prohibited": {
+          "title": "Prohibited Content & Behavior",
+          "body": "• No harassment, bullying, or hate speech\\n• No spam, scams, or fraudulent activities\\n• No counterfeit or illegal products\\n• No inappropriate or offensive content"
+        },
+        "misleading": {
+          "title": "Misleading Practices",
+          "body": "• Don't use fake reviews or ratings\\n• Don't manipulate search results\\n• Don't create duplicate accounts\\n• Don't misrepresent product quality"
+        },
+        "privacy": {
+          "title": "Privacy & Security Violations",
+          "body": "• Don't share personal information publicly\\n• Don't attempt to hack or exploit the platform\\n• Don't use unauthorized payment methods\\n• Don't violate intellectual property rights"
+        },
+        "abuse": {
+          "title": "Platform Abuse",
+          "body": "• Don't circumvent platform policies\\n• Don't use automated tools without permission\\n• Don't engage in price manipulation\\n• Don't interfere with other users' transactions"
+        }
+      }
+    },
+    "summary": {
+      "title": "Summary",
+      "coreTitle": "Core Principles",
+      "coreBody": "Laku Marketplace is built on trust, respect, and mutual benefit. We expect all users to contribute positively to our community.",
+      "takeawaysTitle": "Key Takeaways:",
+      "takeaways": "• Be honest, respectful, and professional in all interactions\\n• Provide accurate product information and quality service\\n• Report violations and help maintain platform integrity\\n• Respect others' privacy and intellectual property\\n• Follow all applicable laws and regulations",
+      "enforcementTitle": "Enforcement",
+      "enforcementBody": "Violations are reviewed on a case-by-case basis. We may issue warnings, remove content, restrict accounts, or suspend users who repeatedly violate these rules.",
+      "questionsTitle": "Questions?",
+      "questionsBody": "If you have questions about these rules or need to report a violation, please contact our support team through the Help Center."
+    },
+    "backToSettings": "Back to settings",
+    "metaTitle": "Community Rules"
+  },
+  "policies": {
+    "headerTitle": "Security & Privacy",
+    "tabs": {
+      "privacy": "Privacy Policy",
+      "terms": "Terms & Conditions"
+    },
+    "privacy": {
+      "title": "Privacy Policy",
+      "intro": "This Privacy Policy explains how Laku collects, uses, discloses, and protects your personal information when you use our marketplace applications and services.",
+      "sections": {
+        "collectTitle": "1. Information We Collect",
+        "collectBody": "• Account Data: name, phone number, country/region, email, profile details.\\n• Authentication Data: verification codes (WhatsApp/SMS), device identifiers for fraud prevention.\\n• Transaction Data: orders, payments, refunds, vouchers, wallet balance (LakuPay), discounts and bonuses.\\n• Usage Data: pages viewed, buttons clicked, device and app version, approximate location (country/region).\\n• Communications: messages with support and notifications preferences.",
+        "useTitle": "2. How We Use Information",
+        "useBody": "• Provide and improve core features including account creation, order processing, and wallet management.\\n• Authenticate your identity, send verification codes, and protect against fraud and abuse.\\n• Personalize your experience (e.g., recently viewed, buy again) aligned with Laku standards.\\n• Communicate with you about orders, promotions, and service updates.\\n• Comply with legal obligations and enforce our Terms.",
+        "shareTitle": "3. Sharing and Disclosure",
+        "shareBody": "• Service Providers: payment processing, analytics, cloud hosting, and communications strictly under contract.\\n• Business Partners: where you opt in to specific services, we may share minimal data to fulfil your requests.\\n• Legal Requirements: to comply with applicable laws, regulations, or lawful requests.\\n• Transfers: in a merger, acquisition, or asset sale, we will notify you where legally required.",
+        "retentionTitle": "4. Data Retention",
+        "retentionBody": "We retain personal information only for as long as necessary to provide services, meet legal obligations, resolve disputes, and enforce agreements. Retention periods vary by data type and regulatory requirements.",
+        "rightsTitle": "5. Your Rights",
+        "rightsBody": "Subject to local laws, you may request access, correction, deletion, restriction, or portability of your data. You can also object to certain processing or withdraw consent.",
+        "securityTitle": "6. Security",
+        "securityBody": "We use industry-standard safeguards including encryption in transit, secure credential storage, risk-based authentication, and access controls. While no system is perfectly secure, we continuously improve our protections.",
+        "childrenTitle": "7. Children",
+        "childrenBody": "Laku is not directed to children under the age of 13 (or the minimum age in your jurisdiction). We do not knowingly collect personal information from children.",
+        "changesTitle": "8. Changes to This Policy",
+        "changesBody": "We may update this policy to reflect changes in our practices or legal requirements. We will post updates in-app and revise the effective date."
+      }
+    },
+    "terms": {
+      "title": "Terms & Conditions",
+      "intro": "These Terms govern your access to and use of Laku marketplace applications and services. By using our services, you agree to these Terms.",
+      "sections": {
+        "accountsTitle": "1. Accounts",
+        "accountsBody": "• You must provide accurate, current information. You are responsible for maintaining account security.\\n• Social sign-in (e.g., Google) must map to your valid email. We may require additional verification.",
+        "ordersTitle": "2. Orders and Payments",
+        "ordersBody": "• Prices, promotions, and stock availability may change.\\n• Payments may be processed by third-party providers. Refunds follow product and channel rules.\\n• Disputes and chargebacks will be reviewed according to policy and evidence provided.",
+        "walletTitle": "3. Wallet and Vouchers",
+        "walletBody": "• LakuPay balances, bonuses, and discounts are subject to eligibility and expiry rules.\\n• Misuse, fraud, or policy violations may result in suspension or forfeiture as permitted by law.",
+        "useTitle": "4. Acceptable Use",
+        "useBody": "You agree not to: violate laws; infringe IP; reverse engineer; spam; harm users; or interfere with the service. We may suspend accounts involved in prohibited activities.",
+        "ipTitle": "5. Intellectual Property",
+        "ipBody": "Laku trademarks, logos, and content are protected by law. You may not use our branding without prior written permission.",
+        "liabilityTitle": "6. Liability",
+        "liabilityBody": "To the extent permitted by law, Laku is not liable for indirect, incidental, or consequential damages. Our aggregate liability is limited to amounts you paid within the last 6 months.",
+        "terminationTitle": "7. Termination",
+        "terminationBody": "We may suspend or terminate your access for policy violations, unlawful activity, or risk to users. You may stop using the services at any time.",
+        "lawTitle": "8. Governing Law",
+        "lawBody": "These Terms are governed by applicable local laws where Laku operates or as required by mandatory consumer protection laws."
+      }
+    },
+    "actions": {
+      "understand": "I Understand"
+    },
+    "metaTitle": "Policies",
+    "backToSettings": "Back to settings"
+  }
+}

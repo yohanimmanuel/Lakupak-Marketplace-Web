@@ -1,0 +1,78 @@
+@import "tailwindcss";
+
+/*
+ * Tokens mirror the Laku Marketplace mobile app (constants/Colors.ts + screen styles)
+ * so the website reads as the same product on a bigger screen.
+ */
+@theme {
+  --color-laku-blue: #0a61d7;
+  --color-laku-blue-dark: #084ba6;
+  --color-laku-ink: #111827;
+  --color-laku-muted: #6b7280;
+  --color-laku-faint: #9ca3af;
+  --color-laku-surface: #f9fafb;
+  --color-laku-line: #e5e7eb;
+  --color-laku-chip: #f3f4f6;
+
+  --color-laku-buy: #059c2d;
+  --color-laku-ship: #10b981;
+  --color-laku-alert: #ef4444;
+
+  --color-laku-discount-bg: #fee2e2;
+  --color-laku-discount-ink: #dc2626;
+  --color-laku-promo-bg: #f3e8ff;
+  --color-laku-promo-ink: #9333ea;
+  --color-laku-rating-bg: #fffbeb;
+  --color-laku-rating-line: #fde68a;
+  --color-laku-rating-star: #f59e0b;
+
+  --font-sans: var(--font-geist-sans), ui-sans-serif, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+
+  --radius-card: 6px;
+  --radius-pill: 22px;
+  --radius-sheet: 24px;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: #ffffff;
+  color: var(--color-laku-ink);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Horizontal rails (offers, categories) keep the mobile swipe feel without visible scrollbars. */
+.laku-rail {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.laku-rail::-webkit-scrollbar {
+  display: none;
+}
+
+@keyframes laku-rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.laku-rise {
+  animation: laku-rise 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .laku-rise {
+    animation: none;
+  }
+}
