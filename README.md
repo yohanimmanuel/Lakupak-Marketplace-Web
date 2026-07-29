@@ -1,7 +1,7 @@
-# Laku-Marketplace-Web
+# Laku Marketplace Web
 
 ## Overview
-Laku-Marketplace-Web is the buyer-facing **website** for Laku. It lets verified retailers (warungs, kiosks, small shops) browse the wholesale catalog, open shareable product links, manage accounts and orders in the browser, and hand off into the mobile app when needed. Built with Next.js (App Router) and connected to the existing Laku backend (Next.js + Prisma).
+Laku Marketplace Web is the buyer-facing **website** for Laku. It lets verified retailers (warungs, kiosks, small shops) browse the wholesale catalog, open shareable product links, manage accounts and orders in the browser, and hand off into the mobile app when needed. Built with Next.js (App Router) and connected to the existing Laku backend (Next.js + Prisma).
 
 This is a sibling of `Laku-Marketplace` (Expo buyer app), `Laku-Dashboard` (SaaS + API), and `Laku-Driver`. It owns no data: everything comes from the Dashboard API.
 
@@ -11,7 +11,7 @@ This is a sibling of `Laku-Marketplace` (Expo buyer app), `Laku-Dashboard` (SaaS
 - Marketplace JWT is stored in an httpOnly cookie (`laku_mp_token`) — never exposed to client JavaScript.
 - Browser never calls the Dashboard directly (no CORS); server components and route handlers proxy all API traffic.
 
-## Why Laku-Marketplace-Web
+## Why Laku Marketplace Web
 - Shareable product and promo URLs for WhatsApp / browser discovery.
 - Desktop-friendly wholesale browse and reorder without installing the app first.
 - Same visual language as the mobile Marketplace so both feel like one product.
@@ -44,7 +44,7 @@ This is a sibling of `Laku-Marketplace` (Expo buyer app), `Laku-Dashboard` (SaaS
 ## Data flow
 
 ```
-Browser → Laku-Marketplace-Web (RSC / route handlers) → Laku-Dashboard API
+Browser → Laku Marketplace Web (RSC / route handlers) → Laku Dashboard API
 ```
 
 | Need | Upstream |
