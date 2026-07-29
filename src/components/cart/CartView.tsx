@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState, useTransition } from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
 import { Package, Store, Trash2 } from "lucide-react";
 
 import { removeCartItemAction, updateCartItemAction } from "@/app/actions/cart";
@@ -11,7 +11,7 @@ import FreeItemsBadge from "@/components/ui/FreeItemsBadge";
 import QuantityStepper from "@/components/ui/QuantityStepper";
 import { useTranslations } from "@/i18n/client";
 import type { CartItem } from "@/lib/api/types";
-import { getCartLineTotal, getCartVariant } from "@/lib/cartPricing";
+import { getCartVariant } from "@/lib/cartPricing";
 import { formatCurrency } from "@/lib/format";
 import { getSellerKey } from "@/lib/checkout";
 import { displayPackageType } from "@/lib/packageLabel";
@@ -25,13 +25,44 @@ function quantityOf(item: CartItem): number {
   return Number.isFinite(quantity) && quantity > 0 ? quantity : 1;
 }
 
+function lineTotal(item: CartItem, quantity: number): number {
+  const pieces = Number(item.productData?.piecesPerPackage) || 1;
+  const { unitPrice } = resolveVariantPricing(
+    item.productData,
+    getCartVariant(item),
+  );
+  return unitPrice * pieces * quantity;
+}
+
 export default function CartView({ items }: Props) {
   const t = useTranslations();
   const router = useRouter();
   const [pending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
+  const [quantities, setQuantities] = useState<Record<number, number>>(() =>
+    Object.fromEntries(items.map((item) => [item.id, quantityOf(item)])),
+  );
+  const persistTimers = useRef<Record<number, ReturnType<typeof setTimeout>>>(
+    {},
+  );
 
-  const subtotal = items.reduce((total, item) => total + getCartLineTotal(item), 0);
+  // Seed new lines / drop removed ones without clobbering in-flight edits.
+  useEffect(() => {
+    setQuantities((prev) => {
+      const next: Record<number, number> = {};
+      for (const item of items) {
+        next[item.id] = prev[item.id] ?? quantityOf(item);
+      }
+      return next;
+    });
+  }, [items]);
+
+  useEffect(() => {
+    const timers = persistTimers.current;
+    return () => {
+      for (const timer of Object.values(timers)) clearTimeout(timer);
+    };
+  }, []);
 
   // Grouped for display only: the API splits the order per seller on submit.
   const groups = new Map<string, CartItem[]>();
@@ -40,10 +71,38 @@ export default function CartView({ items }: Props) {
     groups.set(key, [...(groups.get(key) ?? []), item]);
   }
 
-  const mutate = (action: () => Promise<{ ok: boolean; error?: string }>) => {
+  const subtotal = items.reduce((total, item) => {
+    const quantity = quantities[item.id] ?? quantityOf(item);
+    return total + lineTotal(item, quantity);
+  }, 0);
+
+  const persistQuantity = (itemId: number, next: number, revertTo: number) => {
     setError(null);
     startTransition(async () => {
-      const result = await action();
+      const result = await updateCartItemAction(itemId, next);
+      if (!result.ok) {
+        setError(result.error ?? t("cart.updateError"));
+        setQuantities((prev) => ({ ...prev, [itemId]: revertTo }));
+      }
+      router.refresh();
+    });
+  };
+
+  const handleQuantityChange = (item: CartItem, next: number) => {
+    const previous = quantities[item.id] ?? quantityOf(item);
+    setQuantities((prev) => ({ ...prev, [item.id]: next }));
+
+    clearTimeout(persistTimers.current[item.id]);
+    persistTimers.current[item.id] = setTimeout(() => {
+      persistQuantity(item.id, next, previous);
+    }, 300);
+  };
+
+  const removeItem = (itemId: number) => {
+    setError(null);
+    clearTimeout(persistTimers.current[itemId]);
+    startTransition(async () => {
+      const result = await removeCartItemAction(itemId);
       if (!result.ok) setError(result.error ?? t("cart.updateError"));
       router.refresh();
     });
@@ -62,7 +121,7 @@ export default function CartView({ items }: Props) {
             <ul className="divide-y divide-laku-line">
               {sellerItems.map((item) => {
                 const product = item.productData;
-                const quantity = quantityOf(item);
+                const quantity = quantities[item.id] ?? quantityOf(item);
                 const variant = getCartVariant(item);
                 const { unitPrice, option } = resolveVariantPricing(product, variant);
                 const packageType = displayPackageType(product.packageType);
@@ -120,10 +179,8 @@ export default function CartView({ items }: Props) {
                         <QuantityStepper
                           size="sm"
                           value={quantity}
-                          disabled={pending}
-                          onChange={(next) =>
-                            mutate(() => updateCartItemAction(item.id, next))
-                          }
+                          updateOnType
+                          onChange={(next) => handleQuantityChange(item, next)}
                         />
                         <FreeItemsBadge
                           count={freeQty}
@@ -133,7 +190,7 @@ export default function CartView({ items }: Props) {
                         <button
                           type="button"
                           disabled={pending}
-                          onClick={() => mutate(() => removeCartItemAction(item.id))}
+                          onClick={() => removeItem(item.id)}
                           className="inline-flex items-center gap-1.5 text-xs font-semibold text-laku-muted transition-colors hover:text-laku-alert disabled:opacity-50"
                         >
                           <Trash2 className="size-3.5" aria-hidden />
@@ -143,7 +200,7 @@ export default function CartView({ items }: Props) {
                     </div>
 
                     <p className="shrink-0 text-sm font-bold text-laku-ink">
-                      {formatCurrency(getCartLineTotal(item), t.locale)}
+                      {formatCurrency(lineTotal(item, quantity), t.locale)}
                     </p>
                   </li>
                 );

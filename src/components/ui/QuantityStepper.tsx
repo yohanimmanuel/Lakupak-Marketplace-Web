@@ -12,7 +12,7 @@ type Props = {
   max?: number;
   disabled?: boolean;
   size?: "sm" | "md";
-  /** When true, call onChange on each keystroke (PDP total). Cart keeps blur-only. */
+  /** When true, call onChange on each keystroke (PDP and cart totals). */
   updateOnType?: boolean;
 };
 
