@@ -59,7 +59,7 @@ export default async function DistributorShopPage({
 
   const [distributor, reviews, products, session] = await Promise.all([
     getDistributor(distributorId),
-    getDistributorReviews(distributorId),
+    getDistributorReviews(distributorId, { page: 1, limit: 1 }),
     getProductsBySeller(distributorId),
     getSession(),
   ]);
@@ -118,7 +118,11 @@ export default async function DistributorShopPage({
               </h1>
               <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-laku-muted sm:text-sm">
                 {rating > 0 ? (
-                  <span className="inline-flex items-center gap-1 font-semibold text-laku-ink">
+                  <Link
+                    href={`/distributor/${distributorId}/reviews`}
+                    className="inline-flex items-center gap-1 font-semibold text-laku-ink transition-colors hover:text-laku-blue"
+                    aria-label={t("distributor.viewRatingsA11y")}
+                  >
                     <Star
                       className="size-3.5 fill-laku-rating-star text-laku-rating-star"
                       aria-hidden
@@ -127,7 +131,7 @@ export default async function DistributorShopPage({
                     <span className="font-normal text-laku-muted">
                       ({formatNumber(reviewCount, t.locale)})
                     </span>
-                  </span>
+                  </Link>
                 ) : null}
                 {followers > 0 ? (
                   <span>
@@ -151,21 +155,6 @@ export default async function DistributorShopPage({
                 initiallyFollowing={isFollowing}
                 signedIn={Boolean(session)}
               />
-              {session ? (
-                <Link
-                  href={`/distributor/${distributorId}/rate`}
-                  className="inline-flex items-center gap-1 rounded-lg bg-laku-blue/10 px-3.5 py-2 text-sm font-semibold text-laku-blue transition-colors hover:bg-laku-blue/15"
-                >
-                  {t("distributor.rateReview")}
-                </Link>
-              ) : (
-                <Link
-                  href={`/login?next=${encodeURIComponent(`/distributor/${distributorId}/rate`)}`}
-                  className="inline-flex items-center gap-1 rounded-lg bg-laku-blue/10 px-3.5 py-2 text-sm font-semibold text-laku-blue transition-colors hover:bg-laku-blue/15"
-                >
-                  {t("distributor.rateReview")}
-                </Link>
-              )}
               <Link
                 href={`/seller/${distributorId}`}
                 className="inline-flex items-center gap-1 rounded-lg border border-laku-line px-3.5 py-2 text-sm font-semibold text-laku-ink transition-colors hover:border-laku-blue/20 hover:bg-laku-blue/5"

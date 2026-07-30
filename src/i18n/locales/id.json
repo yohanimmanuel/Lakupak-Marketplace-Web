@@ -694,7 +694,21 @@
       "unfollowA11y": "Berhenti mengikuti distributor ini",
       "error": "Gagal memperbarui status mengikuti."
     },
-    "rateReview": "Beri penilaian"
+    "rateReview": "Beri penilaian",
+    "viewRatingsA11y": "Lihat penilaian distributor"
+  },
+  "distributorReviewsList": {
+    "title": "Ulasan distributor",
+    "titleWithName": "Ulasan · {{name}}",
+    "back": "Kembali ke toko",
+    "overall": "Rating keseluruhan",
+    "latest": "Ulasan terbaru",
+    "more": "Lihat ulasan lainnya",
+    "moreA11y": "Buka semua ulasan distributor",
+    "pagination": "Navigasi halaman ulasan",
+    "prev": "Sebelumnya",
+    "next": "Berikutnya",
+    "pageOf": "Halaman {{page}} dari {{total}}"
   },
   "distributorRating": {
     "metaTitle": "Nilai distributor",
@@ -768,6 +782,7 @@
     "reviewsTitle": "Ulasan pembeli",
     "reviewsSummary": "dari {{count}} ulasan",
     "noReviews": "Belum ada ulasan.",
+    "wouldOrderAgain": "Akan order lagi",
     "browseShop": "Jelajahi toko",
     "reportDistributor": "Laporkan distributor"
   },

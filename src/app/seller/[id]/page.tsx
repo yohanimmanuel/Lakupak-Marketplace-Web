@@ -8,19 +8,16 @@ import {
   Building2,
   Check,
   MapPin,
-  MessageSquare,
-  Star,
   Store,
   Truck,
 } from "lucide-react";
 
+import DistributorReviews from "@/components/distributor/DistributorReviews";
 import { getTranslations } from "@/i18n/server";
 import {
   getDistributor,
   getDistributorReviews,
 } from "@/lib/api/marketplace";
-import { getSession } from "@/lib/auth/session";
-import { formatDate, formatNumber } from "@/lib/format";
 
 type Params = Promise<{ id: string }>;
 
@@ -70,10 +67,9 @@ export default async function SellerInformationPage({
 
   if (!Number.isFinite(sellerId) || sellerId <= 0) notFound();
 
-  const [profile, reviewsData, session] = await Promise.all([
+  const [profile, reviewsData] = await Promise.all([
     getDistributor(sellerId),
-    getDistributorReviews(sellerId),
-    getSession(),
+    getDistributorReviews(sellerId, { page: 1, limit: 10 }),
   ]);
 
   if (!profile) notFound();
@@ -85,9 +81,6 @@ export default async function SellerInformationPage({
   const logo = profile.logo?.trim() || null;
   const banner = profile.bannerImage?.trim() || null;
   const prefs = profile.shippingPreferences ?? [];
-  const rating = reviewsData?.overallRating ?? 0;
-  const reviewCount = reviewsData?.totalReviews ?? 0;
-  const reviews = reviewsData?.reviews ?? [];
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-8 md:px-6">
@@ -231,60 +224,12 @@ export default async function SellerInformationPage({
         ) : null}
       </section>
 
-      <section className="mt-4 rounded-2xl bg-white p-5">
-        <div className="mb-4 flex items-center gap-2">
-          <MessageSquare className="size-5 text-laku-muted" aria-hidden />
-          <h2 className="text-sm font-bold text-laku-ink">
-            {t("sellerInfo.reviewsTitle")}
-          </h2>
-        </div>
-
-        <div className="mb-4 flex items-center gap-2">
-          <Star
-            className="size-5 fill-laku-rating-star text-laku-rating-star"
-            aria-hidden
-          />
-          <span className="text-lg font-bold text-laku-ink">
-            {rating > 0 ? rating.toFixed(1) : "—"}
-          </span>
-          <span className="text-sm text-laku-muted">
-            {t("sellerInfo.reviewsSummary", {
-              count: formatNumber(reviewCount, t.locale),
-            })}
-          </span>
-        </div>
-
-        {reviews.length > 0 ? (
-          <ul className="space-y-3">
-            {reviews.map((review) => (
-              <li
-                key={review.id}
-                className="rounded-xl border border-laku-line bg-laku-surface p-4"
-              >
-                <div className="flex items-center justify-between gap-3">
-                  <p className="text-sm font-semibold text-laku-ink">
-                    {review.reviewerDisplayName}
-                  </p>
-                  <span className="inline-flex items-center gap-1 text-xs font-semibold text-laku-ink">
-                    <Star
-                      className="size-3 fill-laku-rating-star text-laku-rating-star"
-                      aria-hidden
-                    />
-                    {review.overallRating.toFixed(1)}
-                  </span>
-                </div>
-                {review.comment ? (
-                  <p className="mt-2 text-sm text-laku-muted">{review.comment}</p>
-                ) : null}
-                <p className="mt-2 text-xs text-laku-faint">
-                  {formatDate(review.createdAt, t.locale)}
-                </p>
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p className="text-sm text-laku-muted">{t("sellerInfo.noReviews")}</p>
-        )}
+      <section className="mt-4">
+        <DistributorReviews
+          distributorId={sellerId}
+          reviews={reviewsData}
+          variant="panel"
+        />
       </section>
 
       <div className="mt-5 flex flex-wrap gap-3">
@@ -293,16 +238,6 @@ export default async function SellerInformationPage({
           className="inline-flex rounded-lg bg-laku-blue px-5 py-3 text-sm font-bold text-white transition-colors hover:bg-laku-blue-dark"
         >
           {t("sellerInfo.browseShop")}
-        </Link>
-        <Link
-          href={
-            session
-              ? `/distributor/${sellerId}/rate`
-              : `/login?next=${encodeURIComponent(`/distributor/${sellerId}/rate`)}`
-          }
-          className="inline-flex rounded-lg border border-laku-line px-5 py-3 text-sm font-semibold text-laku-ink transition-colors hover:bg-laku-surface"
-        >
-          {t("distributor.rateReview")}
         </Link>
         <Link
           href={`/seller/${sellerId}/report`}

@@ -227,7 +227,11 @@ export type DistributorReviews = {
   distributorId: number;
   totalReviews: number;
   overallRating: number;
+  breakdown?: Record<number, number>;
   reviews: DistributorReview[];
+  page?: number;
+  limit?: number;
+  totalPages?: number;
 };
 
 /**

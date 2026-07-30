@@ -694,7 +694,21 @@
       "unfollowA11y": "Unfollow this distributor",
       "error": "Could not update follow status."
     },
-    "rateReview": "Rate & review"
+    "rateReview": "Rate & review",
+    "viewRatingsA11y": "View distributor ratings"
+  },
+  "distributorReviewsList": {
+    "title": "Distributor reviews",
+    "titleWithName": "Reviews · {{name}}",
+    "back": "Back to shop",
+    "overall": "Overall rating",
+    "latest": "Latest reviews",
+    "more": "More reviews",
+    "moreA11y": "Open all distributor reviews",
+    "pagination": "Reviews pagination",
+    "prev": "Previous",
+    "next": "Next",
+    "pageOf": "Page {{page}} of {{total}}"
   },
   "distributorRating": {
     "metaTitle": "Rate distributor",
@@ -768,6 +782,7 @@
     "reviewsTitle": "Buyer reviews",
     "reviewsSummary": "from {{count}} reviews",
     "noReviews": "No reviews yet.",
+    "wouldOrderAgain": "Would order again",
     "browseShop": "Browse shop",
     "reportDistributor": "Report distributor"
   },

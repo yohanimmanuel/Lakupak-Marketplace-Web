@@ -300,10 +300,13 @@ export async function getDistributor(userId: number): Promise<Distributor | null
 
 export async function getDistributorReviews(
   distributorId: number,
+  options?: { page?: number; limit?: number },
 ): Promise<DistributorReviews | null> {
+  const page = options?.page ?? 1;
+  const limit = options?.limit ?? 10;
   try {
     return await restRequest<DistributorReviews>(
-      `/api/mobile/reviews/distributor?distributorId=${encodeURIComponent(String(distributorId))}`,
+      `/api/mobile/reviews/distributor?distributorId=${encodeURIComponent(String(distributorId))}&page=${page}&limit=${limit}`,
       { revalidate: 300 },
     );
   } catch {

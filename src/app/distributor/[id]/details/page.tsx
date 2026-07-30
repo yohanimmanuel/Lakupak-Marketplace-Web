@@ -18,6 +18,7 @@ import {
   getDistributor,
   getDistributorReviews,
 } from "@/lib/api/marketplace";
+import { getSession } from "@/lib/auth/session";
 import { formatNumber } from "@/lib/format";
 
 type Params = Promise<{ id: string }>;
@@ -56,9 +57,10 @@ export default async function DistributorDetailsPage({
 
   if (!Number.isFinite(distributorId) || distributorId <= 0) notFound();
 
-  const [distributor, reviews] = await Promise.all([
+  const [distributor, reviews, session] = await Promise.all([
     getDistributor(distributorId),
-    getDistributorReviews(distributorId),
+    getDistributorReviews(distributorId, { page: 1, limit: 1 }),
+    getSession(),
   ]);
 
   if (!distributor) notFound();
@@ -191,6 +193,16 @@ export default async function DistributorDetailsPage({
       </section>
 
       <div className="mt-5 flex flex-wrap gap-3">
+        <Link
+          href={
+            session
+              ? `/distributor/${distributorId}/rate`
+              : `/login?next=${encodeURIComponent(`/distributor/${distributorId}/rate`)}`
+          }
+          className="rounded-lg border border-laku-line bg-white px-4 py-2.5 text-sm font-semibold text-laku-ink transition-colors hover:bg-laku-surface"
+        >
+          {t("distributor.rateReview")}
+        </Link>
         <Link
           href={`/seller/${distributorId}`}
           className="rounded-lg border border-laku-line bg-white px-4 py-2.5 text-sm font-semibold text-laku-ink transition-colors hover:bg-laku-surface"
