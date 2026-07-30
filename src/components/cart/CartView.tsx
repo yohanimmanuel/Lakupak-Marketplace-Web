@@ -38,31 +38,31 @@ export default function CartView({ items }: Props) {
   const t = useTranslations();
   const router = useRouter();
   const [pending, startTransition] = useTransition();
+  const [checkoutFlushing, setCheckoutFlushing] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [quantities, setQuantities] = useState<Record<number, number>>(() =>
-    Object.fromEntries(items.map((item) => [item.id, quantityOf(item)])),
-  );
+  // Local edits only; display falls back to server quantity so new/removed
+  // lines sync without a props→state effect (react-hooks/set-state-in-effect).
+  const [quantityOverrides, setQuantityOverrides] = useState<
+    Record<number, number>
+  >({});
   const persistTimers = useRef<Record<number, ReturnType<typeof setTimeout>>>(
     {},
   );
+  const pendingEdits = useRef<
+    Record<number, { next: number; revertTo: number }>
+  >({});
+  const inFlightPersists = useRef(new Map<number, Promise<boolean>>());
 
-  // Seed new lines / drop removed ones without clobbering in-flight edits.
-  useEffect(() => {
-    setQuantities((prev) => {
-      const next: Record<number, number> = {};
-      for (const item of items) {
-        next[item.id] = prev[item.id] ?? quantityOf(item);
-      }
-      return next;
-    });
-  }, [items]);
-
+  // Non-navigation unmount only: cancel debounced work. Checkout flushes first.
   useEffect(() => {
     const timers = persistTimers.current;
     return () => {
       for (const timer of Object.values(timers)) clearTimeout(timer);
     };
   }, []);
+
+  const quantityFor = (item: CartItem) =>
+    quantityOverrides[item.id] ?? quantityOf(item);
 
   // Grouped for display only: the API splits the order per seller on submit.
   const groups = new Map<string, CartItem[]>();
@@ -72,40 +72,88 @@ export default function CartView({ items }: Props) {
   }
 
   const subtotal = items.reduce((total, item) => {
-    const quantity = quantities[item.id] ?? quantityOf(item);
-    return total + lineTotal(item, quantity);
+    return total + lineTotal(item, quantityFor(item));
   }, 0);
 
-  const persistQuantity = (itemId: number, next: number, revertTo: number) => {
-    setError(null);
-    startTransition(async () => {
+  const persistQuantity = (
+    itemId: number,
+    next: number,
+    revertTo: number,
+  ): Promise<boolean> => {
+    const promise = (async () => {
+      setError(null);
       const result = await updateCartItemAction(itemId, next);
       if (!result.ok) {
         setError(result.error ?? t("cart.updateError"));
-        setQuantities((prev) => ({ ...prev, [itemId]: revertTo }));
+        setQuantityOverrides((prev) => ({ ...prev, [itemId]: revertTo }));
+        return false;
       }
-      router.refresh();
+      return true;
+    })();
+
+    inFlightPersists.current.set(itemId, promise);
+    void promise.finally(() => {
+      if (inFlightPersists.current.get(itemId) === promise) {
+        inFlightPersists.current.delete(itemId);
+      }
     });
+
+    startTransition(() => {
+      void promise.then((ok) => {
+        if (ok) router.refresh();
+      });
+    });
+
+    return promise;
   };
 
   const handleQuantityChange = (item: CartItem, next: number) => {
-    const previous = quantities[item.id] ?? quantityOf(item);
-    setQuantities((prev) => ({ ...prev, [item.id]: next }));
+    const previous = quantityFor(item);
+    setQuantityOverrides((prev) => ({ ...prev, [item.id]: next }));
+    pendingEdits.current[item.id] = { next, revertTo: previous };
 
     clearTimeout(persistTimers.current[item.id]);
     persistTimers.current[item.id] = setTimeout(() => {
-      persistQuantity(item.id, next, previous);
+      delete persistTimers.current[item.id];
+      const edit = pendingEdits.current[item.id];
+      delete pendingEdits.current[item.id];
+      if (edit) void persistQuantity(item.id, edit.next, edit.revertTo);
     }, 300);
   };
 
   const removeItem = (itemId: number) => {
     setError(null);
     clearTimeout(persistTimers.current[itemId]);
+    delete persistTimers.current[itemId];
+    delete pendingEdits.current[itemId];
     startTransition(async () => {
       const result = await removeCartItemAction(itemId);
       if (!result.ok) setError(result.error ?? t("cart.updateError"));
       router.refresh();
     });
+  };
+
+  const goToCheckout = async () => {
+    setCheckoutFlushing(true);
+    setError(null);
+
+    for (const itemId of Object.keys(persistTimers.current).map(Number)) {
+      clearTimeout(persistTimers.current[itemId]);
+      delete persistTimers.current[itemId];
+      const edit = pendingEdits.current[itemId];
+      delete pendingEdits.current[itemId];
+      if (edit) void persistQuantity(itemId, edit.next, edit.revertTo);
+    }
+
+    const results = await Promise.all([
+      ...inFlightPersists.current.values(),
+    ]);
+    if (results.some((ok) => !ok)) {
+      setCheckoutFlushing(false);
+      return;
+    }
+
+    router.push("/checkout");
   };
 
   return (
@@ -121,7 +169,7 @@ export default function CartView({ items }: Props) {
             <ul className="divide-y divide-laku-line">
               {sellerItems.map((item) => {
                 const product = item.productData;
-                const quantity = quantities[item.id] ?? quantityOf(item);
+                const quantity = quantityFor(item);
                 const variant = getCartVariant(item);
                 const { unitPrice, option } = resolveVariantPricing(product, variant);
                 const packageType = displayPackageType(product.packageType);
@@ -240,12 +288,14 @@ export default function CartView({ items }: Props) {
           </p>
         ) : null}
 
-        <Link
-          href="/checkout"
-          className="mt-4 block rounded-lg bg-laku-blue px-5 py-3.5 text-center text-sm font-bold text-white transition-colors hover:bg-laku-blue-dark"
+        <button
+          type="button"
+          disabled={pending || checkoutFlushing}
+          onClick={() => void goToCheckout()}
+          className="mt-4 block w-full rounded-lg bg-laku-blue px-5 py-3.5 text-center text-sm font-bold text-white transition-colors hover:bg-laku-blue-dark disabled:opacity-50"
         >
           {t("cart.checkout")}
-        </Link>
+        </button>
       </aside>
     </div>
   );
