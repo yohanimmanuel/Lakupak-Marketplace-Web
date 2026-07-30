@@ -76,8 +76,32 @@ Open [http://localhost:3002](http://localhost:3002).
 
 Browse surfaces degrade to empty states instead of crashing when the Dashboard is down.
 
+## Run with Docker
+
+You can run Marketplace Web with **only Docker** (no Node.js or npm required on your machine), using the same multi-stage pattern as `Laku-Dashboard`.
+
+**Prerequisites:** [Docker Desktop](https://www.docker.com/products/docker-desktop/) installed and running, plus a reachable **Laku-Dashboard** API (default host port `3000`).
+
+1. **Clone the repo** and `cd` into `Laku-Marketplace-Web`.
+2. **Create a `.env` file** in the project root (Compose reads `.env`; local npm can keep using `.env.local`):
+   ```bash
+   cp env.example .env
+   ```
+   Keep `LAKU_API_BASE_URL=http://localhost:3000` for local npm. Compose does **not** use that value inside the container (it would point at the container itself); it sets `http://host.docker.internal:3000` so the storefront can reach Dashboard on your machine.
+3. **Build and start** (Dashboard must already be running on host `:3000`):
+   ```bash
+   docker compose up --build
+   ```
+   First run builds inside Docker (a few minutes). Later runs reuse the image.
+4. Open **http://localhost:3002** in your browser.
+
+**Notes:**
+- This app has no Postgres/Redis/Meilisearch sidecars — those live with Dashboard. Compose only runs the Next.js storefront.
+- `NEXT_PUBLIC_*` values are baked at **image build** time. Change them in `.env`, then `docker compose up --build` again.
+- Container API URL: `DOCKER_LAKU_API_BASE_URL` (default `http://host.docker.internal:3000`). Host npm keeps using `LAKU_API_BASE_URL`.
+
 ## Environment
-Copy `env.example` to `.env.local` and set:
+Copy `env.example` to `.env.local` (npm) or `.env` (Docker) and set:
 
 | Variable | Purpose |
 |----------|---------|
