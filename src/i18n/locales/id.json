@@ -280,6 +280,7 @@
     "packageInfo": "{{packageType}}",
     "freeItems": "+{{count}} gratis",
     "updateError": "Gagal memperbarui keranjang.",
+    "moqBlocked": "Naikkan jumlah ke minimal pembelian tiap produk sebelum checkout.",
     "splitNote": "Produk dari {{count}} distributor akan dipecah menjadi {{count}} pesanan terpisah.",
     "signedOutTitle": "Masuk untuk melihat keranjang",
     "signedOutBody": "Keranjang Anda tersinkron dengan aplikasi Laku setelah masuk.",

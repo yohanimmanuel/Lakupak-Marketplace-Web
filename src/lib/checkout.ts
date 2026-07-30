@@ -162,9 +162,14 @@ export function getMaxPackageQuantity(product: MarketplaceProduct): number {
   return Math.max(1, Math.floor(stock / pieces));
 }
 
-export function meetsMoq(product: MarketplaceProduct, packageQuantity: number): boolean {
-  const moq = Number(product.moq);
-  if (!Number.isFinite(moq) || moq <= 0) return true;
+export function meetsMoq(
+  product: MarketplaceProduct,
+  packageQuantity: number,
+  variantName?: string | null,
+): boolean {
   const pieces = Math.max(1, Number(product.piecesPerPackage) || 1);
+  const { option } = resolveVariantPricing(product, variantName);
+  const moq = Number(option?.moq ?? product.moq);
+  if (!Number.isFinite(moq) || moq <= 0) return true;
   return packageQuantity * pieces >= moq;
 }

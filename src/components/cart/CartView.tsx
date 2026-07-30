@@ -13,7 +13,12 @@ import { useTranslations } from "@/i18n/client";
 import type { CartItem } from "@/lib/api/types";
 import { getCartVariant } from "@/lib/cartPricing";
 import { formatCurrency } from "@/lib/format";
-import { getSellerKey } from "@/lib/checkout";
+import {
+  getMaxPackageQuantity,
+  getMinPackageQuantity,
+  getSellerKey,
+  meetsMoq,
+} from "@/lib/checkout";
 import { displayPackageType } from "@/lib/packageLabel";
 import { calculateProductPromotionGift } from "@/lib/promotion";
 import { getSelectedMoq, resolveVariantPricing } from "@/lib/variants";
@@ -51,7 +56,10 @@ export default function CartView({ items }: Props) {
   const pendingEdits = useRef<
     Record<number, { next: number; revertTo: number }>
   >({});
+  /** Latest persist chain per cart line (each call awaits the prior write). */
   const inFlightPersists = useRef(new Map<number, Promise<boolean>>());
+  const quantityOverridesRef = useRef(quantityOverrides);
+  const itemsRef = useRef(items);
 
   // Non-navigation unmount only: cancel debounced work. Checkout flushes first.
   useEffect(() => {
@@ -60,6 +68,11 @@ export default function CartView({ items }: Props) {
       for (const timer of Object.values(timers)) clearTimeout(timer);
     };
   }, []);
+
+  useEffect(() => {
+    quantityOverridesRef.current = quantityOverrides;
+    itemsRef.current = items;
+  }, [quantityOverrides, items]);
 
   const quantityFor = (item: CartItem) =>
     quantityOverrides[item.id] ?? quantityOf(item);
@@ -75,12 +88,20 @@ export default function CartView({ items }: Props) {
     return total + lineTotal(item, quantityFor(item));
   }, 0);
 
+  const allMoqMet = items.every((item) =>
+    meetsMoq(item.productData, quantityFor(item), getCartVariant(item)),
+  );
+
   const persistQuantity = (
     itemId: number,
     next: number,
     revertTo: number,
   ): Promise<boolean> => {
+    const prior = inFlightPersists.current.get(itemId);
+
     const promise = (async () => {
+      // Serialize per line so an older write cannot finish after a newer one.
+      if (prior) await prior;
       setError(null);
       const result = await updateCartItemAction(itemId, next);
       if (!result.ok) {
@@ -134,6 +155,11 @@ export default function CartView({ items }: Props) {
   };
 
   const goToCheckout = async () => {
+    if (!allMoqMet) {
+      setError(t("cart.moqBlocked"));
+      return;
+    }
+
     setCheckoutFlushing(true);
     setError(null);
 
@@ -145,10 +171,25 @@ export default function CartView({ items }: Props) {
       if (edit) void persistQuantity(itemId, edit.next, edit.revertTo);
     }
 
+    // Latest chain per item already awaits prior writes for that item.
     const results = await Promise.all([
       ...inFlightPersists.current.values(),
     ]);
     if (results.some((ok) => !ok)) {
+      setCheckoutFlushing(false);
+      return;
+    }
+
+    const overrides = quantityOverridesRef.current;
+    const stillMoqMet = itemsRef.current.every((item) =>
+      meetsMoq(
+        item.productData,
+        overrides[item.id] ?? quantityOf(item),
+        getCartVariant(item),
+      ),
+    );
+    if (!stillMoqMet) {
+      setError(t("cart.moqBlocked"));
       setCheckoutFlushing(false);
       return;
     }
@@ -173,12 +214,13 @@ export default function CartView({ items }: Props) {
                 const variant = getCartVariant(item);
                 const { unitPrice, option } = resolveVariantPricing(product, variant);
                 const packageType = displayPackageType(product.packageType);
+                const moq = getSelectedMoq(product, option);
+                const minQuantity = getMinPackageQuantity(product, variant);
+                const maxQuantity = getMaxPackageQuantity(product);
+                const moqMet = meetsMoq(product, quantity, variant);
                 const freeQty =
-                  calculateProductPromotionGift(
-                    product,
-                    quantity,
-                    getSelectedMoq(product, option),
-                  )?.freeQty ?? 0;
+                  calculateProductPromotionGift(product, quantity, moq)
+                    ?.freeQty ?? 0;
 
                 return (
                   <li key={item.id} className="flex gap-4 px-5 py-4">
@@ -227,6 +269,8 @@ export default function CartView({ items }: Props) {
                         <QuantityStepper
                           size="sm"
                           value={quantity}
+                          min={minQuantity}
+                          max={maxQuantity}
                           updateOnType
                           onChange={(next) => handleQuantityChange(item, next)}
                         />
@@ -245,6 +289,15 @@ export default function CartView({ items }: Props) {
                           {t("cart.remove")}
                         </button>
                       </div>
+                      {moq ? (
+                        <p
+                          className={`mt-2 text-xs font-medium ${
+                            moqMet ? "text-laku-muted" : "text-laku-alert"
+                          }`}
+                        >
+                          {t("product.minimumOrder", { count: minQuantity })}
+                        </p>
+                      ) : null}
                     </div>
 
                     <p className="shrink-0 text-sm font-bold text-laku-ink">
@@ -290,12 +343,17 @@ export default function CartView({ items }: Props) {
 
         <button
           type="button"
-          disabled={pending || checkoutFlushing}
+          disabled={pending || checkoutFlushing || !allMoqMet}
           onClick={() => void goToCheckout()}
           className="mt-4 block w-full rounded-lg bg-laku-blue px-5 py-3.5 text-center text-sm font-bold text-white transition-colors hover:bg-laku-blue-dark disabled:opacity-50"
         >
           {t("cart.checkout")}
         </button>
+        {!allMoqMet ? (
+          <p className="mt-2 text-center text-xs font-medium text-laku-alert">
+            {t("cart.moqBlocked")}
+          </p>
+        ) : null}
       </aside>
     </div>
   );

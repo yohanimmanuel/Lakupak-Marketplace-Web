@@ -280,6 +280,7 @@
     "packageInfo": "{{packageType}}",
     "freeItems": "+{{count}} free",
     "updateError": "Could not update your cart.",
+    "moqBlocked": "Raise quantities to each product’s minimum order before checkout.",
     "splitNote": "Products from {{count}} distributors will be split into {{count}} separate orders.",
     "signedOutTitle": "Log in to see your cart",
     "signedOutBody": "Your cart syncs with the Laku app once you log in.",

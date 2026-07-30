@@ -206,7 +206,7 @@ export default function ProductPurchasePanel({
                 moqMet ? "text-laku-muted" : "text-laku-alert"
               }`}
             >
-              {t("product.minimumOrder", { count: moq })}
+              {t("product.minimumOrder", { count: minQuantity })}
             </p>
           ) : null}
         </div>
