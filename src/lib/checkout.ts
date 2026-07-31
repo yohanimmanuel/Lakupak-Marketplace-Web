@@ -149,9 +149,14 @@ export function getMinPackageQuantity(
 ): number {
   const pieces = Math.max(1, Number(product.piecesPerPackage) || 1);
   const { option } = resolveVariantPricing(product, variantName);
-  const moq = Number(option?.moq ?? product.moq);
-  if (!Number.isFinite(moq) || moq <= 0) return 1;
-  return Math.max(1, Math.ceil(moq / pieces));
+  const moq = Number(option?.moq);
+  if (Number.isFinite(moq) && moq > 0) {
+    return Math.max(1, Math.ceil(moq / pieces));
+  }
+  if (option) return 1;
+  const productMoq = Number(product.moq);
+  if (!Number.isFinite(productMoq) || productMoq <= 0) return 1;
+  return Math.max(1, Math.ceil(productMoq / pieces));
 }
 
 /** Max packages that still fit in stock pieces, matching the mobile selector. */
@@ -169,7 +174,12 @@ export function meetsMoq(
 ): boolean {
   const pieces = Math.max(1, Number(product.piecesPerPackage) || 1);
   const { option } = resolveVariantPricing(product, variantName);
-  const moq = Number(option?.moq ?? product.moq);
-  if (!Number.isFinite(moq) || moq <= 0) return true;
-  return packageQuantity * pieces >= moq;
+  const moq = Number(option?.moq);
+  if (Number.isFinite(moq) && moq > 0) {
+    return packageQuantity * pieces >= moq;
+  }
+  if (option) return true;
+  const productMoq = Number(product.moq);
+  if (!Number.isFinite(productMoq) || productMoq <= 0) return true;
+  return packageQuantity * pieces >= productMoq;
 }

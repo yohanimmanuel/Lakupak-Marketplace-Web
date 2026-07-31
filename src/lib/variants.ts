@@ -236,8 +236,14 @@ export function getSelectedMoq(
   product: MarketplaceProduct,
   option: ProductVariantOption | null,
 ): number | null {
-  const moq = Number(option?.moq ?? product.moq);
-  return Number.isFinite(moq) && moq > 0 ? moq : null;
+  // Prefer the matched variant’s own MOQ — never fall back to product.moq
+  // (that is the default variant and can look like the “highest” MOQ).
+  if (option) {
+    const fromOption = Number(option.moq);
+    return Number.isFinite(fromOption) && fromOption > 0 ? fromOption : null;
+  }
+  const fromProduct = Number(product.moq);
+  return Number.isFinite(fromProduct) && fromProduct > 0 ? fromProduct : null;
 }
 
 export function getSelectedStock(

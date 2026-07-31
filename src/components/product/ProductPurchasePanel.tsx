@@ -56,6 +56,13 @@ export default function ProductPurchasePanel({
     stock > 0 ? Math.max(1, Math.floor(stock / pieces)) : 9999;
 
   const [quantity, setQuantity] = useState(minQuantity);
+  // On variant change, set qty to that variant’s package MOQ (not the previous qty).
+  const optionKey = String(option?.id ?? "default");
+  const [prevOptionKey, setPrevOptionKey] = useState(optionKey);
+  if (optionKey !== prevOptionKey) {
+    setPrevOptionKey(optionKey);
+    setQuantity(Math.min(maxQuantity, minQuantity));
+  }
 
   // Raw typed qty drives the live total; clamp only for purchase / MOQ checks.
   const purchaseQuantity = Math.min(maxQuantity, Math.max(minQuantity, quantity));
