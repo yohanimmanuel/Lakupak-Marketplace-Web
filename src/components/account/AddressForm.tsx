@@ -2,13 +2,16 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useActionState, useEffect, useState } from "react";
+import { useActionState, useCallback, useEffect, useState } from "react";
 
 import { saveAddressAction } from "@/app/actions/addresses";
 import AddressMapPreview from "@/components/auth/AddressMapPreview";
 import AuthField from "@/components/auth/AuthField";
+import UseCurrentLocationButton from "@/components/auth/UseCurrentLocationButton";
+import { useCurrentLocationLookup } from "@/hooks/useCurrentLocationLookup";
 import { useTranslations } from "@/i18n/client";
 import type { MarketplaceAddress } from "@/lib/api/addresses";
+import type { GeocodePrecision, MapCoordinates } from "@/lib/geolocation";
 
 const LABELS = ["home", "work", "store"] as const;
 
@@ -30,12 +33,37 @@ export default function AddressForm({
     isDefault: address?.isDefault ?? false,
   });
 
+  const initialCoordinates: MapCoordinates | null =
+    address?.latitude != null && address?.longitude != null
+      ? { latitude: Number(address.latitude), longitude: Number(address.longitude) }
+      : null;
+  const initialPrecision =
+    (address?.geocodePrecision as GeocodePrecision | null | undefined) ?? null;
+
+  const onAddressChange = useCallback((addressText: string) => {
+    setForm((prev) => ({ ...prev, addressText }));
+  }, []);
+
+  const {
+    locating,
+    locationError,
+    mapPinFor,
+    onUseCurrentLocation,
+  } = useCurrentLocationLookup({
+    onAddressChange,
+    initialAddress: address?.address ?? "",
+    initialCoordinates,
+    initialPrecision,
+  });
+
   useEffect(() => {
     if (state.ok) {
       router.push("/account/addresses");
       router.refresh();
     }
   }, [state.ok, router]);
+
+  const mapPin = mapPinFor(form.addressText);
 
   return (
     <form action={formAction} className="space-y-4 rounded-2xl bg-white p-6">
@@ -49,8 +77,31 @@ export default function AddressForm({
         value={form.isDefault ? "true" : "false"}
       />
 
-      <AddressMapPreview address={form.addressText} />
+      <AddressMapPreview
+        address={form.addressText}
+        savedCoordinates={mapPin.savedCoordinates}
+        savedPrecision={mapPin.savedPrecision}
+      />
 
+      <p className="text-xs font-semibold text-laku-muted">
+        {t("location.locationDetails")}
+      </p>
+      <UseCurrentLocationButton
+        onLocateAction={() => void onUseCurrentLocation()}
+        locating={locating}
+      />
+
+      <AuthField
+        label={t("addresses.fields.address")}
+        name="address"
+        value={form.addressText}
+        onChange={(value) =>
+          setForm((prev) => ({ ...prev, addressText: value }))
+        }
+        multiline
+        rows={3}
+        autoComplete="street-address"
+      />
       <AuthField
         label={t("addresses.fields.fullName")}
         name="fullName"
@@ -65,17 +116,6 @@ export default function AddressForm({
         onChange={(value) => setForm((prev) => ({ ...prev, phone: value }))}
         autoComplete="tel"
         inputMode="tel"
-      />
-      <AuthField
-        label={t("addresses.fields.address")}
-        name="address"
-        value={form.addressText}
-        onChange={(value) =>
-          setForm((prev) => ({ ...prev, addressText: value }))
-        }
-        multiline
-        rows={3}
-        autoComplete="street-address"
       />
 
       <div>
@@ -111,6 +151,12 @@ export default function AddressForm({
         />
         {t("addresses.fields.isDefault")}
       </label>
+
+      {locationError ? (
+        <p role="alert" className="text-sm font-medium text-laku-alert">
+          {locationError}
+        </p>
+      ) : null}
 
       {state.error ? (
         <p role="alert" className="text-sm font-medium text-laku-alert">

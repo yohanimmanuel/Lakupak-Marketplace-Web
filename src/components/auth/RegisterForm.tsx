@@ -2,14 +2,16 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { ArrowLeft, Check } from "lucide-react";
 
 import LakuLogo from "@/components/brand/LakuLogo";
+import { useCurrentLocationLookup } from "@/hooks/useCurrentLocationLookup";
 import { useTranslations } from "@/i18n/client";
 
 import AuthField from "./AuthField";
 import AddressMapPreview from "./AddressMapPreview";
+import UseCurrentLocationButton from "./UseCurrentLocationButton";
 
 type AddressLabel = "work" | "store" | "home";
 
@@ -54,15 +56,33 @@ export default function RegisterForm() {
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
+  const onAddressChange = useCallback((address: string) => {
+    setError(null);
+    setData((prev) => ({ ...prev, address }));
+  }, []);
+
+  const {
+    locating,
+    locationError,
+    setLocationError,
+    mapPinFor,
+    onUseCurrentLocation,
+  } = useCurrentLocationLookup({
+    onAddressChange,
+    onLocateStart: () => setError(null),
+  });
+
   const setField =
     (key: keyof SignupData) =>
     (value: string | boolean | AddressLabel) => {
       setError(null);
+      setLocationError(null);
       setData((prev) => ({ ...prev, [key]: value }));
     };
 
   const goBack = () => {
     setError(null);
+    setLocationError(null);
     if (step > 0) setStep((prev) => prev - 1);
     else router.back();
   };
@@ -106,9 +126,11 @@ export default function RegisterForm() {
     const message = validateStep(current);
     if (message) {
       setError(message);
+      setLocationError(null);
       return;
     }
     setError(null);
+    setLocationError(null);
     // Prefill recipient name from step 1 when entering the address step.
     if (current === 2) {
       setData((prev) =>
@@ -120,6 +142,9 @@ export default function RegisterForm() {
     setStep(current + 1);
   };
 
+  const mapPin = mapPinFor(data.address);
+  const formAlert = error ?? locationError;
+
   const submit = async () => {
     const message = validateStep(4);
     if (message) {
@@ -129,6 +154,7 @@ export default function RegisterForm() {
 
     setSubmitting(true);
     setError(null);
+    setLocationError(null);
 
     try {
       const response = await fetch("/api/auth/register", {
@@ -279,11 +305,19 @@ export default function RegisterForm() {
                   {t("auth.signup.shippingAddress")}
                 </h2>
 
-                <AddressMapPreview address={data.address} />
+                <AddressMapPreview
+                  address={data.address}
+                  savedCoordinates={mapPin.savedCoordinates}
+                  savedPrecision={mapPin.savedPrecision}
+                />
 
                 <p className="text-xs font-semibold text-laku-muted">
-                  {t("auth.signup.locationDetails")}
+                  {t("location.locationDetails")}
                 </p>
+                <UseCurrentLocationButton
+                  onLocateAction={() => void onUseCurrentLocation()}
+                  locating={locating}
+                />
                 <AuthField
                   label={t("auth.signup.deliveryAddress")}
                   name="address"
@@ -384,9 +418,9 @@ export default function RegisterForm() {
             ) : null}
           </div>
 
-          {error ? (
+          {formAlert ? (
             <p role="alert" className="mt-4 text-sm font-medium text-laku-alert">
-              {error}
+              {formAlert}
             </p>
           ) : null}
 

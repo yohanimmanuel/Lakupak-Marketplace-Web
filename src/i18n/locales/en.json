@@ -102,6 +102,14 @@
       "delete": "Could not delete the address."
     }
   },
+  "location": {
+    "locationDetails": "Location Details",
+    "useCurrentLocation": "Use current location",
+    "locatingCurrent": "Getting your location…",
+    "permissionBody": "Enable location access so we can detect your address automatically.",
+    "errorBody": "We couldn't detect your location. Please try again or type your address.",
+    "notFound": "We found your location but couldn't determine the address. Please add the details manually."
+  },
   "whatIsLaku": {
     "title": "What is Laku?",
     "body": "Laku connects warungs and retail stores with FMCG distributors across Indonesia. Browse the catalog and complete your order right here.",

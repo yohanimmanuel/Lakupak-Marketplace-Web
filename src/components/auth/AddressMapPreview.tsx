@@ -4,34 +4,48 @@ import { useEffect, useRef, useState } from "react";
 import { MapPin } from "lucide-react";
 
 import { useTranslations } from "@/i18n/client";
+import type { GeocodePrecision, MapCoordinates } from "@/lib/geolocation";
 import MapboxAddressMap from "./MapboxAddressMap";
 
-type Coordinates = { latitude: number; longitude: number };
-type Precision = "exact" | "approximate" | "area";
-
 type GeocodeResponse = {
-  coordinates: Coordinates | null;
+  coordinates: MapCoordinates | null;
   address?: string;
-  precision?: Precision | null;
+  precision?: GeocodePrecision | null;
 };
 
 type Props = {
   address: string;
+  /** Prefer GPS / saved pin when the address text still matches (avoids re-geocode drift). */
+  savedCoordinates?: MapCoordinates | null;
+  savedPrecision?: GeocodePrecision | null;
   height?: number;
 };
 
-/** Debounced map preview matching AddressMapPreview in the mobile signup. */
-export default function AddressMapPreview({ address, height = 240 }: Props) {
+/** Debounced map preview matching AddressMapPreview in the mobile app. */
+export default function AddressMapPreview({
+  address,
+  savedCoordinates = null,
+  savedPrecision = null,
+  height = 240,
+}: Props) {
   const t = useTranslations();
   const trimmed = address.trim();
   const requestIdRef = useRef(0);
-  const [coordinates, setCoordinates] = useState<Coordinates | null>(null);
-  const [precision, setPrecision] = useState<Precision | null>(null);
+  const [geocodedCoordinates, setGeocodedCoordinates] =
+    useState<MapCoordinates | null>(null);
+  const [geocodedPrecision, setGeocodedPrecision] =
+    useState<GeocodePrecision | null>(null);
   const [resolvedQuery, setResolvedQuery] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
+  const usingSaved =
+    Boolean(trimmed) &&
+    savedCoordinates != null &&
+    Number.isFinite(savedCoordinates.latitude) &&
+    Number.isFinite(savedCoordinates.longitude);
+
   useEffect(() => {
-    if (!trimmed) return;
+    if (!trimmed || usingSaved) return;
 
     const requestId = ++requestIdRef.current;
     const timer = window.setTimeout(() => {
@@ -45,8 +59,8 @@ export default function AddressMapPreview({ address, height = 240 }: Props) {
         .then(async (response) => {
           if (requestId !== requestIdRef.current) return;
           if (!response.ok) {
-            setCoordinates(null);
-            setPrecision(null);
+            setGeocodedCoordinates(null);
+            setGeocodedPrecision(null);
             setResolvedQuery(trimmed);
             setLoading(false);
             return;
@@ -55,15 +69,15 @@ export default function AddressMapPreview({ address, height = 240 }: Props) {
           const payload = (await response.json()) as GeocodeResponse;
           if (requestId !== requestIdRef.current) return;
 
-          setCoordinates(payload.coordinates ?? null);
-          setPrecision(payload.precision ?? null);
+          setGeocodedCoordinates(payload.coordinates ?? null);
+          setGeocodedPrecision(payload.precision ?? null);
           setResolvedQuery(trimmed);
           setLoading(false);
         })
         .catch(() => {
           if (requestId !== requestIdRef.current) return;
-          setCoordinates(null);
-          setPrecision(null);
+          setGeocodedCoordinates(null);
+          setGeocodedPrecision(null);
           setResolvedQuery(trimmed);
           setLoading(false);
         });
@@ -73,14 +87,26 @@ export default function AddressMapPreview({ address, height = 240 }: Props) {
       window.clearTimeout(timer);
       requestIdRef.current += 1;
     };
-  }, [trimmed]);
+  }, [trimmed, usingSaved]);
 
   const hasAddress = Boolean(trimmed);
-  const isResolved = resolvedQuery === trimmed;
-  const pin = hasAddress ? coordinates : null;
-  const pinPrecision = hasAddress && isResolved ? precision : null;
-  const showLoading = hasAddress && (loading || !isResolved);
-  const showNotFound = hasAddress && isResolved && !loading && !coordinates;
+  const isResolved = usingSaved || resolvedQuery === trimmed;
+  const pin = !hasAddress
+    ? null
+    : usingSaved
+      ? savedCoordinates
+      : isResolved
+        ? geocodedCoordinates
+        : null;
+  const pinPrecision = !hasAddress
+    ? null
+    : usingSaved
+      ? (savedPrecision ?? "exact")
+      : isResolved
+        ? geocodedPrecision
+        : null;
+  const showLoading = hasAddress && !usingSaved && (loading || !isResolved);
+  const showNotFound = hasAddress && isResolved && !loading && !pin;
   const approximate =
     pinPrecision === "approximate" || pinPrecision === "area";
 

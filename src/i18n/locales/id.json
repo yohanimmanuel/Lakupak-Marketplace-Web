@@ -102,6 +102,14 @@
       "delete": "Gagal menghapus alamat."
     }
   },
+  "location": {
+    "locationDetails": "Detail Lokasi",
+    "useCurrentLocation": "Gunakan lokasi saat ini",
+    "locatingCurrent": "Mendeteksi lokasi Anda…",
+    "permissionBody": "Aktifkan akses lokasi agar kami dapat mendeteksi alamat Anda secara otomatis.",
+    "errorBody": "Kami tidak dapat mendeteksi lokasi Anda. Coba lagi atau ketik alamat secara manual.",
+    "notFound": "Lokasi ditemukan, tetapi alamatnya tidak dapat ditentukan. Silakan lengkapi detailnya secara manual."
+  },
   "whatIsLaku": {
     "title": "Apa itu Laku?",
     "body": "Laku menghubungkan warung dan toko ritel dengan distributor FMCG di Indonesia. Jelajahi katalog, lalu selesaikan pesanan langsung di sini.",
