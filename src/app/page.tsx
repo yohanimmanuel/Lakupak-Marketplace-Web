@@ -65,7 +65,7 @@ export default async function HomePage() {
             <SectionHeader title={t("home.featured")} href="/search" />
             <div className="px-4 md:px-0">
               {products.length > 0 ? (
-                <ProductGrid products={products} priorityCount={5} />
+                <ProductGrid products={products} priorityCount={products.length} />
               ) : (
                 <p className="rounded-card bg-white p-8 text-center text-sm text-laku-muted">
                   {t("home.emptyCatalog")}

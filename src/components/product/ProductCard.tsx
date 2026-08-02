@@ -19,10 +19,17 @@ import { productUrl } from "@/lib/share";
 
 type Props = {
   product: MarketplaceProduct;
+  /** Above-the-fold cards: load immediately (Next 16 LCP-friendly). */
   priority?: boolean;
+  /** First LCP candidate — uses Next 16 `preload` instead of loading/fetchPriority. */
+  preload?: boolean;
 };
 
-export default function ProductCard({ product, priority = false }: Props) {
+export default function ProductCard({
+  product,
+  priority = false,
+  preload = false,
+}: Props) {
   const t = useTranslations();
   const image = product.images[0];
   const discountLabel = getDiscountLabel(product, t.locale);
@@ -47,7 +54,13 @@ export default function ProductCard({ product, priority = false }: Props) {
             src={image}
             alt={product.name}
             fill
-            priority={priority}
+            // Next 16: `preload` must not combine with loading/fetchPriority.
+            {...(preload
+              ? { preload: true as const }
+              : {
+                  loading: (priority ? "eager" : "lazy") as "eager" | "lazy",
+                  fetchPriority: (priority ? "high" : "auto") as "high" | "auto",
+                })}
             sizes="(min-width: 1280px) 20vw, (min-width: 768px) 30vw, 50vw"
             className="object-cover transition-transform duration-300 ease-out group-hover:scale-105"
           />
