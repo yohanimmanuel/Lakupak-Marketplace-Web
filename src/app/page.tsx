@@ -10,7 +10,7 @@ import { getTranslations } from "@/i18n/server";
 import { getProductsSafe } from "@/lib/api/marketplace";
 import { getHomeOffersList } from "@/lib/api/offers";
 import { getSession } from "@/lib/auth/session";
-import { buildCategories } from "@/lib/categories";
+import { buildCategoryDirectory } from "@/lib/categories";
 import { dashboardLandingUrl } from "@/lib/config";
 
 export const revalidate = 60;
@@ -25,7 +25,7 @@ export default async function HomePage() {
     session ? getHomeOffersList(session.token) : Promise.resolve([]),
   ]);
 
-  const categories = buildCategories(facets.productTypes, products, t);
+  const categories = buildCategoryDirectory(facets.productTypes, products, t);
 
   return (
     <div className="bg-laku-blue">
@@ -57,7 +57,7 @@ export default async function HomePage() {
           {categories.length > 0 ? (
             <section className="laku-rise">
               <SectionHeader title={t("nav.categories")} href="/categories" />
-              <CategoryRail categories={categories} />
+              <CategoryRail categories={categories} layout="directory" />
             </section>
           ) : null}
 

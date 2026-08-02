@@ -14,7 +14,7 @@ import {
   uniqueShippedFromOptions,
   type ShippingOptionKey,
 } from "@/lib/searchDiscovery";
-import { translateCategory } from "@/lib/categories";
+import { translateCategory, PREDEFINED_CATEGORY_NAMES, canonicalizeCategory } from "@/lib/categories";
 
 type SortKey = "relevance" | "newest" | "price_low" | "price_high" | "top_sales";
 
@@ -80,13 +80,7 @@ export default function SearchResultsClient({
     () => availableShippingOptionKeys(products),
     [products],
   );
-  const categoryOptions = useMemo(() => {
-    const set = new Set<string>();
-    for (const product of products) {
-      if (product.category?.trim()) set.add(product.category.trim());
-    }
-    return [...set].sort((a, b) => a.localeCompare(b));
-  }, [products]);
+  const categoryOptions = useMemo(() => PREDEFINED_CATEGORY_NAMES, []);
 
   const filtered = useMemo(() => {
     let list = [...products];
@@ -127,7 +121,9 @@ export default function SearchResultsClient({
       }
 
       if (categories.length > 0) {
-        if (!product.category || !categories.includes(product.category)) {
+        const selected = new Set(categories.map((c) => canonicalizeCategory(c)).filter(Boolean));
+        const productType = canonicalizeCategory(product.category);
+        if (!productType || !selected.has(productType)) {
           return false;
         }
       }

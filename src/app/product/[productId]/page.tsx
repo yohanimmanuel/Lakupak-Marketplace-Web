@@ -21,7 +21,7 @@ import {
   getProductsSafe,
 } from "@/lib/api/marketplace";
 import { getSession } from "@/lib/auth/session";
-import { translateCategory } from "@/lib/categories";
+import { canonicalizeCategory, translateCategory } from "@/lib/categories";
 import {
   formatProductOriginalPrice,
   formatProductPrice,
@@ -87,11 +87,14 @@ export default async function ProductPage({ params }: { params: Params }) {
 
   if (!product) notFound();
 
+  const categoryKey = canonicalizeCategory(product.category) || product.category;
+  const categoryLabel = translateCategory(categoryKey, t) || categoryKey;
+
   const sessionUserId = session?.user.id ?? null;
 
   const [reviews, related, sellerReviews] = await Promise.all([
     getProductReviews(product.id),
-    getProductsSafe({ category: product.category, limit: 10 }),
+    getProductsSafe({ category: categoryKey, limit: 10 }),
     // GraphQL hardcodes seller.rating to 0 — use the reviews API instead.
     product.userId ? getDistributorReviews(product.userId) : Promise.resolve(null),
   ]);
@@ -163,10 +166,10 @@ export default async function ProductPage({ params }: { params: Params }) {
         </Link>
         <span className="px-2">/</span>
         <Link
-          href={`/search?q=${encodeURIComponent(translateCategory(product.category, t))}&category=${encodeURIComponent(product.category)}`}
+          href={`/search?q=${encodeURIComponent(categoryLabel)}&category=${encodeURIComponent(categoryKey)}`}
           className="hover:text-laku-blue"
         >
-          {translateCategory(product.category, t)}
+          {categoryLabel}
         </Link>
       </nav>
 
@@ -422,7 +425,7 @@ export default async function ProductPage({ params }: { params: Params }) {
         <section className="mt-14">
           <SectionHeader
             title={t("product.related")}
-            href={`/search?q=${encodeURIComponent(translateCategory(product.category, t))}&category=${encodeURIComponent(product.category)}`}
+            href={`/search?q=${encodeURIComponent(categoryLabel)}&category=${encodeURIComponent(categoryKey)}`}
           />
           <ProductGrid products={relatedProducts} />
         </section>

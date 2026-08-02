@@ -1,4 +1,5 @@
 import type { MarketplaceProduct } from "@/lib/api/types";
+import { canonicalizeCategory } from "@/lib/categories";
 
 export type ShippingOptionKey = "selfPickup" | "sellerDelivery" | "buyerCourier";
 
@@ -107,7 +108,7 @@ export function generatePopularCategories(
 ): PopularCategory[] {
   const counts = new Map<string, number>();
   for (const product of products) {
-    const category = product.category?.trim();
+    const category = canonicalizeCategory(product.category);
     if (!category || category === "Uncategorized" || category === "General") continue;
     counts.set(category, (counts.get(category) ?? 0) + 1);
   }

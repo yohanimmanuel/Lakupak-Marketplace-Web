@@ -5,7 +5,7 @@ import ProductGrid from "@/components/product/ProductGrid";
 import SectionHeader from "@/components/ui/SectionHeader";
 import { getTranslations } from "@/i18n/server";
 import { getProductsSafe } from "@/lib/api/marketplace";
-import { buildCategories } from "@/lib/categories";
+import { buildCategoryDirectory } from "@/lib/categories";
 
 export const revalidate = 120;
 
@@ -22,7 +22,7 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function CategoriesPage() {
   const t = await getTranslations();
   const { products, facets } = await getProductsSafe({ limit: 20 });
-  const categories = buildCategories(facets.productTypes, products, t, 24);
+  const categories = buildCategoryDirectory(facets.productTypes, products, t);
 
   return (
     <div className="mx-auto max-w-7xl space-y-12 py-10 md:px-6">

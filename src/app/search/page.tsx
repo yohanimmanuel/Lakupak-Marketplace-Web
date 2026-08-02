@@ -6,10 +6,11 @@ import SearchDiscovery from "@/components/search/SearchDiscovery";
 import SearchResultsClient from "@/components/search/SearchResultsClient";
 import { getTranslations } from "@/i18n/server";
 import { getProductsSafe } from "@/lib/api/marketplace";
-import { buildCategories, translateCategory } from "@/lib/categories";
+import { buildCategoryDirectory, translateCategory } from "@/lib/categories";
 import { formatNumber } from "@/lib/format";
 import {
   resolveProductTypeKey,
+  resolveProductTypeKeyExact,
   resolveSearchQuery,
 } from "@/lib/resolveSearchQuery";
 import {
@@ -93,7 +94,7 @@ export default async function SearchPage({
 
   const isEmptyQuery = !displayQuery && !effectiveCategory;
 
-  const categories = buildCategories(facets.productTypes, products, t, 12);
+  const categories = buildCategoryDirectory(facets.productTypes, products, t);
   const categoryLabel = effectiveCategory
     ? translateCategory(effectiveCategory, t)
     : null;
@@ -148,7 +149,7 @@ export default async function SearchPage({
         >
           <Link
             href={
-              displayQuery
+              displayQuery && !resolveProductTypeKeyExact(displayQuery)
                 ? `/search?q=${encodeURIComponent(displayQuery)}`
                 : "/search"
             }
@@ -162,7 +163,12 @@ export default async function SearchPage({
           </Link>
           {categories.map((item) => {
             const params = new URLSearchParams();
-            if (displayQuery) params.set("q", displayQuery);
+            // Keep free-text queries when refining by category; replace category-name queries.
+            if (displayQuery && !resolveProductTypeKeyExact(displayQuery)) {
+              params.set("q", displayQuery);
+            } else {
+              params.set("q", item.label);
+            }
             params.set("category", item.name);
             const isActive = effectiveCategory === item.name;
 
