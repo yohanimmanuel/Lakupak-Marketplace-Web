@@ -58,8 +58,7 @@ export default function OffersCarousel({ offers }: Props) {
                     fill
                     sizes="(min-width: 768px) 42rem, 100vw"
                     className="object-cover"
-                    loading={index === 0 ? "eager" : "lazy"}
-                    fetchPriority={index === 0 ? "high" : "auto"}
+                    priority={index === 0}
                     unoptimized
                   />
                   {!offer.customBannerImageUrl ? (

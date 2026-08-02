@@ -15,7 +15,6 @@ export default function ProductGrid({ products, priorityCount = 0 }: Props) {
           key={product.id}
           product={product}
           priority={index < priorityCount}
-          preload={index === 0 && priorityCount > 0}
         />
       ))}
     </div>
