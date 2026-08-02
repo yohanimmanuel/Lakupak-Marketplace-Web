@@ -5,6 +5,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 import type { BrowseCategory } from "@/lib/categories";
+import { getCategoryImageSrc } from "@/lib/categories";
 
 import CategoryIcon from "./CategoryIcon";
 
@@ -28,7 +29,12 @@ function CategoryCell({ category }: { category: BrowseCategory }) {
       <span className="flex size-14 items-center justify-center rounded-full bg-[#f5f5f5] transition-colors duration-200 group-hover:bg-laku-blue/10 sm:size-16">
         <CategoryIcon
           name={category.icon}
-          className="size-7 text-laku-blue transition-transform duration-200 group-hover:scale-110 sm:size-8"
+          categoryName={category.name}
+          className={
+            getCategoryImageSrc(category.name)
+              ? "size-10 object-contain transition-transform duration-200 group-hover:scale-110 sm:size-11"
+              : "size-7 text-laku-blue transition-transform duration-200 group-hover:scale-110 sm:size-8"
+          }
         />
       </span>
       <span className="line-clamp-2 max-w-[5.5rem] text-[11px] leading-snug font-medium text-[#555] sm:max-w-[6.5rem] sm:text-xs">

@@ -1,3 +1,6 @@
+"use client";
+
+import Image from "next/image";
 import {
   Apple,
   Baby,
@@ -8,16 +11,14 @@ import {
   Car,
   Cpu,
   Dumbbell,
-  Factory,
+  Footprints,
   Gamepad2,
   Gem,
-  Hammer,
   Heart,
   HeartHandshake,
   Home,
   LayoutGrid,
   Monitor,
-  Moon,
   Music,
   PawPrint,
   Pill,
@@ -33,6 +34,8 @@ import {
   type LucideIcon,
 } from "lucide-react";
 
+import { getCategoryImageSrc } from "@/lib/categories";
+
 const ICONS: Record<string, LucideIcon> = {
   Apple,
   Baby,
@@ -43,16 +46,14 @@ const ICONS: Record<string, LucideIcon> = {
   Car,
   Cpu,
   Dumbbell,
-  Factory,
+  Footprints,
   Gamepad2,
   Gem,
-  Hammer,
   Heart,
   HeartHandshake,
   Home,
   LayoutGrid,
   Monitor,
-  Moon,
   Music,
   PawPrint,
   Pill,
@@ -69,11 +70,29 @@ const ICONS: Record<string, LucideIcon> = {
 
 export default function CategoryIcon({
   name,
+  categoryName,
   className,
 }: {
+  /** Lucide icon key from BrowseCategory.icon */
   name: string;
+  /** Canonical category English key — used to resolve pictorial assets */
+  categoryName?: string;
   className?: string;
 }) {
+  const imageSrc = getCategoryImageSrc(categoryName);
+  if (imageSrc) {
+    return (
+      <Image
+        src={imageSrc}
+        alt=""
+        width={56}
+        height={56}
+        className={className ?? "size-10 object-contain"}
+        aria-hidden
+      />
+    );
+  }
+
   const Icon = ICONS[name] ?? LayoutGrid;
   return <Icon className={className} aria-hidden />;
 }

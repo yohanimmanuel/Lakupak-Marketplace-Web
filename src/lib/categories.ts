@@ -11,9 +11,13 @@ export const CATEGORY_ICONS: Record<string, string> = {
   "Mobile & Gadgets": "Smartphone",
   "Computers & Peripherals": "Monitor",
   "Home Appliances": "Cpu",
-  "Fashion & Apparel": "Shirt",
-  "Muslim Fashion": "Moon",
-  "Bags & Wallets": "ShoppingBag",
+  "Men's Wear": "Shirt",
+  "Women's Apparel": "Sparkles",
+  "Men's Shoes": "Footprints",
+  "Women's Shoes": "Footprints",
+  "Men's Bags": "Briefcase",
+  "Women's Bags": "ShoppingBag",
+  "Kids Fashion": "Baby",
   "Sports & Outdoors": "Dumbbell",
   "Beauty & Personal Care": "Sparkles",
   "Health & Wellness": "Heart",
@@ -25,8 +29,6 @@ export const CATEGORY_ICONS: Record<string, string> = {
   "Pet Supplies": "PawPrint",
   "Automotive & Motorbike": "Car",
   "Tools & Hardware": "Wrench",
-  "Building Materials": "Hammer",
-  "Industrial Supplies": "Factory",
   "Office & Stationery": "Briefcase",
   "Cameras & Drones": "Camera",
   "Video Games": "Gamepad2",
@@ -43,6 +45,7 @@ export const LEGACY_CATEGORY_MAP: Record<string, string> = {
   "Food & Beverage": "Food & Beverages",
   Technology: "Mobile & Gadgets",
   Fashion: "Fashion & Apparel",
+  "Bags & Wallets": "Bags & Wallets",
   "Home & Garden": "Home & Living",
   Sports: "Sports & Outdoors",
   Beauty: "Beauty & Personal Care",
@@ -74,7 +77,7 @@ export const LEGACY_CATEGORY_MAP: Record<string, string> = {
   Appliances: "Home Appliances",
   Cleaning: "Household Supplies",
   Organization: "Office & Stationery",
-  Safety: "Industrial Supplies",
+  Safety: "Tools & Hardware",
 };
 
 export function canonicalizeCategory(value: string | null | undefined): string {
@@ -96,6 +99,48 @@ export function getCategoryIcon(name: string): string {
 
 /** Stable list of predefined category English keys (search filters / directory). */
 export const PREDEFINED_CATEGORY_NAMES: string[] = Object.keys(CATEGORY_ICONS);
+
+/** Optional pictorial assets under /public/categories (falls back to Lucide). */
+export const CATEGORY_IMAGES: Record<string, string> = {
+  "Food & Beverages": "/categories/foodnbeverage.png",
+  "Fresh Produce": "/categories/freshproduce.png",
+  "Mobile & Gadgets": "/categories/mobilegadgets.png",
+  "Computers & Peripherals": "/categories/computerperipherals.png",
+  "Home Appliances": "/categories/homeappliances.png",
+  "Men's Wear": "/categories/menswear.png",
+  "Women's Apparel": "/categories/womensapparel.png",
+  "Men's Shoes": "/categories/menshoes.png",
+  "Women's Shoes": "/categories/womenshoes.png",
+  "Men's Bags": "/categories/mensbag.png",
+  "Women's Bags": "/categories/womensbag.png",
+  "Kids Fashion": "/categories/kidsfashion.png",
+  "Sports & Outdoors": "/categories/sportsoutdoors.png",
+  "Beauty & Personal Care": "/categories/beautycare.png",
+  "Health & Wellness": "/categories/healthwellness.png",
+  "Pharmacy & Medical": "/categories/pharmacies.png",
+  "Home & Living": "/categories/homeliving.png",
+  "Household Supplies": "/categories/householdsupplies.png",
+  "Toys, Kids & Babies": "/categories/toys.png",
+  "Mom & Baby Care": "/categories/babycare.png",
+  "Pet Supplies": "/categories/petsupplies.png",
+  "Automotive & Motorbike": "/categories/automotive.png",
+  "Tools & Hardware": "/categories/toolshardware.png",
+  "Office & Stationery": "/categories/officestationaires.png",
+  "Cameras & Drones": "/categories/camerasdrones.png",
+  "Video Games": "/categories/videogames.png",
+  "Hobbies & Books": "/categories/hobbiesbooks.png",
+  "Jewelry & Accessories": "/categories/jeweleriesaccessories.png",
+  Watches: "/categories/watch.png",
+  "Music & Audio": "/categories/musicaudio.png",
+  "Travel & Luggage": "/categories/travelluggages.png",
+  Miscellaneous: "/categories/miscellaneous.png",
+};
+
+export function getCategoryImageSrc(name: string | null | undefined): string | null {
+  const key = canonicalizeCategory(name);
+  if (!key) return null;
+  return CATEGORY_IMAGES[key] ?? null;
+}
 
 export type BrowseCategory = {
   name: string;
