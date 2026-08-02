@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useMemo, useState, type FormEvent } from "react";
+import { useMemo, useState, type FormEvent } from "react";
 import { Search } from "lucide-react";
 
 import { useTranslations } from "@/i18n/client";
@@ -20,12 +20,14 @@ export default function SearchBar({ tone = "onBlue", autoFocus = false }: Props)
   const searchParams = useSearchParams();
   const urlQuery = searchParams.get("q") ?? "";
   const [value, setValue] = useState(urlQuery);
+  const [prevUrlQuery, setPrevUrlQuery] = useState(urlQuery);
   const [focused, setFocused] = useState(false);
   const [recent, setRecent] = useState<string[]>([]);
 
-  useEffect(() => {
+  if (urlQuery !== prevUrlQuery) {
+    setPrevUrlQuery(urlQuery);
     setValue(urlQuery);
-  }, [urlQuery]);
+  }
 
   const suggestions = useMemo(() => {
     const q = value.trim().toLowerCase();
