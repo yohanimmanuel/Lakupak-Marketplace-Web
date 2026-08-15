@@ -29,12 +29,12 @@ export async function generateMetadata(): Promise<Metadata> {
     metadataBase: new URL(SITE_URL),
     title: {
       default: t("meta.siteTitle"),
-      template: "%s | Laku",
+      template: "%s | Laku B2B Marketplace",
     },
     description: t("meta.siteDescription"),
     openGraph: {
       type: "website",
-      siteName: "Laku",
+      siteName: "Laku B2B Marketplace",
       locale: t.locale === "en" ? "en_US" : "id_ID",
     },
     twitter: { card: "summary_large_image" },

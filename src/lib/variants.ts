@@ -253,3 +253,30 @@ export function getSelectedStock(
   if (option) return Math.max(0, Number(option.stockQuantity) || 0);
   return Math.max(0, Number(product.stock) || 0);
 }
+
+/** Prefer stored status; fall back to qty + threshold (same rules as mobile Buy Now). */
+export function getSelectedStockStatus(
+  product: MarketplaceProduct,
+  option: ProductVariantOption | null,
+): "In Stock" | "Low Stock" | "Out of Stock" {
+  const stock = getSelectedStock(product, option);
+  if (stock <= 0) return "Out of Stock";
+
+  const stored = String(
+    option?.stockStatus ?? product.stockStatus ?? "",
+  ).trim();
+  if (
+    stored === "Out of Stock" ||
+    stored === "Low Stock" ||
+    stored === "In Stock"
+  ) {
+    return stored;
+  }
+
+  const threshold = Math.max(
+    0,
+    Number(option?.lowStockThreshold) || 0,
+  );
+  if (threshold > 0 && stock <= threshold) return "Low Stock";
+  return "In Stock";
+}

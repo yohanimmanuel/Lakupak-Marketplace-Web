@@ -199,16 +199,23 @@ export default async function ProductPage({ params }: { params: Params }) {
             <span className="font-medium text-laku-muted">
               {t("product.sold", { count: product.soldCount })}
             </span>
+            <span className="font-medium text-laku-ink">
+              {t("product.stock", { count: product.stock })}
+            </span>
             <span
               className={`font-semibold ${
                 product.stockStatus === "Out of Stock"
                   ? "text-laku-alert"
-                  : "text-laku-ship"
+                  : product.stockStatus === "Low Stock"
+                    ? "text-laku-rating-star"
+                    : "text-laku-ship"
               }`}
             >
               {product.stockStatus === "Out of Stock"
                 ? t("product.outOfStock")
-                : t("product.inStock")}
+                : product.stockStatus === "Low Stock"
+                  ? t("product.lowStock")
+                  : t("product.inStock")}
             </span>
           </div>
 

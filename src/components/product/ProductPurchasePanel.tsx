@@ -17,6 +17,7 @@ import {
   formatVariantName,
   getSelectedMoq,
   getSelectedStock,
+  getSelectedStockStatus,
   getSelectedUnitPrice,
   initialVariantSelection,
 } from "@/lib/variants";
@@ -51,6 +52,7 @@ export default function ProductPurchasePanel({
   const packagePrice = unitPrice * pieces;
   const moq = getSelectedMoq(product, option);
   const stock = getSelectedStock(product, option);
+  const stockStatus = getSelectedStockStatus(product, option);
   const minQuantity = moq ? Math.max(1, Math.ceil(moq / pieces)) : 1;
   const maxQuantity =
     stock > 0 ? Math.max(1, Math.floor(stock / pieces)) : 9999;
@@ -71,13 +73,23 @@ export default function ProductPurchasePanel({
   const moqMet = !moq || purchaseQuantity * pieces >= moq;
   const freeGift = calculateProductPromotionGift(product, displayQuantity, moq);
   const freeQty = freeGift?.freeQty ?? 0;
-  const outOfStock =
-    product.stockStatus === "Out of Stock" ||
-    stock <= 0 ||
-    option?.stockStatus === "Out of Stock";
+  const outOfStock = stockStatus === "Out of Stock" || stock <= 0;
   const canPurchase = !pending && !outOfStock && moqMet;
   const variantName = formatVariantName(selected, option);
   const loginHref = `/login?next=${encodeURIComponent(`/product/${product.id}`)}`;
+
+  const stockStatusLabel =
+    stockStatus === "Out of Stock"
+      ? t("product.outOfStock")
+      : stockStatus === "Low Stock"
+        ? t("product.lowStock")
+        : t("product.inStock");
+  const stockStatusClass =
+    stockStatus === "Out of Stock"
+      ? "text-laku-alert"
+      : stockStatus === "Low Stock"
+        ? "text-laku-rating-star"
+        : "text-laku-ship";
 
   useEffect(() => {
     let active = true;
@@ -189,6 +201,15 @@ export default function ProductPurchasePanel({
           ))}
         </div>
       ) : null}
+
+      <div className="mb-5 flex flex-wrap items-center gap-2 text-sm">
+        <span className="font-medium text-laku-ink">
+          {t("product.stock", { count: stock })}
+        </span>
+        <span className={`font-semibold ${stockStatusClass}`} aria-label={t("product.stockStatus")}>
+          {stockStatusLabel}
+        </span>
+      </div>
 
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
