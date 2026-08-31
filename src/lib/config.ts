@@ -7,7 +7,7 @@ export const SITE_URL = (
   process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3002"
 ).replace(/\/$/, "");
 
-export const APP_SCHEME = process.env.NEXT_PUBLIC_APP_SCHEME ?? "lakumarketplace";
+export const APP_SCHEME = process.env.NEXT_PUBLIC_APP_SCHEME ?? "lakupak";
 
 export const ANDROID_STORE_URL =
   process.env.NEXT_PUBLIC_ANDROID_STORE_URL ??

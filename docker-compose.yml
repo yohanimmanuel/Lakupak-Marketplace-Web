@@ -5,7 +5,7 @@ services:
       args:
         # Baked into the client bundle at build time (same as Next.js locally).
         NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL:-http://localhost:3002}
-        NEXT_PUBLIC_APP_SCHEME: ${NEXT_PUBLIC_APP_SCHEME:-lakumarketplace}
+        NEXT_PUBLIC_APP_SCHEME: ${NEXT_PUBLIC_APP_SCHEME:-lakupak}
         NEXT_PUBLIC_ANDROID_STORE_URL: ${NEXT_PUBLIC_ANDROID_STORE_URL:-https://play.google.com/store/apps/details?id=com.laku.marketplace}
         NEXT_PUBLIC_IOS_STORE_URL: ${NEXT_PUBLIC_IOS_STORE_URL:-https://apps.apple.com/app/laku}
         NEXT_PUBLIC_DASHBOARD_URL: ${NEXT_PUBLIC_DASHBOARD_URL:-http://localhost:3000}

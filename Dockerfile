@@ -20,7 +20,7 @@ RUN npm install -g npm@10.8.2
 
 # NEXT_PUBLIC_* are inlined into the client bundle at build time.
 ARG NEXT_PUBLIC_SITE_URL=http://localhost:3002
-ARG NEXT_PUBLIC_APP_SCHEME=lakumarketplace
+ARG NEXT_PUBLIC_APP_SCHEME=lakupak
 ARG NEXT_PUBLIC_ANDROID_STORE_URL=https://play.google.com/store/apps/details?id=com.laku.marketplace
 ARG NEXT_PUBLIC_IOS_STORE_URL=https://apps.apple.com/app/laku
 ARG NEXT_PUBLIC_DASHBOARD_URL=http://localhost:3000
