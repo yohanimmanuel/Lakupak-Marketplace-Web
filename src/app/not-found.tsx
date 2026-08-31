@@ -20,7 +20,7 @@ export default async function NotFound() {
           href="/categories"
           className="rounded-lg border border-laku-line bg-white px-5 py-3 text-sm font-bold text-laku-ink transition-colors hover:border-laku-blue hover:text-laku-blue"
         >
-          {t("whatIsLaku.browseCategories")}
+          {t("whatIsLakupak.browseCategories")}
         </Link>
       </div>
     </div>

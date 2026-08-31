@@ -186,7 +186,7 @@ export default function ProductPurchasePanel({
                           [definition.variantType]: choice,
                         }))
                       }
-                      className={`rounded-lg border px-3.5 py-2 text-sm font-semibold transition-colors ${
+                      className={`rounded-md border px-2.5 py-1.5 text-xs font-medium transition-colors ${
                         active
                           ? "border-laku-blue bg-laku-blue/10 text-laku-blue"
                           : "border-laku-line bg-white text-laku-ink hover:border-laku-blue"

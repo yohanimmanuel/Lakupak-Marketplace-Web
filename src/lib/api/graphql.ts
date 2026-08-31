@@ -35,7 +35,7 @@ export async function graphqlRequest<T>(
   });
 
   if (!response.ok) {
-    throw new LakuApiError(`Laku API responded with ${response.status}`);
+    throw new LakuApiError(`Lakupak API responded with ${response.status}`);
   }
 
   const payload = (await response.json()) as GraphQLResponse<T>;
@@ -44,7 +44,7 @@ export async function graphqlRequest<T>(
     throw new LakuApiError(payload.errors[0].message);
   }
   if (!payload.data) {
-    throw new LakuApiError("Laku API returned an empty response");
+    throw new LakuApiError("Lakupak API returned an empty response");
   }
 
   return payload.data;
@@ -80,7 +80,7 @@ export async function restRequest<T>(
   });
 
   if (!response.ok) {
-    throw new LakuApiError(`Laku API responded with ${response.status} for ${path}`);
+    throw new LakuApiError(`Lakupak API responded with ${response.status} for ${path}`);
   }
 
   return (await response.json()) as T;
@@ -125,6 +125,6 @@ export async function restMutate<T>(
 
     return { ok: true, data: payload };
   } catch {
-    return { ok: false, status: 0, error: "Tidak dapat terhubung ke server Laku." };
+    return { ok: false, status: 0, error: "Tidak dapat terhubung ke server Lakupak." };
   }
 }

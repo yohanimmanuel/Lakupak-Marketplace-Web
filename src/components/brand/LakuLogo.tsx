@@ -7,21 +7,20 @@ type Props = {
   priority?: boolean;
 };
 
-/** Official Laku wordmark from /public (replaces the old Store + "Laku" text mark). */
+/** Official Lakupak wordmark — white on dark surfaces, blue on light. */
 export default function LakuLogo({
   variant = "onDark",
   className = "h-8 w-auto",
   priority = false,
 }: Props) {
-  const src =
-    variant === "onLight" ? "/LakuTextLogo.svg" : "/LakuWTextLogo.svg";
+  const src = variant === "onLight" ? "/Lakupak!.svg" : "/LakupakWhite.svg";
 
   return (
     <Image
       src={src}
-      alt="Laku"
-      width={141}
-      height={50}
+      alt="Lakupak"
+      width={180}
+      height={42}
       className={className}
       priority={priority}
     />

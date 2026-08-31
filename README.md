@@ -1,9 +1,9 @@
-# Laku Marketplace Web
+# Lakupak Marketplace Web
 
 ## Overview
-Laku Marketplace Web is the buyer-facing **website** for Laku. It lets verified retailers (warungs, kiosks, small shops) browse the wholesale catalog, open shareable product links, manage accounts and orders in the browser, and hand off into the mobile app when needed. Built with Next.js (App Router) and connected to the existing Laku backend (Next.js + Prisma).
+Lakupak Marketplace Web is the buyer-facing **website** for Lakupak. It lets verified retailers (warungs, kiosks, small shops) browse the wholesale catalog, open shareable product links, manage accounts and orders in the browser, and hand off into the mobile app when needed. Built with Next.js (App Router) and connected to the existing Lakupak backend (Next.js + Prisma).
 
-This is a sibling of `Laku-Marketplace` (Expo buyer app), `Laku-Dashboard` (SaaS + API), and `Laku-Driver`. It owns no data: everything comes from the Dashboard API.
+This is a sibling of `Lakupak-Marketplace` (Expo buyer app), `Lakupak-Dashboard` (SaaS + API), and `Lakupak-Driver`. It owns no data: everything comes from the Dashboard API.
 
 ## Key Security & Trust Principles
 - Verified buyer access; pricing and offers scoped to approved distributors.
@@ -11,7 +11,7 @@ This is a sibling of `Laku-Marketplace` (Expo buyer app), `Laku-Dashboard` (SaaS
 - Marketplace JWT is stored in an httpOnly cookie (`laku_mp_token`) — never exposed to client JavaScript.
 - Browser never calls the Dashboard directly (no CORS); server components and route handlers proxy all API traffic.
 
-## Why Laku Marketplace Web
+## Why Lakupak Marketplace Web
 - Shareable product and promo URLs for WhatsApp / browser discovery.
 - Desktop-friendly wholesale browse and reorder without installing the app first.
 - Same visual language as the mobile Marketplace so both feel like one product.
@@ -37,14 +37,14 @@ This is a sibling of `Laku-Marketplace` (Expo buyer app), `Laku-Dashboard` (SaaS
 - Styling: Tailwind CSS v4 (design tokens in `src/app/globals.css`)
 - UI icons: lucide-react
 - Maps (signup address preview): Mapbox GL
-- Data: server-side GraphQL + REST proxies to Laku-Dashboard
+- Data: server-side GraphQL + REST proxies to Lakupak-Dashboard
 - Auth session: httpOnly cookie via `/api/auth/*` route handlers
 - i18n: Indonesian + English locale JSON under `src/i18n`
 
 ## Data flow
 
 ```
-Browser → Laku Marketplace Web (RSC / route handlers) → Laku Dashboard API
+Browser → Lakupak Marketplace Web (RSC / route handlers) → Lakupak Dashboard API
 ```
 
 | Need | Upstream |
@@ -59,7 +59,7 @@ Browser → Laku Marketplace Web (RSC / route handlers) → Laku Dashboard API
 Product pages resolve through the `productId` argument on `mobileMarketplaceProducts` so shared links work even when free-text search does not index product ids.
 
 ## Getting Started
-1) Prerequisites: Node LTS, Git, a running **Laku-Dashboard** (default `http://localhost:3000`)
+1) Prerequisites: Node LTS, Git, a running **Lakupak-Dashboard** (default `http://localhost:3000`)
 2) Install dependencies:
 ```
 npm install
@@ -78,11 +78,11 @@ Browse surfaces degrade to empty states instead of crashing when the Dashboard i
 
 ## Run with Docker
 
-You can run Marketplace Web with **only Docker** (no Node.js or npm required on your machine), using the same multi-stage pattern as `Laku-Dashboard`.
+You can run Marketplace Web with **only Docker** (no Node.js or npm required on your machine), using the same multi-stage pattern as `Lakupak-Dashboard`.
 
-**Prerequisites:** [Docker Desktop](https://www.docker.com/products/docker-desktop/) installed and running, plus a reachable **Laku-Dashboard** API (default host port `3000`).
+**Prerequisites:** [Docker Desktop](https://www.docker.com/products/docker-desktop/) installed and running, plus a reachable **Lakupak-Dashboard** API (default host port `3000`).
 
-1. **Clone the repo** and `cd` into `Laku-Marketplace-Web`.
+1. **Clone the repo** and `cd` into `Lakupak-Marketplace-Web`.
 2. **Create a `.env` file** in the project root (Compose reads `.env`; local npm can keep using `.env.local`):
    ```bash
    cp env.example .env
@@ -129,7 +129,7 @@ Copy `env.example` to `.env.local` (npm) or `.env` (Docker) and set:
 | App handoff | `/app` |
 
 ## Design
-Mirrors `Laku-Marketplace` mobile: primary blue `#0a61d7`, page surface `#f9fafb`, flat white product cards (6px radius), blue prices, red discount tags, purple promo pills. Tokens live in `src/app/globals.css`. Default copy aligns with the app’s Indonesian locale; English is available via i18n.
+Mirrors `Lakupak-Marketplace` mobile: primary blue `#0a61d7`, page surface `#f9fafb`, flat white product cards (6px radius), blue prices, red discount tags, purple promo pills. Tokens live in `src/app/globals.css`. Default copy aligns with the app’s Indonesian locale; English is available via i18n.
 
 ## Scripts
 

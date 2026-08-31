@@ -6,22 +6,22 @@ import { getTranslations } from "@/i18n/server";
 const POINTS = [
   {
     icon: ShieldCheck,
-    titleKey: "whatIsLaku.verifiedTitle",
-    bodyKey: "whatIsLaku.verifiedBody",
+    titleKey: "whatIsLakupak.verifiedTitle",
+    bodyKey: "whatIsLakupak.verifiedBody",
   },
   {
     icon: PackageCheck,
-    titleKey: "whatIsLaku.wholesaleTitle",
-    bodyKey: "whatIsLaku.wholesaleBody",
+    titleKey: "whatIsLakupak.wholesaleTitle",
+    bodyKey: "whatIsLakupak.wholesaleBody",
   },
   {
     icon: Truck,
-    titleKey: "whatIsLaku.deliveryTitle",
-    bodyKey: "whatIsLaku.deliveryBody",
+    titleKey: "whatIsLakupak.deliveryTitle",
+    bodyKey: "whatIsLakupak.deliveryBody",
   },
 ];
 
-/** First-visit context for people who have never heard of Laku. */
+/** First-visit context for people who have never heard of Lakupak. */
 export default async function WhatIsLaku() {
   const t = await getTranslations();
 
@@ -29,10 +29,10 @@ export default async function WhatIsLaku() {
     <section className="px-4 md:px-0">
       <div className="rounded-2xl bg-white p-8 md:p-12">
         <h2 className="text-xl font-bold text-laku-ink md:text-2xl">
-          {t("whatIsLaku.title")}
+          {t("whatIsLakupak.title")}
         </h2>
         <p className="mt-2 max-w-2xl text-sm/6 text-laku-muted">
-          {t("whatIsLaku.body")}
+          {t("whatIsLakupak.body")}
         </p>
 
         <div className="mt-8 grid gap-8 md:grid-cols-3">
@@ -58,7 +58,7 @@ export default async function WhatIsLaku() {
             href="/categories"
             className="rounded-lg border border-laku-line px-5 py-3 text-sm font-bold text-laku-ink transition-colors hover:bg-laku-surface"
           >
-            {t("whatIsLaku.browseCategories")}
+            {t("whatIsLakupak.browseCategories")}
           </Link>
         </div>
       </div>

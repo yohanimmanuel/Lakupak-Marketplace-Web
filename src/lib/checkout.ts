@@ -128,7 +128,7 @@ export function getSellerKey(product: MarketplaceProduct): string {
   return (
     product.seller?.company?.name?.trim() ||
     product.seller?.name?.trim() ||
-    (product.userId != null ? `seller-${product.userId}` : "Distributor Laku")
+    (product.userId != null ? `seller-${product.userId}` : "Distributor Lakupak")
   );
 }
 

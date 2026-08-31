@@ -70,7 +70,7 @@ export function buildInvoiceSnapshot(
 
   return {
     orderId: order.orderId,
-    storeName: order.storeName?.trim() || "Laku Marketplace",
+    storeName: order.storeName?.trim() || "Lakupak Marketplace",
     issuedAt: formatIssuedAt(order.orderDate, locale),
     paymentStatus: order.paymentStatus || "—",
     paymentTerms: order.paymentTerms || "—",
@@ -87,5 +87,5 @@ export function buildInvoiceSnapshot(
 }
 
 export function getInvoiceLegalFooter(year = new Date().getFullYear()): string {
-  return `© ${year} Laku. All rights reserved. This invoice is issued through Laku Marketplace. Use of the Laku platform is subject to Laku's Terms & Conditions and Privacy Policy.`;
+  return `© ${year} Lakupak. All rights reserved. This invoice is issued through Lakupak Marketplace. Use of the Lakupak platform is subject to Lakupak's Terms & Conditions and Privacy Policy.`;
 }
