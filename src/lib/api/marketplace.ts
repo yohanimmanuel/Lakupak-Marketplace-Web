@@ -155,11 +155,11 @@ type ProductsQueryData = {
 /** Same derivation the mobile client applies after fetching. */
 function normalizeProduct(raw: RawProduct): MarketplaceProduct {
   const sellingPrice = Number(raw.sellingPrice) || 0;
-  const originalSellingPrice =
-    Number(raw.originalSellingPrice) || Number(raw.originalPrice) || 0;
+  // originalPrice from the API is purchase/cost — never use it as a compare-at price.
+  const originalSellingPrice = Number(raw.originalSellingPrice) || 0;
   const discount =
-    originalSellingPrice > sellingPrice && originalSellingPrice > 0
-      ? ((originalSellingPrice - sellingPrice) / originalSellingPrice) * 100
+    originalSellingPrice > sellingPrice
+      ? Math.round(((originalSellingPrice - sellingPrice) / originalSellingPrice) * 100)
       : 0;
 
   const { variantOptionsFormatted, variants: rawVariants, ...rest } = raw;
