@@ -1,17 +1,16 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { ArrowDownWideNarrow, ArrowUpWideNarrow, ChevronDown, Package } from "lucide-react";
+import { ChevronDown, Package } from "lucide-react";
 
 import ProductGrid from "@/components/product/ProductGrid";
 import { useTranslations } from "@/i18n/client";
 import type { MarketplaceProduct } from "@/lib/api/types";
 import { formatNumber } from "@/lib/format";
 
-type SortKey = "popular" | "latest" | "top_sales" | "price";
-type PriceDir = "asc" | "desc";
+type SortKey = "popular" | "latest" | "top_sales";
 
-const SORT_TABS: SortKey[] = ["popular", "latest", "top_sales", "price"];
+const SORT_TABS: SortKey[] = ["popular", "latest", "top_sales"];
 
 function safeNum(value: unknown, fallback = 0): number {
   const n = typeof value === "number" ? value : typeof value === "string" ? Number(value) : NaN;
@@ -47,7 +46,6 @@ export default function DistributorProductShelf({
 }) {
   const t = useTranslations();
   const [sortKey, setSortKey] = useState<SortKey>("popular");
-  const [priceDir, setPriceDir] = useState<PriceDir>("asc");
   const [category, setCategory] = useState("all");
 
   const categories = useMemo(() => {
@@ -85,24 +83,10 @@ export default function DistributorProductShelf({
       sorted.sort(
         (a, b) => parseSoldCount(b.soldCount) - parseSoldCount(a.soldCount),
       );
-    } else if (sortKey === "price") {
-      sorted.sort((a, b) => {
-        const diff = safeNum(a.sellingPrice) - safeNum(b.sellingPrice);
-        return priceDir === "asc" ? diff : -diff;
-      });
     }
 
     return sorted;
-  }, [category, priceDir, products, sortKey]);
-
-  const onPressPrice = () => {
-    if (sortKey !== "price") {
-      setSortKey("price");
-      setPriceDir("asc");
-      return;
-    }
-    setPriceDir((dir) => (dir === "asc" ? "desc" : "asc"));
-  };
+  }, [category, products, sortKey]);
 
   return (
     <section className="mt-8">
@@ -124,32 +108,6 @@ export default function DistributorProductShelf({
         >
           {SORT_TABS.map((key) => {
             const active = sortKey === key;
-            if (key === "price") {
-              return (
-                <button
-                  key={key}
-                  type="button"
-                  onClick={onPressPrice}
-                  className={`relative shrink-0 border-b-2 px-3 py-3 text-sm transition-colors ${
-                    active
-                      ? "border-laku-blue font-bold text-laku-blue"
-                      : "border-transparent font-medium text-laku-muted hover:text-laku-ink"
-                  }`}
-                >
-                  <span className="inline-flex items-center gap-1">
-                    {t(`distributor.sort.${key}`)}
-                    {active ? (
-                      priceDir === "asc" ? (
-                        <ArrowUpWideNarrow className="size-3.5" aria-hidden />
-                      ) : (
-                        <ArrowDownWideNarrow className="size-3.5" aria-hidden />
-                      )
-                    ) : null}
-                  </span>
-                </button>
-              );
-            }
-
             return (
               <button
                 key={key}
@@ -165,46 +123,42 @@ export default function DistributorProductShelf({
               </button>
             );
           })}
-
-          {categories.length > 1 ? (
-            <label className="relative ml-auto flex shrink-0 items-center gap-1 border-b-2 border-transparent px-3 py-3 text-sm font-medium text-laku-muted">
-              <span className="sr-only">{t("distributor.sort.category")}</span>
-              <select
-                value={category}
-                onChange={(event) => setCategory(event.target.value)}
-                className={`max-w-36 appearance-none bg-transparent pr-5 outline-none ${
-                  category !== "all" ? "font-bold text-laku-blue" : ""
-                }`}
-              >
-                {categories.map((value) => (
-                  <option key={value} value={value}>
-                    {value === "all"
-                      ? t("distributor.sort.categoryAll")
-                      : value}
-                  </option>
-                ))}
-              </select>
-              <ChevronDown
-                className="pointer-events-none absolute right-3 size-3.5 text-laku-muted"
-                aria-hidden
-              />
-            </label>
-          ) : null}
         </nav>
 
-        <div className="p-3 sm:p-4">
-          {visible.length > 0 ? (
-            <ProductGrid products={visible} priorityCount={5} />
-          ) : (
-            <div className="flex flex-col items-center px-6 py-14 text-center">
-              <Package className="mb-3 size-10 text-laku-faint" aria-hidden />
-              <p className="text-sm font-semibold text-laku-ink">
-                {t("distributor.emptyProducts")}
-              </p>
-            </div>
-          )}
+        <div className="flex items-center gap-2 border-b border-laku-line px-4 py-3">
+          <label className="text-xs font-semibold text-laku-muted">
+            {t("distributor.sort.category")}
+          </label>
+          <div className="relative">
+            <select
+              value={category}
+              onChange={(event) => setCategory(event.target.value)}
+              className="appearance-none rounded-lg border border-laku-line bg-white py-1.5 pl-3 pr-8 text-sm font-semibold text-laku-ink outline-none focus:border-laku-blue"
+            >
+              {categories.map((value) => (
+                <option key={value} value={value}>
+                  {value === "all" ? t("distributor.sort.categoryAll") : value}
+                </option>
+              ))}
+            </select>
+            <ChevronDown
+              className="pointer-events-none absolute right-2 top-1/2 size-3.5 -translate-y-1/2 text-laku-muted"
+              aria-hidden
+            />
+          </div>
         </div>
       </div>
+
+      {visible.length > 0 ? (
+        <ProductGrid products={visible} />
+      ) : (
+        <div className="rounded-2xl bg-white px-5 py-12 text-center">
+          <Package className="mx-auto size-10 text-laku-faint" aria-hidden />
+          <p className="mt-3 text-sm font-semibold text-laku-ink">
+            {t("distributor.emptyProducts")}
+          </p>
+        </div>
+      )}
     </section>
   );
 }

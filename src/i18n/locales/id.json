@@ -122,7 +122,7 @@
     "browseCategories": "Jelajahi kategori"
   },
   "footer": {
-    "about": "Pasar grosir untuk warung dan toko ritel. Pesan langsung dari distributor terverifikasi, bandingkan harga, dan pantau pengiriman dalam satu tempat.",
+    "about": "Marketplace grosir untuk warung dan toko retail. Temukan produk dari distributor terverifikasi dan kirim purchase order di satu tempat.",
     "exploreTitle": "Jelajahi",
     "appTitle": "Lakupak di ponsel Anda",
     "appBody": "Aplikasi menambahkan notifikasi langsung, pelacakan pengiriman, dan chat distributor.",
@@ -243,7 +243,7 @@
       "returnDays": "Retur {{count}} hari",
       "originalProduct": "Produk original"
     },
-    "addToCartError": "Gagal menambahkan ke keranjang.",
+    "addToCartError": "Tidak dapat menambahkan produk ke PO.",
     "favoriteError": "Gagal memperbarui favorit.",
     "notProvided": "Belum tersedia",
     "leadDaysRange": "{{min}}-{{max}} hari",
@@ -259,8 +259,14 @@
     "estimatedDelivery": "Estimasi pengiriman",
     "shippedFrom": "Dikirim dari",
     "brand": "Merek",
-    "shareText": "{{name}} — {{price}} di Lakupak",
-    "metaDescription": "Produk grosir di Lakupak."
+    "shareText": "{{name}} di Lakupak",
+    "metaDescription": "Produk grosir di Lakupak.",
+    "requestOrder": "Ajukan Pesanan",
+    "addToPo": "Tambah ke PO",
+    "addedToPo": "Ditambahkan ke PO",
+    "poItemsLabel": "Jumlah PO",
+    "poQuantityCount": "{{count}} item",
+    "pricingConfirmedBy": "Harga akan dikonfirmasi oleh {{distributor}}"
   },
   "productReviewsList": {
     "title": "Ulasan",
@@ -277,32 +283,38 @@
     "pageOf": "Halaman {{page}} dari {{total}}"
   },
   "cart": {
-    "title": "Keranjang",
-    "emptyTitle": "Keranjang masih kosong",
-    "emptyBody": "Tambahkan produk grosir favorit Anda, lalu selesaikan pesanan langsung dari situs ini.",
+    "title": "Purchase order",
+    "emptyTitle": "PO Anda masih kosong",
+    "emptyBody": "Tambahkan produk dari satu distributor, lalu kirim purchase order.",
     "startShopping": "Mulai belanja",
-    "summaryTitle": "Ringkasan belanja",
+    "summaryTitle": "Ringkasan PO",
     "subtotal": "Subtotal",
     "shipping": "Ongkos kirim",
     "shippingNote": "Disepakati dengan distributor",
     "total": "Total",
-    "checkout": "Lanjut ke checkout",
+    "checkout": "Lanjut kirim PO",
     "remove": "Hapus",
     "packageInfo": "{{packageType}}",
     "freeItems": "+{{count}} gratis",
-    "updateError": "Gagal memperbarui keranjang.",
+    "updateError": "Gagal memperbarui PO.",
     "moqBlocked": "Naikkan jumlah ke minimal pembelian tiap produk sebelum checkout.",
     "splitNote": "Produk dari {{count}} distributor akan dipecah menjadi {{count}} pesanan terpisah.",
-    "signedOutTitle": "Masuk untuk melihat keranjang",
-    "signedOutBody": "Keranjang Anda tersinkron dengan aplikasi Lakupak setelah masuk.",
-    "metaDescription": "Produk grosir yang siap Anda pesan di Lakupak."
+    "signedOutTitle": "Masuk untuk melihat PO",
+    "signedOutBody": "Purchase order Anda tersinkron dengan aplikasi Lakupak setelah masuk.",
+    "metaDescription": "Produk grosir siap untuk purchase order di Lakupak.",
+    "preparingCheckout": "Menyiapkan checkout…",
+    "singleDistributorOnly": "Satu purchase order hanya boleh berisi produk dari satu distributor. Hapus produk distributor lain terlebih dahulu.",
+    "itemCount": "Item",
+    "qtyBadge": "{{count}}",
+    "distributor": "Distributor",
+    "pricingNote": "Harga akan dikonfirmasi oleh {{distributor}}"
   },
   "checkout": {
-    "title": "Checkout",
-    "signedOutTitle": "Masuk untuk checkout",
-    "signedOutBody": "Buat pesanan langsung dari situs Lakupak setelah Anda masuk.",
+    "title": "Kirim purchase order",
+    "signedOutTitle": "Masuk untuk mengirim PO",
+    "signedOutBody": "Kirim purchase order langsung dari situs Lakupak setelah Anda masuk.",
     "emptyTitle": "Tidak ada produk untuk dipesan",
-    "emptyBody": "Tambahkan produk ke keranjang terlebih dahulu.",
+    "emptyBody": "Tambahkan produk ke PO terlebih dahulu.",
     "findProducts": "Cari produk",
     "addressTitle": "Alamat pengiriman",
     "recipientName": "Nama penerima",
@@ -311,10 +323,10 @@
     "fullAddress": "Alamat lengkap",
     "addressPlaceholder": "Jalan, nomor, kelurahan, kecamatan, kota, kode pos",
     "addressSaveNote": "Alamat ini juga disimpan di profil Anda untuk pesanan berikutnya.",
-    "deliveryTitle": "Metode pengiriman",
+    "deliveryTitle": "Preferensi pengiriman",
     "pickupDate": "Tanggal pengambilan (opsional)",
     "pickupTime": "Jam pengambilan (opsional)",
-    "deliveryDate": "Tanggal pengiriman (opsional)",
+    "deliveryDate": "Tanggal pengiriman pilihan (opsional)",
     "deliveryTime": "Jam pengiriman (opsional)",
     "scheduleNote": "Jadwal bersifat permintaan. Distributor akan mengonfirmasi ketersediaannya.",
     "paymentTitle": "Metode pembayaran",
@@ -326,11 +338,11 @@
     "splitNote": "Pesanan akan dipecah menjadi {{count}} pesanan, satu untuk tiap distributor.",
     "placeOrder": "Buat pesanan",
     "placing": "Memproses pesanan…",
-    "terms": "Dengan membuat pesanan, Anda menyetujui syarat pembelian grosir Lakupak.",
+    "terms": "Dengan mengirim purchase order, Anda menyetujui syarat pembelian grosir Lakupak. Harga dikonfirmasi distributor setelah pengiriman PO.",
     "lineSummary": "{{quantity}} · {{price}}",
     "lineSummaryWithPackage": "{{quantity}} {{packageType}} · {{price}}",
     "freeItems": "+{{count}} gratis",
-    "metaDescription": "Selesaikan pesanan grosir Anda di Lakupak.",
+    "metaDescription": "Kirim purchase order grosir di Lakupak.",
     "errors": {
       "sessionExpired": "Sesi Anda berakhir. Masuk kembali.",
       "delivery": "Pilih metode pengiriman.",
@@ -339,7 +351,39 @@
       "address": "Alamat pengiriman wajib diisi.",
       "empty": "Tidak ada produk untuk dipesan.",
       "productMissing": "Produk tidak ditemukan."
-    }
+    },
+    "savedAddress": "Alamat tersimpan",
+    "useNewAddress": "Gunakan alamat baru",
+    "addressLine": "Baris alamat",
+    "city": "Kota",
+    "postalCode": "Kode pos",
+    "landmark": "Catatan / patokan untuk pengemudi (opsional)",
+    "landmarkPlaceholder": "mis. sebelah gerbang biru",
+    "landmarkPrefix": "Patokan: {{landmark}}",
+    "manageAddresses": "Kelola alamat tersimpan",
+    "email": "Email",
+    "contactTitle": "Kontak akun",
+    "contactReadOnly": "Detail kontak diambil dari akun Anda.",
+    "editInAccount": "Ubah di pengaturan akun",
+    "notSet": "Belum diisi",
+    "pickupSlot": "Jendela pengambilan",
+    "deliverySlot": "Jendela pengiriman pilihan",
+    "slotMorning": "Pagi",
+    "slotAfternoon": "Siang",
+    "slotAny": "Kapan saja",
+    "poNotesTitle": "Referensi & catatan PO",
+    "poReference": "Referensi PO Anda (opsional)",
+    "poReferencePlaceholder": "Nomor PO internal, jika ada",
+    "noteToDistributor": "Catatan untuk distributor (opsional)",
+    "noteToDistributorPlaceholder": "Informasi yang perlu diketahui distributor sebelum konfirmasi",
+    "itemCount": "Item",
+    "qtyBadge": "{{count}}",
+    "distributor": "Distributor",
+    "pricingNote": "Harga akan dikonfirmasi oleh {{distributor}}",
+    "singleDistributorOnly": "Purchase order tidak boleh berisi produk dari lebih dari satu distributor.",
+    "submitPo": "Kirim PO",
+    "submitting": "Mengirim PO…",
+    "lineQty": "{{quantity}} {{packageType}}"
   },
   "delivery": {
     "self_pickup": {
@@ -366,12 +410,12 @@
     }
   },
   "checkoutSuccess": {
-    "metaTitle": "Pesanan Berhasil Dibuat",
-    "title": "Pesanan berhasil dibuat!",
-    "subtitleSingle": "Distributor sudah menerima pesanan Anda.",
-    "subtitleMulti": "{{count}} pesanan dibuat karena produk berasal dari distributor berbeda.",
-    "partialTitle": "Sebagian pesanan berhasil",
-    "partialBody": "{{created}} dari {{expected}} pesanan distributor berhasil dibuat.",
+    "metaTitle": "PO Terkirim",
+    "title": "Purchase order terkirim",
+    "subtitleSingle": "Distributor telah menerima purchase order Anda dan akan mengonfirmasi harga.",
+    "subtitleMulti": "{{count}} purchase order dibuat karena produk berasal dari distributor berbeda.",
+    "partialTitle": "Sebagian PO terkirim",
+    "partialBody": "{{created}} dari {{expected}} purchase order distributor berhasil dibuat.",
     "partialWarning": "Satu atau lebih distributor tidak dapat dijangkau. Lanjutkan dengan pesanan di bawah, lalu tambahkan kembali item yang belum terpesan dan coba lagi.",
     "awaitingTransfer": "Menunggu transfer bank",
     "codNote": "Dibayar tunai saat pesanan tiba",
@@ -385,7 +429,11 @@
     "stepProcessTitle": "Distributor memproses pesanan",
     "stepProcessBody": "Pesanan dikonfirmasi lalu dikemas oleh distributor.",
     "stepShipTitle": "Pengiriman berjalan",
-    "stepShipBody": "Pantau status pengiriman di halaman detail pesanan."
+    "stepShipBody": "Pantau status pengiriman di halaman detail pesanan.",
+    "pendingConfirmation": "Status: Menunggu konfirmasi",
+    "pricingPending": "Harga akan dikonfirmasi distributor — belum ada tagihan.",
+    "stepConfirmTitle": "Distributor mengonfirmasi PO Anda",
+    "stepConfirmBody": "Distributor meninjau item dan kuantitas, lalu mengonfirmasi harga untuk akun Anda."
   },
   "orders": {
     "title": "Pesanan",
@@ -419,7 +467,7 @@
     "metaDescription": "Pantau status pesanan grosir Anda di Lakupak."
   },
   "orderStatus": {
-    "pending": "Pending",
+    "pending": "Menunggu konfirmasi",
     "confirmed": "Confirmed",
     "packed": "Packed",
     "shipped": "Shipped",
@@ -695,7 +743,6 @@
       "popular": "Populer",
       "latest": "Terbaru",
       "top_sales": "Terlaris",
-      "price": "Harga",
       "category": "Kategori",
       "categoryAll": "Semua"
     },
@@ -707,7 +754,10 @@
       "error": "Gagal memperbarui status mengikuti."
     },
     "rateReview": "Beri penilaian",
-    "viewRatingsA11y": "Lihat penilaian distributor"
+    "viewRatingsA11y": "Lihat penilaian distributor",
+    "yearsLabel": "Tahun beroperasi",
+    "coverageLabel": "Cakupan pengiriman",
+    "fulfillmentLabel": "Catatan pemenuhan"
   },
   "distributorReviewsList": {
     "title": "Ulasan distributor",
@@ -767,7 +817,9 @@
     "email": "Email",
     "noInfo": "Belum ada detail perusahaan tambahan.",
     "reviewsCount": "({{count}} ulasan)",
-    "browseProducts": "Jelajahi produk"
+    "browseProducts": "Jelajahi produk",
+    "coverage": "Cakupan pengiriman",
+    "fulfillment": "Catatan pemenuhan"
   },
   "sellerInfo": {
     "metaTitle": "Informasi Penjual",
@@ -796,7 +848,9 @@
     "noReviews": "Belum ada ulasan.",
     "wouldOrderAgain": "Akan order lagi",
     "browseShop": "Jelajahi toko",
-    "reportDistributor": "Laporkan distributor"
+    "reportDistributor": "Laporkan distributor",
+    "coverage": "Cakupan pengiriman",
+    "fulfillment": "Catatan pemenuhan"
   },
   "cancelReasons": {
     "changed_mind": "Berubah pikiran",

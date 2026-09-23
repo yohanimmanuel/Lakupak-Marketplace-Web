@@ -1,10 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { CheckCircle2, ClipboardList, CreditCard, Package, Truck } from "lucide-react";
+import { CheckCircle2, ClipboardList, Package, Truck } from "lucide-react";
 
 import { getTranslations } from "@/i18n/server";
-import { formatCurrency } from "@/lib/format";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations();
@@ -28,27 +27,19 @@ export default async function CheckoutSuccessPage({
   searchParams: SearchParams;
 }) {
   const t = await getTranslations();
-  const { orders, total, payment, partial, expected } = await searchParams;
+  const { orders, partial, expected } = await searchParams;
   const orderIds = (orders ?? "").split(",").filter(Boolean);
 
   if (orderIds.length === 0) redirect("/orders");
 
-  const amount = Number(total) || 0;
-  const isBankTransfer = payment === "bank_transfer";
   const isPartial = partial === "1";
   const expectedCount = Number(expected) || 0;
-  const payHref = `/orders/${encodeURIComponent(orderIds[0])}/pay`;
 
   const nextSteps = [
     {
-      icon: CreditCard,
-      title: t("checkoutSuccess.stepPayTitle"),
-      body: t("checkoutSuccess.stepPayBody"),
-    },
-    {
       icon: Package,
-      title: t("checkoutSuccess.stepProcessTitle"),
-      body: t("checkoutSuccess.stepProcessBody"),
+      title: t("checkoutSuccess.stepConfirmTitle"),
+      body: t("checkoutSuccess.stepConfirmBody"),
     },
     {
       icon: Truck,
@@ -88,13 +79,11 @@ export default async function CheckoutSuccessPage({
           </p>
         ) : null}
 
-        <p className="mt-5 text-3xl font-bold text-laku-blue">
-          {formatCurrency(amount, t.locale)}
+        <p className="mt-5 text-sm font-semibold text-laku-ink">
+          {t("checkoutSuccess.pendingConfirmation")}
         </p>
         <p className="mt-1 text-xs text-laku-muted">
-          {isBankTransfer
-            ? t("checkoutSuccess.awaitingTransfer")
-            : t("checkoutSuccess.codNote")}
+          {t("checkoutSuccess.pricingPending")}
         </p>
 
         <ul className="mt-6 space-y-2">
@@ -115,14 +104,6 @@ export default async function CheckoutSuccessPage({
         </ul>
 
         <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-center">
-          {isBankTransfer ? (
-            <Link
-              href={payHref}
-              className="rounded-lg bg-laku-blue px-6 py-3.5 text-sm font-bold text-white transition-colors hover:bg-laku-blue-dark"
-            >
-              {t("checkoutSuccess.payNow")}
-            </Link>
-          ) : null}
           <Link
             href="/orders"
             className="inline-flex items-center justify-center gap-2 rounded-lg border border-laku-line px-6 py-3.5 text-sm font-bold text-laku-ink transition-colors hover:bg-laku-surface"

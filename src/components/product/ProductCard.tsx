@@ -2,19 +2,11 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { Gift, ImageIcon, MapPin, Star, Truck } from "lucide-react";
+import { ImageIcon, MapPin, Store, Truck } from "lucide-react";
 
 import { useTranslations } from "@/i18n/client";
 import type { MarketplaceProduct } from "@/lib/api/types";
-import {
-  formatProductOriginalPrice,
-  formatProductPrice,
-  getDeliveryLabel,
-  getDiscountLabel,
-  getPromotion,
-  getShippingLocation,
-  showsStrikethrough,
-} from "@/lib/format";
+import { getDeliveryLabel, getShippingLocation } from "@/lib/format";
 import { productUrl } from "@/lib/share";
 
 type Props = {
@@ -22,19 +14,25 @@ type Props = {
   priority?: boolean;
 };
 
+function distributorLabel(product: MarketplaceProduct, fallback: string): string {
+  return (
+    product.seller?.company?.name?.trim() ||
+    product.seller?.name?.trim() ||
+    fallback
+  );
+}
+
 export default function ProductCard({ product, priority = false }: Props) {
   const t = useTranslations();
   const image = product.images[0];
-  const discountLabel = getDiscountLabel(product, t.locale);
-  const promotion = getPromotion(product);
   const delivery = getDeliveryLabel(product, t);
   const location = getShippingLocation(product);
-  const rating = product.reviews?.overallRating ?? product.rating ?? 0;
-  const ratingLabel =
-    Number.isFinite(rating) && rating > 0
-      ? (Math.round(rating * 10) / 10).toFixed(1)
-      : "0.0";
-  const showDiscountTag = Boolean(discountLabel) && product.offerBadge !== "Promotion";
+  const sellerName = distributorLabel(product, t("product.distributorFallback"));
+  const sellerLogo =
+    product.seller?.company?.logo?.trim() ||
+    product.seller?.avatar?.trim() ||
+    null;
+  const category = product.productCategory || product.category || null;
 
   return (
     <Link
@@ -56,12 +54,6 @@ export default function ProductCard({ product, priority = false }: Props) {
             <ImageIcon className="size-10 text-laku-faint" aria-hidden />
           </div>
         )}
-
-        {showDiscountTag ? (
-          <span className="absolute top-2 left-2 rounded-[4px] bg-laku-discount-bg px-1.5 py-1 text-[10px] font-bold text-laku-discount-ink">
-            {discountLabel}
-          </span>
-        ) : null}
       </div>
 
       <div className="p-2">
@@ -69,43 +61,26 @@ export default function ProductCard({ product, priority = false }: Props) {
           {product.name}
         </h3>
 
-        <div className="mb-1 flex flex-col items-start gap-0.5">
-          {showsStrikethrough(product) ? (
-            <span className="text-xs text-laku-faint line-through">
-              {formatProductOriginalPrice(product, t.locale)}
-            </span>
-          ) : null}
-          <span className="text-sm font-bold text-laku-blue">
-            {formatProductPrice(product, t.locale)}
-          </span>
-        </div>
-
-        {promotion ? (
-          <span className="mb-1.5 inline-flex max-w-full items-center gap-1 truncate rounded-[4px] bg-laku-promo-bg px-2 py-1 text-[11px] font-bold text-laku-promo-ink">
-            <Gift className="size-2.5 shrink-0" aria-hidden />
-            {t("product.promoBuyGet", {
-              min: promotion.minQuantity,
-              free: promotion.freeQuantity,
-            })}
-          </span>
+        {product.brand ? (
+          <p className="mb-1 truncate text-xs text-laku-muted">{product.brand}</p>
         ) : null}
 
-        <div className="mb-1 flex flex-wrap items-center gap-x-1.5 gap-y-1">
-          <span
-            className="inline-flex items-center gap-1 rounded-[4px] border border-laku-rating-line bg-laku-rating-bg px-2 py-0.5 text-xs font-semibold text-laku-ink"
-            aria-label={`Rating ${ratingLabel} out of 5`}
-          >
-            <Star
-              className="size-[11px] fill-laku-rating-star text-laku-rating-star"
-              aria-hidden
-            />
-            {ratingLabel}
+        {category ? (
+          <p className="mb-1.5 truncate text-[11px] font-medium text-laku-faint">
+            {category}
+          </p>
+        ) : null}
+
+        <div className="mb-1.5 flex items-center gap-1.5">
+          <span className="relative flex size-5 shrink-0 items-center justify-center overflow-hidden rounded-full bg-laku-blue/10 text-laku-blue">
+            {sellerLogo ? (
+              <Image src={sellerLogo} alt="" fill sizes="20px" className="object-cover" />
+            ) : (
+              <Store className="size-3" aria-hidden />
+            )}
           </span>
-          <span className="text-xs text-[#d1d5db]" aria-hidden>
-            •
-          </span>
-          <span className="text-xs font-medium text-laku-muted">
-            {t("product.sold", { count: product.soldCount })}
+          <span className="truncate text-xs font-semibold text-laku-ink">
+            {sellerName}
           </span>
         </div>
 

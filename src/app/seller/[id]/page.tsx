@@ -148,6 +148,18 @@ export default async function SellerInformationPage({
         {profile.yearsInOperation ? (
           <InfoField label={t("sellerInfo.years")} value={profile.yearsInOperation} />
         ) : null}
+        {profile.deliveryCoverageArea ? (
+          <InfoField
+            label={t("sellerInfo.coverage")}
+            value={profile.deliveryCoverageArea}
+          />
+        ) : null}
+        {profile.fulfillmentNotes ? (
+          <InfoField
+            label={t("sellerInfo.fulfillment")}
+            value={profile.fulfillmentNotes}
+          />
+        ) : null}
         {profile.businessDescription ? (
           <InfoField
             label={t("sellerInfo.description")}

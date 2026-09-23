@@ -204,6 +204,8 @@ export type Distributor = {
   industryType?: string | null;
   businessDescription?: string | null;
   yearsInOperation?: string | null;
+  deliveryCoverageArea?: string | null;
+  fulfillmentNotes?: string | null;
   businessAddress?: string | null;
   businessPhone?: string | null;
   businessEmail?: string | null;

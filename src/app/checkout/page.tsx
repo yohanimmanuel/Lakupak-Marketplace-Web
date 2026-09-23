@@ -4,6 +4,7 @@ import Link from "next/link";
 import CheckoutForm from "@/components/checkout/CheckoutForm";
 import SignedOutPrompt from "@/components/auth/SignedOutPrompt";
 import { getTranslations } from "@/i18n/server";
+import { listAddresses } from "@/lib/api/addresses";
 import { getCart, getCartQuantity } from "@/lib/api/cart";
 import { getProductById } from "@/lib/api/marketplace";
 import { getProfile } from "@/lib/api/profile";
@@ -54,7 +55,7 @@ export default async function CheckoutPage({
   const isDirect = Boolean(productId);
   const variantName = variant?.trim() || "Default";
 
-  const [lines, profile] = await Promise.all([
+  const [lines, profile, addresses] = await Promise.all([
     isDirect
       ? getProductById(productId!).then((product) => {
           if (!product) return [] as CheckoutLine[];
@@ -78,6 +79,7 @@ export default async function CheckoutPage({
           })),
         ),
     getProfile({ userId: session.user.id, token: session.token }),
+    listAddresses({ userId: session.user.id, token: session.token }),
   ]);
 
   if (lines.length === 0) {
@@ -105,6 +107,7 @@ export default async function CheckoutPage({
         deliveryOptions={deliveryOptions}
         source={isDirect ? "direct" : "cart"}
         productId={productId ?? null}
+        addresses={addresses}
         buyer={{
           name: profile?.name ?? session.user.name ?? "",
           phone: profile?.phone ?? "",

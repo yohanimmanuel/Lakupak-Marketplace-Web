@@ -7,12 +7,10 @@ import { useEffect, useRef, useState, useTransition } from "react";
 import { Package, Store, Trash2 } from "lucide-react";
 
 import { removeCartItemAction, updateCartItemAction } from "@/app/actions/cart";
-import FreeItemsBadge from "@/components/ui/FreeItemsBadge";
 import QuantityStepper from "@/components/ui/QuantityStepper";
 import { useTranslations } from "@/i18n/client";
 import type { CartItem } from "@/lib/api/types";
 import { getCartVariant } from "@/lib/cartPricing";
-import { formatCurrency } from "@/lib/format";
 import {
   getMaxPackageQuantity,
   getMinPackageQuantity,
@@ -20,7 +18,6 @@ import {
   meetsMoq,
 } from "@/lib/checkout";
 import { displayPackageType } from "@/lib/packageLabel";
-import { calculateProductPromotionGift } from "@/lib/promotion";
 import { getSelectedMoq, resolveVariantPricing } from "@/lib/variants";
 
 type Props = { items: CartItem[] };
@@ -28,15 +25,6 @@ type Props = { items: CartItem[] };
 function quantityOf(item: CartItem): number {
   const quantity = Number(item.metadata?.quantity);
   return Number.isFinite(quantity) && quantity > 0 ? quantity : 1;
-}
-
-function lineTotal(item: CartItem, quantity: number): number {
-  const pieces = Number(item.productData?.piecesPerPackage) || 1;
-  const { unitPrice } = resolveVariantPricing(
-    item.productData,
-    getCartVariant(item),
-  );
-  return unitPrice * pieces * quantity;
 }
 
 export default function CartView({ items }: Props) {
@@ -77,16 +65,15 @@ export default function CartView({ items }: Props) {
   const quantityFor = (item: CartItem) =>
     quantityOverrides[item.id] ?? quantityOf(item);
 
-  // Grouped for display only: the API splits the order per seller on submit.
+  // Grouped for display; cart is restricted to one distributor on add.
   const groups = new Map<string, CartItem[]>();
   for (const item of items) {
     const key = getSellerKey(item.productData);
     groups.set(key, [...(groups.get(key) ?? []), item]);
   }
 
-  const subtotal = items.reduce((total, item) => {
-    return total + lineTotal(item, quantityFor(item));
-  }, 0);
+  const itemCount = items.reduce((total, item) => total + quantityFor(item), 0);
+  const distributorLabel = [...groups.keys()][0] ?? t("product.distributorFallback");
 
   const allMoqMet = items.every((item) =>
     meetsMoq(item.productData, quantityFor(item), getCartVariant(item)),
@@ -212,15 +199,12 @@ export default function CartView({ items }: Props) {
                 const product = item.productData;
                 const quantity = quantityFor(item);
                 const variant = getCartVariant(item);
-                const { unitPrice, option } = resolveVariantPricing(product, variant);
+                const { option } = resolveVariantPricing(product, variant);
                 const packageType = displayPackageType(product.packageType);
                 const moq = getSelectedMoq(product, option);
                 const minQuantity = getMinPackageQuantity(product, variant);
                 const maxQuantity = getMaxPackageQuantity(product);
                 const moqMet = meetsMoq(product, quantity, variant);
-                const freeQty =
-                  calculateProductPromotionGift(product, quantity, moq)
-                    ?.freeQty ?? 0;
 
                 return (
                   <li key={item.id} className="flex gap-4 px-5 py-4">
@@ -255,15 +239,11 @@ export default function CartView({ items }: Props) {
                           {variant}
                         </p>
                       ) : null}
-                      <p className="mt-0.5 text-xs text-laku-muted">
-                        {formatCurrency(unitPrice, t.locale)}
-                        {packageType ? (
-                          <>
-                            {" · "}
-                            {t("cart.packageInfo", { packageType })}
-                          </>
-                        ) : null}
-                      </p>
+                      {packageType ? (
+                        <p className="mt-0.5 text-xs text-laku-muted">
+                          {t("cart.packageInfo", { packageType })}
+                        </p>
+                      ) : null}
 
                       <div className="mt-3 flex flex-wrap items-center gap-2.5">
                         <QuantityStepper
@@ -273,10 +253,6 @@ export default function CartView({ items }: Props) {
                           max={maxQuantity}
                           updateOnType
                           onChange={(next) => handleQuantityChange(item, next)}
-                        />
-                        <FreeItemsBadge
-                          count={freeQty}
-                          label={t("cart.freeItems", { count: freeQty })}
                         />
 
                         <button
@@ -301,7 +277,7 @@ export default function CartView({ items }: Props) {
                     </div>
 
                     <p className="shrink-0 text-sm font-bold text-laku-ink">
-                      {formatCurrency(lineTotal(item, quantity), t.locale)}
+                      {t("cart.qtyBadge", { count: quantity })}
                     </p>
                   </li>
                 );
@@ -318,36 +294,37 @@ export default function CartView({ items }: Props) {
 
         <dl className="mt-4 space-y-2.5 text-sm">
           <div className="flex justify-between">
-            <dt className="text-laku-muted">{t("cart.subtotal")}</dt>
+            <dt className="text-laku-muted">{t("cart.itemCount")}</dt>
             <dd className="font-medium text-laku-ink">
-              {formatCurrency(subtotal, t.locale)}
+              {t("cart.qtyBadge", { count: itemCount })}
             </dd>
           </div>
           <div className="flex justify-between">
-            <dt className="text-laku-muted">{t("cart.shipping")}</dt>
-            <dd className="text-laku-muted">{t("cart.shippingNote")}</dd>
-          </div>
-          <div className="flex justify-between border-t border-laku-line pt-3">
-            <dt className="font-bold text-laku-ink">{t("cart.total")}</dt>
-            <dd className="text-lg font-bold text-laku-blue">
-              {formatCurrency(subtotal, t.locale)}
+            <dt className="text-laku-muted">{t("cart.distributor")}</dt>
+            <dd className="max-w-[60%] truncate text-right font-medium text-laku-ink">
+              {distributorLabel}
             </dd>
+          </div>
+          <div className="border-t border-laku-line pt-3">
+            <p className="text-xs text-laku-muted">
+              {t("cart.pricingNote", { distributor: distributorLabel })}
+            </p>
           </div>
         </dl>
 
         {groups.size > 1 ? (
-          <p className="mt-3 rounded-lg bg-laku-surface px-3 py-2 text-xs text-laku-muted">
-            {t("cart.splitNote", { count: groups.size })}
+          <p className="mt-3 rounded-lg bg-laku-alert/10 px-3 py-2 text-xs font-medium text-laku-alert">
+            {t("cart.singleDistributorOnly")}
           </p>
         ) : null}
 
         <button
           type="button"
-          disabled={pending || checkoutFlushing || !allMoqMet}
+          disabled={pending || checkoutFlushing || !allMoqMet || groups.size > 1}
           onClick={() => void goToCheckout()}
           className="mt-4 block w-full rounded-lg bg-laku-blue px-5 py-3.5 text-center text-sm font-bold text-white transition-colors hover:bg-laku-blue-dark disabled:opacity-50"
         >
-          {t("cart.checkout")}
+          {checkoutFlushing ? t("cart.preparingCheckout") : t("cart.checkout")}
         </button>
         {!allMoqMet ? (
           <p className="mt-2 text-center text-xs font-medium text-laku-alert">

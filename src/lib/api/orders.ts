@@ -114,6 +114,7 @@ export type CreateOrderPayload = {
   preferredDeliveryTime?: string | null;
   preferredPickupDate?: string | null;
   preferredPickupTime?: string | null;
+  deliveryNote?: string | null;
   orderStatus: "Pending";
   paymentStatus: "Unpaid";
   paymentTerms: string;

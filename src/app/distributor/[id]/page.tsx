@@ -147,6 +147,36 @@ export default async function DistributorShopPage({
                   <span className="min-w-0">{distributor.businessAddress}</span>
                 </p>
               ) : null}
+              {(distributor.yearsInOperation ||
+                distributor.deliveryCoverageArea ||
+                distributor.fulfillmentNotes) && (
+                <ul className="mt-2 space-y-1 text-xs text-laku-muted sm:text-sm">
+                  {distributor.yearsInOperation ? (
+                    <li>
+                      <span className="font-semibold text-laku-ink">
+                        {t("distributor.yearsLabel")}:
+                      </span>{" "}
+                      {distributor.yearsInOperation}
+                    </li>
+                  ) : null}
+                  {distributor.deliveryCoverageArea ? (
+                    <li>
+                      <span className="font-semibold text-laku-ink">
+                        {t("distributor.coverageLabel")}:
+                      </span>{" "}
+                      {distributor.deliveryCoverageArea}
+                    </li>
+                  ) : null}
+                  {distributor.fulfillmentNotes ? (
+                    <li>
+                      <span className="font-semibold text-laku-ink">
+                        {t("distributor.fulfillmentLabel")}:
+                      </span>{" "}
+                      {distributor.fulfillmentNotes}
+                    </li>
+                  ) : null}
+                </ul>
+              )}
             </div>
 
             <div className="flex shrink-0 flex-wrap gap-2">

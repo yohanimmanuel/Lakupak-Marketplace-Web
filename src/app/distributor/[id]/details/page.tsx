@@ -11,6 +11,7 @@ import {
   Phone,
   Star,
   Store,
+  Truck,
 } from "lucide-react";
 
 import { getTranslations } from "@/i18n/server";
@@ -83,6 +84,20 @@ export default async function DistributorDetailsPage({
           icon: Calendar,
           label: t("distributorDetails.years"),
           value: distributor.yearsInOperation,
+        }
+      : null,
+    distributor.deliveryCoverageArea
+      ? {
+          icon: MapPin,
+          label: t("distributorDetails.coverage"),
+          value: distributor.deliveryCoverageArea,
+        }
+      : null,
+    distributor.fulfillmentNotes
+      ? {
+          icon: Truck,
+          label: t("distributorDetails.fulfillment"),
+          value: distributor.fulfillmentNotes,
         }
       : null,
     distributor.businessAddress

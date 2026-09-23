@@ -46,23 +46,25 @@ type GroupShippingInput = {
 
 function toOrderItem({ product, quantity, variant }: LineItem): CreateOrderItemPayload {
   const piecesPerPackage = Number(product.piecesPerPackage) || 1;
-  const { unitPrice, variantOptionId } = resolveVariantPricing(product, variant);
+  const { variantOptionId } = resolveVariantPricing(product, variant);
   const packageQuantity = Math.max(
     getMinPackageQuantity(product, variant),
     Math.trunc(quantity) || 1,
   );
   const variantLabel = variant?.trim() || "Default";
 
+  // Marketplace never sends catalog/offer prices — distributor resolves pricing
+  // after the PO lands (getOfferForClientAndProduct on Orders side).
   return {
     productId: product.id,
     productName: product.name,
     quantity: packageQuantity * piecesPerPackage,
-    priceAtPurchase: String(unitPrice),
-    subtotal: unitPrice * piecesPerPackage * packageQuantity,
+    priceAtPurchase: "0",
+    subtotal: 0,
     packageType: product.packageType ?? "Box",
     piecesPerPackage,
     packageQuantity,
-    pricePerPackage: unitPrice * piecesPerPackage,
+    pricePerPackage: 0,
     category: product.category,
     variantId: variantOptionId,
     variantName: variantLabel,
@@ -155,6 +157,15 @@ export async function placeOrderAction(
   if (!contactPhone) return { ok: false, error: t("checkout.errors.phone") };
   if (!deliveryAddress) return { ok: false, error: t("checkout.errors.address") };
 
+  const poReference = String(formData.get("poReference") ?? "").trim();
+  const noteToDistributor = String(formData.get("noteToDistributor") ?? "").trim();
+  const deliveryNoteParts = [
+    poReference ? `PO: ${poReference}` : "",
+    noteToDistributor,
+  ].filter(Boolean);
+  const deliveryNote =
+    deliveryNoteParts.length > 0 ? deliveryNoteParts.join("\n") : null;
+
   const lineItems = await resolveLineItems({
     userId: session.user.id,
     token: session.token,
@@ -172,6 +183,11 @@ export async function placeOrderAction(
   for (const line of lineItems) {
     const key = getDistributorGroupKey(line.product);
     groups.set(key, [...(groups.get(key) ?? []), line]);
+  }
+
+  // One PO = one distributor.
+  if (groups.size > 1) {
+    return { ok: false, error: t("checkout.singleDistributorOnly") };
   }
 
   const expectedGroupCount = groups.size;
@@ -234,7 +250,6 @@ export async function placeOrderAction(
     }
 
     const orderItems = groupLines.map(toOrderItem);
-    const subtotal = orderItems.reduce((sum, item) => sum + item.subtotal, 0);
     const totalOrders = orderItems.reduce(
       (sum, item) => sum + item.packageQuantity * item.piecesPerPackage,
       0,
@@ -279,10 +294,10 @@ export async function placeOrderAction(
       ...(distributorUserId ? { distributorUserId } : {}),
       orderDate: new Date().toISOString(),
       orderItems,
-      subtotal,
+      subtotal: 0,
       discounts: 0,
       shippingFee: 0,
-      totalAmount: subtotal,
+      totalAmount: 0,
       totalOrders,
       contactPerson,
       storeName: storeName || contactPerson,
@@ -297,6 +312,8 @@ export async function placeOrderAction(
       preferredDeliveryTime: isPickup ? null : preferredTime || null,
       preferredPickupDate: isPickup ? scheduledDate : null,
       preferredPickupTime: isPickup ? preferredTime || null : null,
+      ...(deliveryNote ? { deliveryNote } : {}),
+      // Existing Orders module status for awaiting distributor confirmation.
       orderStatus: "Pending" as const,
       paymentStatus: "Unpaid" as const,
       paymentTerms: getPaymentTerms(paymentMethodId),
@@ -307,7 +324,7 @@ export async function placeOrderAction(
       // Same checkoutAttemptId retry: this groupId may already be persisted.
       if (isDuplicateOrderError(result.error)) {
         orderIds.push(orderId);
-        totalAmount += subtotal;
+        totalAmount += 0;
         continue;
       }
       // Earlier groups may already be persisted — surface them instead of an
@@ -325,7 +342,7 @@ export async function placeOrderAction(
       }
     }
     if (!added) orderIds.push(orderId);
-    totalAmount += subtotal;
+    totalAmount += 0;
   }
 
   await finishPlacedOrders(false);

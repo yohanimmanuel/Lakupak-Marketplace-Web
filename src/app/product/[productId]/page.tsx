@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Gift, MapPin, ShieldCheck, Star, Store, Truck } from "lucide-react";
+import { MapPin, ShieldCheck, Star, Store, Truck } from "lucide-react";
 
 import OpenInAppButton from "@/components/app/OpenInAppButton";
 import ContactSellerButton from "@/components/messages/ContactSellerButton";
@@ -22,16 +22,7 @@ import {
 } from "@/lib/api/marketplace";
 import { getSession } from "@/lib/auth/session";
 import { canonicalizeCategory, translateCategory } from "@/lib/categories";
-import {
-  formatProductOriginalPrice,
-  formatProductPrice,
-  getDeliveryLabel,
-  getDiscountLabel,
-  getProductPriceRange,
-  getPromotion,
-  getShippingLocation,
-  showsStrikethrough,
-} from "@/lib/format";
+import { getDeliveryLabel, getShippingLocation } from "@/lib/format";
 import { absoluteProductUrl, productAppUrl, productUrl } from "@/lib/share";
 
 export const revalidate = 120;
@@ -52,9 +43,13 @@ export async function generateMetadata({
   }
 
   const seller = product.seller?.company?.name ?? product.seller?.name;
-  const description = `${formatProductPrice(product, t.locale)} · ${
-    seller ? `${seller} · ` : ""
-  }${product.description?.slice(0, 140) || t("product.metaDescription")}`;
+  const description = [
+    seller,
+    product.brand,
+    product.description?.slice(0, 140) || t("product.metaDescription"),
+  ]
+    .filter(Boolean)
+    .join(" · ");
 
   return {
     title: product.name,
@@ -103,8 +98,6 @@ export default async function ProductPage({ params }: { params: Params }) {
     .filter((item) => item.id !== product.id)
     .slice(0, 5);
 
-  const discountLabel = getDiscountLabel(product, t.locale);
-  const promotion = getPromotion(product);
   const delivery = getDeliveryLabel(product, t);
   const location = getShippingLocation(product);
   const rating = reviews?.overallRating ?? product.reviews?.overallRating ?? 0;
@@ -120,7 +113,7 @@ export default async function ProductPage({ params }: { params: Params }) {
     null;
   const shareUrl = absoluteProductUrl(product.id);
 
-  const priceRange = getProductPriceRange(product);
+  // Discovery must not expose price — omit Offer JSON-LD entirely.
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Product",
@@ -129,28 +122,7 @@ export default async function ProductPage({ params }: { params: Params }) {
     image: product.images.slice(0, 3),
     sku: product.sku ?? undefined,
     brand: product.brand ? { "@type": "Brand", name: product.brand } : undefined,
-    offers: priceRange.hasRange
-      ? {
-          "@type": "AggregateOffer",
-          lowPrice: priceRange.min,
-          highPrice: priceRange.max,
-          priceCurrency: "IDR",
-          availability:
-            product.stockStatus === "Out of Stock"
-              ? "https://schema.org/OutOfStock"
-              : "https://schema.org/InStock",
-          url: shareUrl,
-        }
-      : {
-          "@type": "Offer",
-          price: priceRange.min > 0 ? priceRange.min : product.sellingPrice,
-          priceCurrency: "IDR",
-          availability:
-            product.stockStatus === "Out of Stock"
-              ? "https://schema.org/OutOfStock"
-              : "https://schema.org/InStock",
-          url: shareUrl,
-        },
+    url: shareUrl,
   };
 
   return (
@@ -219,31 +191,11 @@ export default async function ProductPage({ params }: { params: Params }) {
             </span>
           </div>
 
-          <div className="mt-6 flex flex-wrap items-end gap-3">
-            <span className="text-3xl font-bold text-laku-blue">
-              {formatProductPrice(product, t.locale)}
-            </span>
-            {showsStrikethrough(product) ? (
-              <span className="pb-1 text-base text-laku-faint line-through">
-                {formatProductOriginalPrice(product, t.locale)}
-              </span>
-            ) : null}
-            {discountLabel && product.offerBadge !== "Promotion" ? (
-              <span className="mb-1 rounded-[4px] bg-laku-discount-bg px-2 py-1 text-xs font-bold text-laku-discount-ink">
-                {discountLabel}
-              </span>
-            ) : null}
+          <div className="mt-6 rounded-xl border border-laku-line bg-laku-surface px-4 py-3 text-sm text-laku-muted">
+            {t("product.pricingConfirmedBy", {
+              distributor: sellerName ?? t("product.distributorFallback"),
+            })}
           </div>
-
-          {promotion ? (
-            <p className="mt-4 inline-flex items-center gap-2 rounded-card bg-laku-promo-bg px-3 py-2 text-sm font-bold text-laku-promo-ink">
-              <Gift className="size-4" aria-hidden />
-              {t("product.promoBuyGet", {
-                min: promotion.minQuantity,
-                free: promotion.freeQuantity,
-              })}
-            </p>
-          ) : null}
 
           <dl className="mt-6 space-y-2 border-t border-laku-line pt-6 text-sm">
             <div className="flex items-center gap-2">
@@ -281,7 +233,6 @@ export default async function ProductPage({ params }: { params: Params }) {
               title={product.name}
               text={t("product.shareText", {
                 name: product.name,
-                price: formatProductPrice(product, t.locale),
               })}
               url={shareUrl}
             />

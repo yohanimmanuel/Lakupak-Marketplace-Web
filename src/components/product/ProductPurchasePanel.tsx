@@ -2,23 +2,19 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState, useTransition } from "react";
-import { Check, Heart, ShoppingCart } from "lucide-react";
+import { Check, Heart, ClipboardList } from "lucide-react";
 
 import { addToCartAction } from "@/app/actions/cart";
 import { recordProductViewAction, toggleFavoriteAction } from "@/app/actions/activity";
-import FreeItemsBadge from "@/components/ui/FreeItemsBadge";
 import QuantityStepper from "@/components/ui/QuantityStepper";
 import { useTranslations } from "@/i18n/client";
 import type { MarketplaceProduct } from "@/lib/api/types";
-import { formatCurrency } from "@/lib/format";
-import { calculateProductPromotionGift } from "@/lib/promotion";
 import {
   findSelectedVariantOption,
   formatVariantName,
   getSelectedMoq,
   getSelectedStock,
   getSelectedStockStatus,
-  getSelectedUnitPrice,
   initialVariantSelection,
 } from "@/lib/variants";
 
@@ -48,8 +44,6 @@ export default function ProductPurchasePanel({
   );
 
   const pieces = Math.max(1, Number(product.piecesPerPackage) || 1);
-  const unitPrice = getSelectedUnitPrice(product, option);
-  const packagePrice = unitPrice * pieces;
   const moq = getSelectedMoq(product, option);
   const stock = getSelectedStock(product, option);
   const stockStatus = getSelectedStockStatus(product, option);
@@ -58,7 +52,6 @@ export default function ProductPurchasePanel({
     stock > 0 ? Math.max(1, Math.floor(stock / pieces)) : 9999;
 
   const [quantity, setQuantity] = useState(minQuantity);
-  // On variant change, set qty to that variant’s package MOQ (not the previous qty).
   const optionKey = String(option?.id ?? "default");
   const [prevOptionKey, setPrevOptionKey] = useState(optionKey);
   if (optionKey !== prevOptionKey) {
@@ -66,17 +59,16 @@ export default function ProductPurchasePanel({
     setQuantity(Math.min(maxQuantity, minQuantity));
   }
 
-  // Raw typed qty drives the live total; clamp only for purchase / MOQ checks.
   const purchaseQuantity = Math.min(maxQuantity, Math.max(minQuantity, quantity));
-  const displayQuantity = Math.min(maxQuantity, Math.max(0, quantity));
-  const totalPackages = displayQuantity;
   const moqMet = !moq || purchaseQuantity * pieces >= moq;
-  const freeGift = calculateProductPromotionGift(product, displayQuantity, moq);
-  const freeQty = freeGift?.freeQty ?? 0;
   const outOfStock = stockStatus === "Out of Stock" || stock <= 0;
   const canPurchase = !pending && !outOfStock && moqMet;
   const variantName = formatVariantName(selected, option);
   const loginHref = `/login?next=${encodeURIComponent(`/product/${product.id}`)}`;
+  const distributorName =
+    product.seller?.company?.name?.trim() ||
+    product.seller?.name?.trim() ||
+    t("product.distributorFallback");
 
   const stockStatusLabel =
     stockStatus === "Out of Stock"
@@ -118,7 +110,7 @@ export default function ProductPurchasePanel({
     router.push(loginHref);
   };
 
-  const handleAddToCart = () => {
+  const handleAddToPo = () => {
     if (!signedIn) return requireAuth();
     if (!moqMet) return;
 
@@ -137,7 +129,7 @@ export default function ProductPurchasePanel({
     });
   };
 
-  const handleBuyNow = () => {
+  const handleRequestOrder = () => {
     if (!signedIn) return requireAuth();
     if (!moqMet) return;
     const params = new URLSearchParams({
@@ -206,7 +198,10 @@ export default function ProductPurchasePanel({
         <span className="font-medium text-laku-ink">
           {t("product.stock", { count: stock })}
         </span>
-        <span className={`font-semibold ${stockStatusClass}`} aria-label={t("product.stockStatus")}>
+        <span
+          className={`font-semibold ${stockStatusClass}`}
+          aria-label={t("product.stockStatus")}
+        >
           {stockStatusLabel}
         </span>
       </div>
@@ -223,10 +218,6 @@ export default function ProductPurchasePanel({
               updateOnType
               disabled={pending || outOfStock}
             />
-            <FreeItemsBadge
-              count={freeQty}
-              label={t("product.freeItems", { count: freeQty })}
-            />
           </div>
           {moq ? (
             <p
@@ -239,16 +230,15 @@ export default function ProductPurchasePanel({
           ) : null}
         </div>
 
-        <div className="text-right">
-          <p className="text-xs font-semibold text-laku-muted">{t("product.total")}</p>
-          <p className="text-2xl font-bold text-laku-blue">
-            {formatCurrency(packagePrice * displayQuantity, t.locale)}
+        <div className="max-w-xs text-right">
+          <p className="text-xs font-semibold text-laku-muted">
+            {t("product.poItemsLabel")}
+          </p>
+          <p className="text-2xl font-bold text-laku-ink">
+            {t("product.poQuantityCount", { count: purchaseQuantity })}
           </p>
           <p className="text-xs text-laku-muted">
-            {t("product.unitBreakdown", {
-              count: totalPackages,
-              price: formatCurrency(packagePrice, t.locale),
-            })}
+            {t("product.pricingConfirmedBy", { distributor: distributorName })}
           </p>
         </div>
       </div>
@@ -261,44 +251,40 @@ export default function ProductPurchasePanel({
         <button
           type="button"
           disabled={!canPurchase}
-          onClick={handleBuyNow}
+          onClick={handleRequestOrder}
           className="inline-flex flex-1 items-center justify-center gap-2 rounded-lg bg-laku-blue px-5 py-3.5 text-sm font-bold text-white transition-colors hover:bg-laku-blue-dark disabled:cursor-not-allowed disabled:opacity-50"
         >
-          {t("product.buyNow")}
+          {t("product.requestOrder")}
         </button>
 
         <button
           type="button"
           disabled={!canPurchase}
-          onClick={handleAddToCart}
-          className="inline-flex flex-1 items-center justify-center gap-2 rounded-lg border-2 border-laku-blue px-5 py-3.5 text-sm font-bold text-laku-blue transition-colors hover:bg-laku-blue/5 disabled:cursor-not-allowed disabled:opacity-50"
+          onClick={handleAddToPo}
+          className="inline-flex flex-1 items-center justify-center gap-2 rounded-lg border border-laku-line bg-white px-5 py-3.5 text-sm font-bold text-laku-ink transition-colors hover:border-laku-blue hover:text-laku-blue disabled:cursor-not-allowed disabled:opacity-50"
         >
           {added ? (
             <>
-              <Check className="size-4" aria-hidden />
-              {t("product.addedToCart")}
+              <Check className="size-4 text-laku-ship" aria-hidden />
+              {t("product.addedToPo")}
             </>
           ) : (
             <>
-              <ShoppingCart className="size-4" aria-hidden />
-              {t("product.addToCart")}
+              <ClipboardList className="size-4" aria-hidden />
+              {t("product.addToPo")}
             </>
           )}
         </button>
 
         <button
           type="button"
-          aria-label={
-            favorite ? t("product.removeFavorite") : t("product.addFavorite")
-          }
-          aria-pressed={favorite}
+          disabled={pending}
           onClick={handleFavorite}
-          className="flex size-12 items-center justify-center rounded-lg border border-laku-line transition-colors hover:border-laku-alert"
+          aria-label={favorite ? t("product.removeFavorite") : t("product.addFavorite")}
+          className="inline-flex items-center justify-center rounded-lg border border-laku-line bg-white px-4 py-3.5 text-laku-ink transition-colors hover:border-laku-blue hover:text-laku-blue disabled:opacity-50"
         >
           <Heart
-            className={`size-5 ${
-              favorite ? "fill-laku-alert text-laku-alert" : "text-laku-muted"
-            }`}
+            className={`size-4 ${favorite ? "fill-laku-alert text-laku-alert" : ""}`}
             aria-hidden
           />
         </button>

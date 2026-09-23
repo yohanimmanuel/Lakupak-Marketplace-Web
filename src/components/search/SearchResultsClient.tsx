@@ -6,7 +6,6 @@ import { SlidersHorizontal } from "lucide-react";
 import ProductGrid from "@/components/product/ProductGrid";
 import { useTranslations } from "@/i18n/client";
 import type { MarketplaceProduct } from "@/lib/api/types";
-import { getProductPriceRange } from "@/lib/format";
 import {
   availableShippingOptionKeys,
   productShippedFrom,
@@ -16,7 +15,7 @@ import {
 } from "@/lib/searchDiscovery";
 import { translateCategory, PREDEFINED_CATEGORY_NAMES, canonicalizeCategory } from "@/lib/categories";
 
-type SortKey = "relevance" | "newest" | "price_low" | "price_high" | "top_sales";
+type SortKey = "relevance" | "newest" | "top_sales";
 
 function parseSold(soldCount: string): number {
   const n = Number.parseInt(String(soldCount).replace(/[^\d]/g, ""), 10);
@@ -65,8 +64,6 @@ export default function SearchResultsClient({
   const [sort, setSort] = useState<SortKey>("relevance");
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [ratingMin, setRatingMin] = useState(0);
-  const [minPrice, setMinPrice] = useState("");
-  const [maxPrice, setMaxPrice] = useState("");
   const [salesChannels, setSalesChannels] = useState<string[]>([]);
   const [shippedFrom, setShippedFrom] = useState<string[]>([]);
   const [shippingOption, setShippingOption] = useState<ShippingOptionKey[]>([]);
@@ -85,20 +82,13 @@ export default function SearchResultsClient({
   const filtered = useMemo(() => {
     let list = [...products];
 
-    const min = Number.parseFloat(minPrice);
-    const max = Number.parseFloat(maxPrice);
     list = list.filter((product) => {
-      // Prefer seller rating when present (mobile filter), else product rating.
       const rating =
         product.seller?.rating ??
         product.reviews?.overallRating ??
         product.rating ??
         0;
       if (ratingMin > 0 && rating < ratingMin) return false;
-
-      const price = getProductPriceRange(product).min || product.sellingPrice || 0;
-      if (Number.isFinite(min) && min > 0 && price < min) return false;
-      if (Number.isFinite(max) && max > 0 && price > max) return false;
 
       if (
         salesChannels.length > 0 &&
@@ -131,19 +121,7 @@ export default function SearchResultsClient({
       return true;
     });
 
-    if (sort === "price_low") {
-      list.sort(
-        (a, b) =>
-          (getProductPriceRange(a).min || a.sellingPrice) -
-          (getProductPriceRange(b).min || b.sellingPrice),
-      );
-    } else if (sort === "price_high") {
-      list.sort(
-        (a, b) =>
-          (getProductPriceRange(b).min || b.sellingPrice) -
-          (getProductPriceRange(a).min || a.sellingPrice),
-      );
-    } else if (sort === "top_sales") {
+    if (sort === "top_sales") {
       list.sort((a, b) => parseSold(b.soldCount) - parseSold(a.soldCount));
     } else if (sort === "newest") {
       list.sort((a, b) =>
@@ -156,8 +134,6 @@ export default function SearchResultsClient({
     products,
     sort,
     ratingMin,
-    minPrice,
-    maxPrice,
     salesChannels,
     shippedFrom,
     shippingOption,
@@ -177,8 +153,6 @@ export default function SearchResultsClient({
             <option value="relevance">{t("search.sort.relevance")}</option>
             <option value="newest">{t("search.sort.latest")}</option>
             <option value="top_sales">{t("search.sort.topSales")}</option>
-            <option value="price_low">{t("search.sort.priceLow")}</option>
-            <option value="price_high">{t("search.sort.priceHigh")}</option>
           </select>
         </label>
 
@@ -212,29 +186,6 @@ export default function SearchResultsClient({
               </button>
             ))}
           </FilterPills>
-
-          <div className="grid gap-3 sm:grid-cols-2">
-            <label className="block text-xs font-semibold text-laku-muted">
-              {t("search.filterSheet.minPrice")}
-              <input
-                type="number"
-                inputMode="numeric"
-                value={minPrice}
-                onChange={(event) => setMinPrice(event.target.value)}
-                className="mt-1 h-10 w-full rounded-lg border border-laku-line px-3 text-sm text-laku-ink outline-none focus:border-laku-blue"
-              />
-            </label>
-            <label className="block text-xs font-semibold text-laku-muted">
-              {t("search.filterSheet.maxPrice")}
-              <input
-                type="number"
-                inputMode="numeric"
-                value={maxPrice}
-                onChange={(event) => setMaxPrice(event.target.value)}
-                className="mt-1 h-10 w-full rounded-lg border border-laku-line px-3 text-sm text-laku-ink outline-none focus:border-laku-blue"
-              />
-            </label>
-          </div>
 
           <FilterPills title={t("search.filterSheet.salesChannel")}>
             {["Wholesale", "Retail"].map((channel) => (
@@ -300,8 +251,6 @@ export default function SearchResultsClient({
             type="button"
             onClick={() => {
               setRatingMin(0);
-              setMinPrice("");
-              setMaxPrice("");
               setSalesChannels([]);
               setShippedFrom([]);
               setShippingOption([]);
