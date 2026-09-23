@@ -82,6 +82,13 @@ export default async function OrderDetailsPage({ params }: { params: Params }) {
   const sellerLogo = getSellerLogo(order);
   const distributorId = getDistributorUserId(order);
   const productTotal = order.orderItems.reduce((total, item) => total + item.subtotal, 0);
+  const anyItemPending = order.orderItems.some((item) => !(Number(item.subtotal) > 0));
+  const pricingPending = anyItemPending || !(Number(order.totalAmount) > 0);
+  const pendingPriceLabel = t("orderDetails.pendingPrice");
+  const formatOrderMoney = (amount: number) =>
+    Number(amount) > 0 ? formatCurrency(amount, t.locale) : pendingPriceLabel;
+  const formatOrderTotal = () =>
+    pricingPending ? pendingPriceLabel : formatCurrency(order.totalAmount, t.locale);
 
   const existingReviews = isReviewable(order)
     ? await getOrderReviews({
@@ -329,7 +336,7 @@ export default async function OrderDetailsPage({ params }: { params: Params }) {
               </div>
 
               <p className="shrink-0 text-sm font-semibold text-laku-ink">
-                {formatCurrency(item.subtotal, t.locale)}
+                {formatOrderMoney(item.subtotal)}
               </p>
             </li>
             );
@@ -339,7 +346,9 @@ export default async function OrderDetailsPage({ params }: { params: Params }) {
         <dl className="mt-4 space-y-2 border-t border-laku-line pt-4 text-sm">
           <SummaryRow
             label={t("orderDetails.productTotal")}
-            value={formatCurrency(productTotal, t.locale)}
+            value={
+              pricingPending ? pendingPriceLabel : formatCurrency(productTotal, t.locale)
+            }
           />
           <SummaryRow
             label={
@@ -365,7 +374,7 @@ export default async function OrderDetailsPage({ params }: { params: Params }) {
               {t("orderDetails.orderTotal")}
             </dt>
             <dd className="text-lg font-bold text-laku-blue">
-              {formatCurrency(order.totalAmount, t.locale)}
+              {formatOrderTotal()}
             </dd>
           </div>
         </dl>

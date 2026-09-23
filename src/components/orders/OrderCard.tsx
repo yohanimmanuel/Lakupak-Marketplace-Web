@@ -102,7 +102,10 @@ export default async function OrderCard({ order }: { order: Order }) {
         >
           {t("orders.itemsTotal", {
             count: getItemCount(order),
-            amount: formatCurrency(order.totalAmount, t.locale),
+            amount:
+              Number(order.totalAmount) > 0
+                ? formatCurrency(order.totalAmount, t.locale)
+                : t("orderDetails.pendingPrice"),
           })}
         </p>
 
