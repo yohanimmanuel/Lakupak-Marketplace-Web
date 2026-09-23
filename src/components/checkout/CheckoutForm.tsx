@@ -12,6 +12,7 @@ import {
   Store,
   Truck,
   User,
+  Wallet,
 } from "lucide-react";
 
 import { placeOrderAction } from "@/app/actions/orders";
@@ -23,7 +24,9 @@ import {
   getAvailableDeliveryOptions,
   getDistributorGroupKey,
   getDistributorGroupLabel,
+  PAYMENT_METHODS,
   type DeliveryOptionId,
+  type PaymentMethodId,
 } from "@/lib/checkout";
 import { displayPackageType } from "@/lib/packageLabel";
 import { calculateProductPromotionGift } from "@/lib/promotion";
@@ -89,6 +92,7 @@ export default function CheckoutForm({
   });
   const [poReference, setPoReference] = useState("");
   const [noteToDistributor, setNoteToDistributor] = useState("");
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethodId>("cod");
 
   const groups = useMemo(() => {
     const map = new Map<
@@ -209,7 +213,7 @@ export default function CheckoutForm({
       {productId && directVariant ? (
         <input type="hidden" name="variant" value={directVariant} />
       ) : null}
-      <input type="hidden" name="paymentMethod" value="cod" />
+      <input type="hidden" name="paymentMethod" value={paymentMethod} />
       <input type="hidden" name="checkoutAttemptId" value={checkoutAttemptId} />
       <input type="hidden" name="shippingByDistributor" value={shippingPayload} />
       <input type="hidden" name="deliveryAddress" value={resolvedAddress} />
@@ -424,6 +428,41 @@ export default function CheckoutForm({
               </Link>
             </p>
           ) : null}
+        </section>
+
+        <section className="rounded-2xl bg-white p-5">
+          <h2 className="flex items-center gap-2 text-sm font-bold text-laku-ink">
+            <Wallet className="size-4 text-laku-blue" aria-hidden />
+            {t("checkout.paymentTitle")}
+          </h2>
+          <div className="mt-4 space-y-2">
+            {PAYMENT_METHODS.map((method) => (
+              <label
+                key={method.id}
+                className={`flex cursor-pointer gap-3 rounded-xl border p-3.5 transition-colors ${
+                  paymentMethod === method.id
+                    ? "border-laku-blue bg-laku-blue/5"
+                    : "border-laku-line hover:border-laku-faint"
+                }`}
+              >
+                <input
+                  type="radio"
+                  name="paymentChoice"
+                  checked={paymentMethod === method.id}
+                  onChange={() => setPaymentMethod(method.id)}
+                  className="mt-0.5 size-4 accent-laku-blue"
+                />
+                <span className="min-w-0">
+                  <span className="block text-sm font-semibold text-laku-ink">
+                    {t(method.labelKey)}
+                  </span>
+                  <span className="mt-0.5 block text-xs text-laku-muted">
+                    {t(method.descriptionKey)}
+                  </span>
+                </span>
+              </label>
+            ))}
+          </div>
         </section>
 
         {[...groups.entries()].map(([key, group]) => {

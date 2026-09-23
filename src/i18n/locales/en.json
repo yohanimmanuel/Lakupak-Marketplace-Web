@@ -378,6 +378,7 @@
     "errors": {
       "sessionExpired": "Your session expired. Please log in again.",
       "delivery": "Choose a delivery method.",
+      "payment": "Choose a payment method.",
       "name": "Recipient name is required.",
       "phone": "Phone number is required.",
       "address": "Delivery address is required.",

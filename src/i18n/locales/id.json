@@ -346,6 +346,7 @@
     "errors": {
       "sessionExpired": "Sesi Anda berakhir. Masuk kembali.",
       "delivery": "Pilih metode pengiriman.",
+      "payment": "Pilih metode pembayaran.",
       "name": "Nama penerima wajib diisi.",
       "phone": "Nomor telepon wajib diisi.",
       "address": "Alamat pengiriman wajib diisi.",

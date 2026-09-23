@@ -25,6 +25,7 @@ import {
   getDistributorGroupKey,
   getMinPackageQuantity,
   getPaymentTerms,
+  PAYMENT_METHODS,
   type DeliveryOptionId,
   type PaymentMethodId,
 } from "@/lib/checkout";
@@ -156,6 +157,9 @@ export async function placeOrderAction(
   if (!contactPerson) return { ok: false, error: t("checkout.errors.name") };
   if (!contactPhone) return { ok: false, error: t("checkout.errors.phone") };
   if (!deliveryAddress) return { ok: false, error: t("checkout.errors.address") };
+  if (!PAYMENT_METHODS.some((method) => method.id === paymentMethodId)) {
+    return { ok: false, error: t("checkout.errors.payment") };
+  }
 
   const poReference = String(formData.get("poReference") ?? "").trim();
   const noteToDistributor = String(formData.get("noteToDistributor") ?? "").trim();
