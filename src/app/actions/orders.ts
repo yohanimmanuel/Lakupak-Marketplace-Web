@@ -325,6 +325,13 @@ export async function placeOrderAction(
 
     const result = await createOrders(payload, session.token);
     if (!result.ok) {
+      console.error("[placeOrderAction] createOrders failed", {
+        orderId,
+        status: result.status,
+        error: result.error,
+        groupKey,
+        distributorUserId,
+      });
       // Same checkoutAttemptId retry: this groupId may already be persisted.
       if (isDuplicateOrderError(result.error)) {
         orderIds.push(orderId);

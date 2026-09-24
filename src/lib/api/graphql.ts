@@ -113,13 +113,23 @@ export async function restMutate<T>(
     const payload = (await response.json().catch(() => ({}))) as T & {
       error?: string;
       message?: string;
+      details?: string;
     };
 
     if (!response.ok) {
+      const errorText =
+        typeof payload?.error === "string" ? payload.error.trim() : "";
+      const messageText =
+        typeof payload?.message === "string" ? payload.message.trim() : "";
+      const primary = errorText || messageText || "Permintaan gagal diproses.";
+      const details =
+        typeof payload?.details === "string" && payload.details.trim()
+          ? payload.details.trim()
+          : "";
       return {
         ok: false,
         status: response.status,
-        error: payload?.error ?? payload?.message ?? "Permintaan gagal diproses.",
+        error: details && details !== primary ? `${primary}: ${details}` : primary,
       };
     }
 

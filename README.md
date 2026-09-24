@@ -87,7 +87,10 @@ You can run Marketplace Web with **only Docker** (no Node.js or npm required on 
    ```bash
    cp env.example .env
    ```
-   Keep `LAKU_API_BASE_URL=http://localhost:3000` for local npm. Compose does **not** use that value inside the container (it would point at the container itself); it sets `http://host.docker.internal:3000` so the storefront can reach Dashboard on your machine.
+   Keep both API hosts in `.env`:
+   - `LAKU_API_BASE_URL_DEV=http://localhost:3000` — used by `npm run dev`
+   - `LAKU_API_BASE_URL_PROD=https://lakupak-dashboard.onrender.com` — used in production builds
+   Compose does **not** use those for the container (it would point at the container itself); it sets `LAKU_API_BASE_URL` from `DOCKER_LAKU_API_BASE_URL` / `host.docker.internal:3000` so the storefront can reach Dashboard on your machine.
 3. **Build and start** (Dashboard must already be running on host `:3000`):
    ```bash
    docker compose up --build
@@ -98,18 +101,20 @@ You can run Marketplace Web with **only Docker** (no Node.js or npm required on 
 **Notes:**
 - This app has no Postgres/Redis/Meilisearch sidecars — those live with Dashboard. Compose only runs the Next.js storefront.
 - `NEXT_PUBLIC_*` values are baked at **image build** time. Change them in `.env`, then `docker compose up --build` again.
-- Container API URL: `DOCKER_LAKU_API_BASE_URL` (default `http://host.docker.internal:3000`). Host npm keeps using `LAKU_API_BASE_URL`.
+- Container API URL: `DOCKER_LAKU_API_BASE_URL` (default `http://host.docker.internal:3000`). Host npm picks `LAKU_API_BASE_URL_DEV` or `LAKU_API_BASE_URL_PROD` from `NODE_ENV`.
 
 ## Environment
 Copy `env.example` to `.env.local` (npm) or `.env` (Docker) and set:
 
 | Variable | Purpose |
 |----------|---------|
-| `LAKU_API_BASE_URL` | Dashboard origin (server-side only) |
-| `NEXT_PUBLIC_SITE_URL` | Canonical site URL (share links, OG tags) |
+| `LAKU_API_BASE_URL_DEV` | Dashboard origin for local `npm run dev` |
+| `LAKU_API_BASE_URL_PROD` | Dashboard origin for production / Render |
+| `LAKU_API_BASE_URL` | Optional hard override (Docker Compose sets this) |
+| `NEXT_PUBLIC_SITE_URL_DEV` / `NEXT_PUBLIC_SITE_URL_PROD` | Canonical site URL (share links, OG tags) |
 | `NEXT_PUBLIC_APP_SCHEME` | Mobile deep-link scheme |
 | `NEXT_PUBLIC_ANDROID_STORE_URL` / `NEXT_PUBLIC_IOS_STORE_URL` | Install CTAs |
-| `NEXT_PUBLIC_DASHBOARD_URL` | Distributor / seller entry |
+| `NEXT_PUBLIC_DASHBOARD_URL_DEV` / `NEXT_PUBLIC_DASHBOARD_URL_PROD` | Distributor / seller entry |
 | `NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN` | Signup address map (public `pk…` token) |
 
 ## Main routes
