@@ -114,9 +114,11 @@ export default function CheckoutForm({
     return map;
   }, [lines, deliveryOptions]);
 
-  const distributorLabel =
-    [...groups.values()][0]?.label ?? t("product.distributorFallback");
-  const multiDistributor = groups.size > 1;
+  const distributorSummaries = [...groups.entries()].map(([key, group]) => ({
+    key,
+    distributor: group.label || t("product.distributorFallback"),
+    count: group.lines.reduce((sum, line) => sum + line.quantity, 0),
+  }));
   const itemCount = lines.reduce((sum, line) => sum + line.quantity, 0);
 
   const [shippingByGroup, setShippingByGroup] = useState<
@@ -658,22 +660,26 @@ export default function CheckoutForm({
                 {t("checkout.qtyBadge", { count: itemCount })}
               </dd>
             </div>
-            <div className="flex justify-between gap-4">
-              <dt className="text-laku-muted">{t("checkout.distributor")}</dt>
-              <dd className="max-w-[60%] truncate text-right font-semibold text-laku-ink">
-                {distributorLabel}
-              </dd>
-            </div>
-            <div className="border-t border-laku-line pt-3">
-              <p className="text-xs text-laku-muted">
-                {t("checkout.pricingNote", { distributor: distributorLabel })}
-              </p>
+            <div className="space-y-2 border-t border-laku-line pt-3">
+              {distributorSummaries.map((group) => (
+                <div key={group.key} className="space-y-1">
+                  <p className="truncate font-semibold text-laku-ink">
+                    {t("checkout.distributorGroupLine", {
+                      distributor: group.distributor,
+                      count: group.count,
+                    })}
+                  </p>
+                  <p className="text-xs text-laku-muted">
+                    {t("checkout.pricingNote", { distributor: group.distributor })}
+                  </p>
+                </div>
+              ))}
             </div>
           </dl>
 
-          {multiDistributor ? (
-            <p className="mt-3 rounded-lg bg-laku-alert/10 px-3 py-2 text-xs font-medium text-laku-alert">
-              {t("checkout.singleDistributorOnly")}
+          {groups.size > 1 ? (
+            <p className="mt-3 text-xs text-laku-muted">
+              {t("checkout.splitNote", { count: groups.size })}
             </p>
           ) : null}
 
@@ -687,7 +693,6 @@ export default function CheckoutForm({
             type="submit"
             disabled={
               pending ||
-              multiDistributor ||
               !resolvedAddress.trim() ||
               contactIncomplete
             }

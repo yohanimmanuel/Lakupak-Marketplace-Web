@@ -65,7 +65,7 @@ export default function CartView({ items }: Props) {
   const quantityFor = (item: CartItem) =>
     quantityOverrides[item.id] ?? quantityOf(item);
 
-  // Grouped for display; cart is restricted to one distributor on add.
+  // Grouped for display; checkout splits into one order per distributor.
   const groups = new Map<string, CartItem[]>();
   for (const item of items) {
     const key = getSellerKey(item.productData);
@@ -73,7 +73,10 @@ export default function CartView({ items }: Props) {
   }
 
   const itemCount = items.reduce((total, item) => total + quantityFor(item), 0);
-  const distributorLabel = [...groups.keys()][0] ?? t("product.distributorFallback");
+  const distributorSummaries = [...groups.entries()].map(([seller, sellerItems]) => ({
+    distributor: seller || t("product.distributorFallback"),
+    count: sellerItems.reduce((total, item) => total + quantityFor(item), 0),
+  }));
 
   const allMoqMet = items.every((item) =>
     meetsMoq(item.productData, quantityFor(item), getCartVariant(item)),
@@ -299,28 +302,34 @@ export default function CartView({ items }: Props) {
               {t("cart.qtyBadge", { count: itemCount })}
             </dd>
           </div>
-          <div className="flex justify-between">
-            <dt className="text-laku-muted">{t("cart.distributor")}</dt>
-            <dd className="max-w-[60%] truncate text-right font-medium text-laku-ink">
-              {distributorLabel}
-            </dd>
-          </div>
-          <div className="border-t border-laku-line pt-3">
-            <p className="text-xs text-laku-muted">
-              {t("cart.pricingNote", { distributor: distributorLabel })}
-            </p>
+          <div className="space-y-2 border-t border-laku-line pt-3">
+            {distributorSummaries.map((group) => (
+              <div key={group.distributor} className="space-y-1">
+                <div className="flex justify-between gap-3">
+                  <dt className="min-w-0 flex-1 truncate font-medium text-laku-ink">
+                    {t("cart.distributorGroupLine", {
+                      distributor: group.distributor,
+                      count: group.count,
+                    })}
+                  </dt>
+                </div>
+                <p className="text-xs text-laku-muted">
+                  {t("cart.pricingNote", { distributor: group.distributor })}
+                </p>
+              </div>
+            ))}
           </div>
         </dl>
 
         {groups.size > 1 ? (
-          <p className="mt-3 rounded-lg bg-laku-alert/10 px-3 py-2 text-xs font-medium text-laku-alert">
-            {t("cart.singleDistributorOnly")}
+          <p className="mt-3 text-xs text-laku-muted">
+            {t("cart.splitNote", { count: groups.size })}
           </p>
         ) : null}
 
         <button
           type="button"
-          disabled={pending || checkoutFlushing || !allMoqMet || groups.size > 1}
+          disabled={pending || checkoutFlushing || !allMoqMet}
           onClick={() => void goToCheckout()}
           className="mt-4 block w-full rounded-lg bg-laku-blue px-5 py-3.5 text-center text-sm font-bold text-white transition-colors hover:bg-laku-blue-dark disabled:opacity-50"
         >

@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 
-import { addToCart, getCart, removeCartItem, updateCartItem } from "@/lib/api/cart";
+import { addToCart, removeCartItem, updateCartItem } from "@/lib/api/cart";
 import { getProductById } from "@/lib/api/marketplace";
 import { getSession } from "@/lib/auth/session";
 import { getMinPackageQuantity } from "@/lib/checkout";
@@ -22,29 +22,6 @@ export async function addToCartAction(
 
   const product = await getProductById(productId);
   if (!product) return { ok: false, error: t("checkout.errors.productMissing") };
-
-  // One PO = one distributor: block mixing sellers in the same cart.
-  const existing = await getCart({ userId: session.user.id, token: session.token });
-  if (existing.length > 0) {
-    const incomingKey =
-      product.userId != null && Number.isFinite(product.userId)
-        ? String(product.userId)
-        : product.seller?.company?.name?.trim() ||
-          product.seller?.name?.trim() ||
-          "unknown";
-    for (const item of existing) {
-      const pdata = item.productData;
-      const existingKey =
-        pdata?.userId != null && Number.isFinite(pdata.userId)
-          ? String(pdata.userId)
-          : pdata?.seller?.company?.name?.trim() ||
-            pdata?.seller?.name?.trim() ||
-            "unknown";
-      if (existingKey !== incomingKey) {
-        return { ok: false, error: t("cart.singleDistributorOnly") };
-      }
-    }
-  }
 
   const variantLabel = variant?.trim() || "Default";
   const minQuantity = getMinPackageQuantity(product, variantLabel);

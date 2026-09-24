@@ -189,11 +189,6 @@ export async function placeOrderAction(
     groups.set(key, [...(groups.get(key) ?? []), line]);
   }
 
-  // One PO = one distributor.
-  if (groups.size > 1) {
-    return { ok: false, error: t("checkout.singleDistributorOnly") };
-  }
-
   const expectedGroupCount = groups.size;
   const orderIds: string[] = [];
   let totalAmount = 0;

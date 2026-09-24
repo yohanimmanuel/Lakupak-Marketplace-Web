@@ -285,7 +285,7 @@
   "cart": {
     "title": "Purchase order",
     "emptyTitle": "PO Anda masih kosong",
-    "emptyBody": "Tambahkan produk dari satu distributor, lalu kirim purchase order.",
+    "emptyBody": "Tambahkan produk ke purchase order, lalu kirim.",
     "startShopping": "Mulai belanja",
     "summaryTitle": "Ringkasan PO",
     "subtotal": "Subtotal",
@@ -307,6 +307,7 @@
     "itemCount": "Item",
     "qtyBadge": "{{count}}",
     "distributor": "Distributor",
+    "distributorGroupLine": "{{distributor}}: {{count}} item",
     "pricingNote": "Harga akan dikonfirmasi oleh {{distributor}}"
   },
   "checkout": {
@@ -380,6 +381,7 @@
     "itemCount": "Item",
     "qtyBadge": "{{count}}",
     "distributor": "Distributor",
+    "distributorGroupLine": "{{distributor}}: {{count}} item",
     "pricingNote": "Harga akan dikonfirmasi oleh {{distributor}}",
     "singleDistributorOnly": "Purchase order tidak boleh berisi produk dari lebih dari satu distributor.",
     "submitPo": "Kirim PO",
