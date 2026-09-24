@@ -48,21 +48,13 @@ type Props = {
   };
 };
 
-type DeliverySlot = "morning" | "afternoon" | "any";
-
 type GroupShipping = {
   delivery: DeliveryOptionId;
   preferredDate: string;
-  preferredSlot: DeliverySlot;
+  preferredTime: string;
 };
 
 const INITIAL = { ok: false } as const;
-
-const SLOT_TIME: Record<DeliverySlot, string> = {
-  morning: "09:00",
-  afternoon: "14:00",
-  any: "",
-};
 
 export default function CheckoutForm({
   lines,
@@ -137,7 +129,7 @@ export default function CheckoutForm({
           deliveryOptions[0]?.id ??
           "seller_delivery") as DeliveryOptionId,
         preferredDate: "",
-        preferredSlot: "any",
+        preferredTime: "",
       };
     }
     return initial;
@@ -157,12 +149,12 @@ export default function CheckoutForm({
             deliveryOptions[0]?.id ??
             "seller_delivery") as DeliveryOptionId,
           preferredDate: "",
-          preferredSlot: "any" as DeliverySlot,
+          preferredTime: "",
         } satisfies GroupShipping);
       payload[key] = {
         delivery: shipping.delivery,
         preferredDate: shipping.preferredDate,
-        preferredTime: SLOT_TIME[shipping.preferredSlot],
+        preferredTime: shipping.preferredTime.trim(),
       };
     }
     return JSON.stringify(payload);
@@ -190,7 +182,7 @@ export default function CheckoutForm({
       [key]: {
         delivery: prev[key]?.delivery ?? "seller_delivery",
         preferredDate: prev[key]?.preferredDate ?? "",
-        preferredSlot: prev[key]?.preferredSlot ?? "any",
+        preferredTime: prev[key]?.preferredTime ?? "",
         ...patch,
       },
     }));
@@ -469,7 +461,7 @@ export default function CheckoutForm({
           const shipping = shippingByGroup[key] ?? {
             delivery: (group.options[0]?.id ?? "seller_delivery") as DeliveryOptionId,
             preferredDate: "",
-            preferredSlot: "any" as DeliverySlot,
+            preferredTime: "",
           };
           const isPickup = shipping.delivery === "self_pickup";
 
@@ -532,35 +524,19 @@ export default function CheckoutForm({
                       className="mt-1 h-10 w-full rounded-lg border border-laku-line px-3 text-sm text-laku-ink outline-none focus:border-laku-blue"
                     />
                   </label>
-                  <fieldset className="block text-xs font-semibold text-laku-muted">
-                    <legend>
-                      {isPickup
-                        ? t("checkout.pickupSlot")
-                        : t("checkout.deliverySlot")}
-                    </legend>
-                    <div className="mt-1 flex flex-wrap gap-2">
-                      {(
-                        [
-                          ["morning", "checkout.slotMorning"],
-                          ["afternoon", "checkout.slotAfternoon"],
-                          ["any", "checkout.slotAny"],
-                        ] as const
-                      ).map(([slot, labelKey]) => (
-                        <button
-                          key={slot}
-                          type="button"
-                          onClick={() => updateGroup(key, { preferredSlot: slot })}
-                          className={`rounded-lg border px-3 py-2 text-xs font-semibold transition-colors ${
-                            shipping.preferredSlot === slot
-                              ? "border-laku-blue bg-laku-blue/10 text-laku-blue"
-                              : "border-laku-line text-laku-ink hover:border-laku-faint"
-                          }`}
-                        >
-                          {t(labelKey)}
-                        </button>
-                      ))}
-                    </div>
-                  </fieldset>
+                  <label className="block text-xs font-semibold text-laku-muted">
+                    {isPickup
+                      ? t("checkout.pickupTime")
+                      : t("checkout.deliveryTime")}
+                    <input
+                      type="time"
+                      value={shipping.preferredTime}
+                      onChange={(event) =>
+                        updateGroup(key, { preferredTime: event.target.value })
+                      }
+                      className="mt-1 h-10 w-full rounded-lg border border-laku-line px-3 text-sm text-laku-ink outline-none focus:border-laku-blue"
+                    />
+                  </label>
                 </div>
                 <p className="mt-2 flex items-start gap-1.5 text-xs text-laku-muted">
                   <CalendarClock className="mt-0.5 size-3.5 shrink-0" aria-hidden />
