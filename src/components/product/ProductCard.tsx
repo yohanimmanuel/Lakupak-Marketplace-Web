@@ -6,7 +6,7 @@ import { ImageIcon, MapPin, Store, Truck } from "lucide-react";
 
 import { useTranslations } from "@/i18n/client";
 import type { MarketplaceProduct } from "@/lib/api/types";
-import { getDeliveryLabel, getShippingLocation } from "@/lib/format";
+import { formatBasePrice, getDeliveryLabel, getShippingLocation } from "@/lib/format";
 import { productUrl } from "@/lib/share";
 
 type Props = {
@@ -33,6 +33,7 @@ export default function ProductCard({ product, priority = false }: Props) {
     product.seller?.avatar?.trim() ||
     null;
   const category = product.productCategory || product.category || null;
+  const basePrice = formatBasePrice(product, t.locale);
 
   return (
     <Link
@@ -60,6 +61,10 @@ export default function ProductCard({ product, priority = false }: Props) {
         <h3 className="mb-1 line-clamp-2 text-sm/[18px] font-medium text-laku-ink">
           {product.name}
         </h3>
+
+        {basePrice ? (
+          <p className="mb-1 text-sm font-bold text-laku-blue">{basePrice}</p>
+        ) : null}
 
         {product.brand ? (
           <p className="mb-1 truncate text-xs text-laku-muted">{product.brand}</p>

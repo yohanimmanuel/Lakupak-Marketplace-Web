@@ -100,7 +100,7 @@ export default async function CheckoutPage({
   const deliveryOptions = getAvailableDeliveryOptions(lines.map((line) => line.product));
 
   return (
-    <div className="mx-auto max-w-5xl px-4 py-10 md:px-6">
+    <div className="mx-auto max-w-6xl px-4 py-10 md:px-6">
       <h1 className="mb-6 text-2xl font-bold text-laku-ink">{t("checkout.title")}</h1>
       <CheckoutForm
         lines={lines}

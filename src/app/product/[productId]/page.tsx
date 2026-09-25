@@ -22,7 +22,7 @@ import {
 } from "@/lib/api/marketplace";
 import { getSession } from "@/lib/auth/session";
 import { canonicalizeCategory, translateCategory } from "@/lib/categories";
-import { getDeliveryLabel, getShippingLocation } from "@/lib/format";
+import { formatBasePrice, getDeliveryLabel, getShippingLocation } from "@/lib/format";
 import { absoluteProductUrl, productAppUrl, productUrl } from "@/lib/share";
 
 export const revalidate = 120;
@@ -112,6 +112,7 @@ export default async function ProductPage({ params }: { params: Params }) {
     product.seller?.avatar?.trim() ||
     null;
   const shareUrl = absoluteProductUrl(product.id);
+  const basePrice = formatBasePrice(product, t.locale);
 
   // Discovery must not expose price — omit Offer JSON-LD entirely.
   const jsonLd = {
@@ -191,7 +192,11 @@ export default async function ProductPage({ params }: { params: Params }) {
             </span>
           </div>
 
-          <div className="mt-6 rounded-xl border border-laku-line bg-laku-surface px-4 py-3 text-sm text-laku-muted">
+          {basePrice ? (
+            <p className="mt-5 text-3xl font-bold text-laku-blue">{basePrice}</p>
+          ) : null}
+
+          <div className="mt-4 rounded-xl border border-laku-line bg-laku-surface px-4 py-3 text-sm text-laku-muted">
             {t("product.pricingConfirmedBy", {
               distributor: sellerName ?? t("product.distributorFallback"),
             })}

@@ -10,7 +10,8 @@ import { removeCartItemAction, updateCartItemAction } from "@/app/actions/cart";
 import QuantityStepper from "@/components/ui/QuantityStepper";
 import { useTranslations } from "@/i18n/client";
 import type { CartItem } from "@/lib/api/types";
-import { getCartVariant } from "@/lib/cartPricing";
+import { getBaseLineTotal, getCartVariant } from "@/lib/cartPricing";
+import { formatCurrency } from "@/lib/format";
 import {
   getMaxPackageQuantity,
   getMinPackageQuantity,
@@ -72,10 +73,15 @@ export default function CartView({ items }: Props) {
     groups.set(key, [...(groups.get(key) ?? []), item]);
   }
 
+  const lineTotalFor = (item: CartItem) =>
+    getBaseLineTotal(item.productData, getCartVariant(item), quantityFor(item));
+
   const itemCount = items.reduce((total, item) => total + quantityFor(item), 0);
+  const subtotal = items.reduce((total, item) => total + lineTotalFor(item), 0);
   const distributorSummaries = [...groups.entries()].map(([seller, sellerItems]) => ({
     distributor: seller || t("product.distributorFallback"),
     count: sellerItems.reduce((total, item) => total + quantityFor(item), 0),
+    subtotal: sellerItems.reduce((total, item) => total + lineTotalFor(item), 0),
   }));
 
   const allMoqMet = items.every((item) =>
@@ -188,7 +194,7 @@ export default function CartView({ items }: Props) {
   };
 
   return (
-    <div className="grid gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] lg:items-start">
+    <div className="grid gap-4 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)] lg:items-start">
       <div className="space-y-4">
         {[...groups.entries()].map(([seller, sellerItems]) => (
           <section key={seller} className="overflow-hidden rounded-2xl bg-white">
@@ -208,6 +214,7 @@ export default function CartView({ items }: Props) {
                 const minQuantity = getMinPackageQuantity(product, variant);
                 const maxQuantity = getMaxPackageQuantity(product);
                 const moqMet = meetsMoq(product, quantity, variant);
+                const lineTotal = lineTotalFor(item);
 
                 return (
                   <li key={item.id} className="flex gap-4 px-5 py-4">
@@ -279,9 +286,16 @@ export default function CartView({ items }: Props) {
                       ) : null}
                     </div>
 
-                    <p className="shrink-0 text-sm font-bold text-laku-ink">
-                      {t("cart.qtyBadge", { count: quantity })}
-                    </p>
+                    <div className="shrink-0 text-right">
+                      <p className="text-sm font-bold text-laku-ink">
+                        {t("cart.qtyBadge", { count: quantity })}
+                      </p>
+                      {lineTotal > 0 ? (
+                        <p className="mt-1 text-sm font-bold text-laku-blue">
+                          {formatCurrency(lineTotal, t.locale)}
+                        </p>
+                      ) : null}
+                    </div>
                   </li>
                 );
               })}
@@ -305,13 +319,18 @@ export default function CartView({ items }: Props) {
           <div className="space-y-2 border-t border-laku-line pt-3">
             {distributorSummaries.map((group) => (
               <div key={group.distributor} className="space-y-1">
-                <div className="flex justify-between gap-3">
-                  <dt className="min-w-0 flex-1 truncate font-medium text-laku-ink">
+                <div className="flex items-start justify-between gap-3">
+                  <dt className="min-w-0 flex-1 font-medium break-words text-laku-ink">
                     {t("cart.distributorGroupLine", {
                       distributor: group.distributor,
                       count: group.count,
                     })}
                   </dt>
+                  {group.subtotal > 0 ? (
+                    <dd className="shrink-0 font-medium text-laku-ink">
+                      {formatCurrency(group.subtotal, t.locale)}
+                    </dd>
+                  ) : null}
                 </div>
                 <p className="text-xs text-laku-muted">
                   {t("cart.pricingNote", { distributor: group.distributor })}
@@ -319,7 +338,17 @@ export default function CartView({ items }: Props) {
               </div>
             ))}
           </div>
+          {subtotal > 0 ? (
+            <div className="flex justify-between border-t border-laku-line pt-3">
+              <dt className="font-semibold text-laku-ink">{t("cart.subtotal")}</dt>
+              <dd className="font-bold text-laku-blue">{formatCurrency(subtotal, t.locale)}</dd>
+            </div>
+          ) : null}
         </dl>
+
+        {subtotal > 0 ? (
+          <p className="mt-2 text-xs text-laku-muted">{t("cart.basePriceNote")}</p>
+        ) : null}
 
         {groups.size > 1 ? (
           <p className="mt-3 text-xs text-laku-muted">

@@ -73,6 +73,27 @@ export function getProductOriginalPriceRange(
   return rangeFromPrices(prices);
 }
 
+/**
+ * Catalog base price for one package, matching getBaseLineTotal (unit price ×
+ * pieces per package). Offers never change it.
+ */
+export function formatBasePrice(
+  product: MarketplaceProduct,
+  locale: Locale = "id",
+): string {
+  const pieces = Math.max(1, Number(product.piecesPerPackage) || 1);
+  const fromVariants = rangeFromPrices(
+    (product.variantOptions ?? [])
+      .map((option) => Number(option.sellingPrice) * pieces)
+      .filter((price) => Number.isFinite(price) && price > 0),
+  );
+  const variantLabel = formatRangeOrSingle(fromVariants, locale);
+  if (variantLabel) return variantLabel;
+
+  const base = (Number(product.sellingPrice) || 0) * pieces;
+  return base > 0 ? formatCurrency(base, locale) : "";
+}
+
 /** Card / PDP selling price: "Rp X – Rp Y" when variants differ, else a single price. */
 export function formatProductPrice(
   product: MarketplaceProduct,

@@ -28,6 +28,8 @@ import {
   type DeliveryOptionId,
   type PaymentMethodId,
 } from "@/lib/checkout";
+import { getBaseLineTotal } from "@/lib/cartPricing";
+import { formatCurrency } from "@/lib/format";
 import { displayPackageType } from "@/lib/packageLabel";
 import { calculateProductPromotionGift } from "@/lib/promotion";
 import { getSelectedMoq, resolveVariantPricing } from "@/lib/variants";
@@ -114,12 +116,16 @@ export default function CheckoutForm({
     return map;
   }, [lines, deliveryOptions]);
 
+  const lineTotalFor = (line: CheckoutLine) =>
+    getBaseLineTotal(line.product, line.variant, line.quantity);
   const distributorSummaries = [...groups.entries()].map(([key, group]) => ({
     key,
     distributor: group.label || t("product.distributorFallback"),
     count: group.lines.reduce((sum, line) => sum + line.quantity, 0),
+    subtotal: group.lines.reduce((sum, line) => sum + lineTotalFor(line), 0),
   }));
   const itemCount = lines.reduce((sum, line) => sum + line.quantity, 0);
+  const subtotal = lines.reduce((sum, line) => sum + lineTotalFor(line), 0);
 
   const [shippingByGroup, setShippingByGroup] = useState<
     Record<string, GroupShipping>
@@ -197,7 +203,7 @@ export default function CheckoutForm({
   return (
     <form
       action={formAction}
-      className="grid gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] lg:items-start"
+      className="grid gap-4 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)] lg:items-start"
     >
       <input type="hidden" name="source" value={source} />
       {productId ? <input type="hidden" name="productId" value={productId} /> : null}
@@ -474,7 +480,71 @@ export default function CheckoutForm({
                 {group.label}
               </h2>
 
-              <div className="border-b border-laku-line px-5 py-4">
+              <ul className="divide-y divide-laku-line border-b border-laku-line">
+                {group.lines.map((line) => {
+                  const packageType = displayPackageType(line.product.packageType);
+                  const { option } = resolveVariantPricing(
+                    line.product,
+                    line.variant,
+                  );
+                  const moq = getSelectedMoq(line.product, option);
+                  const freeQty =
+                    calculateProductPromotionGift(
+                      line.product,
+                      line.quantity,
+                      moq,
+                    )?.freeQty ?? 0;
+                  const lineTotal = lineTotalFor(line);
+                  return (
+                    <li
+                      key={`${line.product.id}-${line.variant ?? "Default"}`}
+                      className="flex gap-4 px-5 py-4"
+                    >
+                      <div className="relative size-16 shrink-0 overflow-hidden rounded-lg bg-laku-chip">
+                        {line.product.images?.[0] ? (
+                          <Image
+                            src={line.product.images[0]}
+                            alt=""
+                            fill
+                            sizes="64px"
+                            className="object-cover"
+                          />
+                        ) : (
+                          <Package className="m-auto size-6 text-laku-faint" />
+                        )}
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <p className="text-sm font-semibold text-laku-ink">
+                          {line.product.name}
+                        </p>
+                        <p className="mt-1 text-xs text-laku-muted">
+                          {t("checkout.lineQty", {
+                            quantity: line.quantity,
+                            packageType,
+                          })}
+                          {line.variant && line.variant !== "Default"
+                            ? ` · ${line.variant}`
+                            : ""}
+                        </p>
+                        {freeQty > 0 ? (
+                          <FreeItemsBadge
+                            count={freeQty}
+                            label={t("checkout.freeItems", { count: freeQty })}
+                            className="mt-1"
+                          />
+                        ) : null}
+                      </div>
+                      {lineTotal > 0 ? (
+                        <p className="shrink-0 text-sm font-bold text-laku-blue">
+                          {formatCurrency(lineTotal, t.locale)}
+                        </p>
+                      ) : null}
+                    </li>
+                  );
+                })}
+              </ul>
+
+              <div className="px-5 py-4">
                 <h3 className="mb-3 flex items-center gap-2 text-xs font-bold uppercase tracking-wide text-laku-muted">
                   <Truck className="size-3.5 text-laku-blue" aria-hidden />
                   {t("checkout.deliveryTitle")}
@@ -545,64 +615,6 @@ export default function CheckoutForm({
                   {t("checkout.scheduleNote")}
                 </p>
               </div>
-
-              <ul className="divide-y divide-laku-line">
-                {group.lines.map((line) => {
-                  const packageType = displayPackageType(line.product.packageType);
-                  const { option } = resolveVariantPricing(
-                    line.product,
-                    line.variant,
-                  );
-                  const moq = getSelectedMoq(line.product, option);
-                  const freeQty =
-                    calculateProductPromotionGift(
-                      line.product,
-                      line.quantity,
-                      moq,
-                    )?.freeQty ?? 0;
-                  return (
-                    <li
-                      key={`${line.product.id}-${line.variant ?? "Default"}`}
-                      className="flex gap-4 px-5 py-4"
-                    >
-                      <div className="relative size-16 shrink-0 overflow-hidden rounded-lg bg-laku-chip">
-                        {line.product.images?.[0] ? (
-                          <Image
-                            src={line.product.images[0]}
-                            alt=""
-                            fill
-                            sizes="64px"
-                            className="object-cover"
-                          />
-                        ) : (
-                          <Package className="m-auto size-6 text-laku-faint" />
-                        )}
-                      </div>
-                      <div className="min-w-0 flex-1">
-                        <p className="text-sm font-semibold text-laku-ink">
-                          {line.product.name}
-                        </p>
-                        <p className="mt-1 text-xs text-laku-muted">
-                          {t("checkout.lineQty", {
-                            quantity: line.quantity,
-                            packageType,
-                          })}
-                          {line.variant && line.variant !== "Default"
-                            ? ` · ${line.variant}`
-                            : ""}
-                        </p>
-                        {freeQty > 0 ? (
-                          <FreeItemsBadge
-                            count={freeQty}
-                            label={t("checkout.freeItems", { count: freeQty })}
-                            className="mt-1"
-                          />
-                        ) : null}
-                      </div>
-                    </li>
-                  );
-                })}
-              </ul>
             </section>
           );
         })}
@@ -663,19 +675,38 @@ export default function CheckoutForm({
             <div className="space-y-2 border-t border-laku-line pt-3">
               {distributorSummaries.map((group) => (
                 <div key={group.key} className="space-y-1">
-                  <p className="truncate font-semibold text-laku-ink">
-                    {t("checkout.distributorGroupLine", {
-                      distributor: group.distributor,
-                      count: group.count,
-                    })}
-                  </p>
+                  <div className="flex items-start justify-between gap-3">
+                    <p className="min-w-0 flex-1 font-semibold break-words text-laku-ink">
+                      {t("checkout.distributorGroupLine", {
+                        distributor: group.distributor,
+                        count: group.count,
+                      })}
+                    </p>
+                    {group.subtotal > 0 ? (
+                      <p className="shrink-0 font-medium text-laku-ink">
+                        {formatCurrency(group.subtotal, t.locale)}
+                      </p>
+                    ) : null}
+                  </div>
                   <p className="text-xs text-laku-muted">
                     {t("checkout.pricingNote", { distributor: group.distributor })}
                   </p>
                 </div>
               ))}
             </div>
+            {subtotal > 0 ? (
+              <div className="flex justify-between gap-4 border-t border-laku-line pt-3">
+                <dt className="font-semibold text-laku-ink">{t("checkout.subtotal")}</dt>
+                <dd className="font-bold text-laku-blue">
+                  {formatCurrency(subtotal, t.locale)}
+                </dd>
+              </div>
+            ) : null}
           </dl>
+
+          {subtotal > 0 ? (
+            <p className="mt-2 text-xs text-laku-muted">{t("checkout.basePriceNote")}</p>
+          ) : null}
 
           {groups.size > 1 ? (
             <p className="mt-3 text-xs text-laku-muted">
