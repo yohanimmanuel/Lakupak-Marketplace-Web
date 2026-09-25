@@ -29,6 +29,23 @@ export function parsePromotionDetails(
   return raw;
 }
 
+/** Use buyQuantity as the buy threshold when the snapshot omitted minQuantity. */
+function normalizePromotionSnapshot(
+  raw: PromotionDetails | string | null | undefined,
+): PromotionDetails | null {
+  const parsed = parsePromotionDetails(raw);
+  if (!parsed) return null;
+
+  const record = parsed as PromotionDetails & { buyQuantity?: number };
+  const minQuantity = Number(record.minQuantity);
+  if (Number.isFinite(minQuantity) && minQuantity > 0) return parsed;
+
+  const buyQuantity = Number(record.buyQuantity);
+  if (!(Number.isFinite(buyQuantity) && buyQuantity > 0)) return parsed;
+
+  return { ...parsed, minQuantity: buyQuantity };
+}
+
 /**
  * @param quantityInPieces - Ordered quantity in pieces
  * @param moq - MOQ in pieces (null = treat as from_zero / no MOQ gate)
@@ -111,10 +128,66 @@ export function getOrderItemFreeQuantity(item: OrderItemPromotionSource): number
     item.piecesPerPackage && item.piecesPerPackage > 0 ? item.piecesPerPackage : 1;
 
   const gift = calculatePromotionGift(
-    parsePromotionDetails(item.promotionDetailsSnapshot),
+    normalizePromotionSnapshot(item.promotionDetailsSnapshot),
     packageQuantity * piecesPerPackage,
     resolveOrderItemMoq(item),
   );
 
   return gift?.freeQty ?? 0;
+}
+
+export type OrderOfferLine = OrderItemPromotionSource & {
+  pricePerPackage?: number | null;
+  subtotal?: number | null;
+  originalPriceSnapshot?: number | null;
+  discountPercentage?: number | null;
+  discountAmount?: number | null;
+};
+
+export type OrderOfferDisplay = {
+  buy: number | null;
+  free: number | null;
+  freePieces: number;
+  percentOff: number | null;
+  amountOff: number | null;
+  originalLineTotal: number | null;
+};
+
+/** Promo rule and price discount saved on the order line, for buyer order screens. */
+export function getOrderOfferDisplay(item: OrderOfferLine): OrderOfferDisplay {
+  const parsed = normalizePromotionSnapshot(item.promotionDetailsSnapshot);
+  const buyRaw = Number(parsed?.minQuantity || 0);
+  const freeRaw = Number(parsed?.freeQuantity || 0);
+  const hasPromo = buyRaw > 0 && freeRaw > 0;
+
+  const pieces = Math.max(1, Number(item.piecesPerPackage) || 1);
+  const qty = Math.max(1, Number(item.packageQuantity) || 1);
+  const originalUnit = Number(item.originalPriceSnapshot) || 0;
+  const originalLineTotal = originalUnit > 0 ? originalUnit * pieces * qty : 0;
+  const subtotalValue = Number(item.subtotal);
+  const unitPrice = Number(item.pricePerPackage);
+  // A zero subtotal is still pending. Fall back to the unit price only when
+  // the subtotal was never set and a current price is already known.
+  const currentLine =
+    item.subtotal != null && Number.isFinite(subtotalValue) && subtotalValue > 0
+      ? subtotalValue
+      : item.subtotal == null && Number.isFinite(unitPrice) && unitPrice > 0
+        ? unitPrice * qty
+        : null;
+  const showPriceDiscount =
+    currentLine != null && originalLineTotal > currentLine + 0.01;
+  const percent = Number(item.discountPercentage);
+  const amount = Number(item.discountAmount);
+
+  return {
+    buy: hasPromo ? buyRaw : null,
+    free: hasPromo ? freeRaw : null,
+    freePieces: getOrderItemFreeQuantity(item),
+    percentOff: showPriceDiscount && Number.isFinite(percent) && percent > 0 ? percent : null,
+    amountOff:
+      showPriceDiscount && !(Number.isFinite(percent) && percent > 0) && Number.isFinite(amount) && amount > 0
+        ? amount
+        : null,
+    originalLineTotal: showPriceDiscount ? originalLineTotal : null,
+  };
 }

@@ -26,7 +26,7 @@ import { getOrderById, getOrderReviews } from "@/lib/api/orders";
 import { getSession } from "@/lib/auth/session";
 import { formatCurrency } from "@/lib/format";
 import { displayPackageType } from "@/lib/packageLabel";
-import { getOrderItemFreeQuantity } from "@/lib/promotion";
+import { getOrderOfferDisplay } from "@/lib/promotion";
 import {
   formatOrderDateTime,
   getDistributorUserId,
@@ -286,7 +286,15 @@ export default async function OrderDetailsPage({ params }: { params: Params }) {
         <ul className="divide-y divide-laku-line">
           {order.orderItems.map((item, index) => {
             const packageType = displayPackageType(item.packageType);
-            const freeQty = getOrderItemFreeQuantity(item);
+            const offer = getOrderOfferDisplay(item);
+            const discountLabel =
+              offer.percentOff != null
+                ? t("orderDetails.percentOff", { percent: Math.round(offer.percentOff) })
+                : offer.amountOff != null
+                  ? t("orderDetails.amountOff", {
+                      amount: formatCurrency(offer.amountOff, t.locale),
+                    })
+                  : null;
             return (
             <li key={`${item.productId ?? index}`} className="flex gap-3 py-3 first:pt-0">
               <div className="relative size-16 shrink-0 overflow-hidden rounded-lg bg-laku-chip">
@@ -329,15 +337,27 @@ export default async function OrderDetailsPage({ params }: { params: Params }) {
                       : `×${item.packageQuantity ?? 1}`}
                   </span>
                   <FreeItemsBadge
-                    count={freeQty}
-                    label={t("orderDetails.freeItems", { count: freeQty })}
+                    count={offer.freePieces}
+                    label={t("orderDetails.freeItems", { count: offer.freePieces })}
                   />
                 </div>
               </div>
 
-              <p className="shrink-0 text-sm font-semibold text-laku-ink">
-                {formatOrderMoney(item.subtotal)}
-              </p>
+              <div className="shrink-0 text-right">
+                {discountLabel ? (
+                  <p className="mb-1 inline-flex rounded bg-laku-discount-bg px-1.5 py-0.5 text-[11px] font-semibold text-laku-discount-ink">
+                    {discountLabel}
+                  </p>
+                ) : null}
+                {offer.originalLineTotal != null ? (
+                  <p className="text-xs text-laku-muted line-through">
+                    {formatCurrency(offer.originalLineTotal, t.locale)}
+                  </p>
+                ) : null}
+                <p className="text-sm font-semibold text-laku-ink">
+                  {formatOrderMoney(item.subtotal)}
+                </p>
+              </div>
             </li>
             );
           })}

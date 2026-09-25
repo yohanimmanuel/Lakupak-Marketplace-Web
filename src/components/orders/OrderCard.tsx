@@ -16,7 +16,7 @@ import {
   getStatusStyle,
   isPayable,
 } from "@/lib/orders";
-import { getOrderItemFreeQuantity } from "@/lib/promotion";
+import { getOrderOfferDisplay } from "@/lib/promotion";
 
 export default async function OrderCard({ order }: { order: Order }) {
   const t = await getTranslations();
@@ -66,7 +66,7 @@ export default async function OrderCard({ order }: { order: Order }) {
 
           <ul className="mt-2 space-y-1">
             {order.orderItems.slice(0, 3).map((item, index) => {
-              const freeQty = getOrderItemFreeQuantity(item);
+              const offer = getOrderOfferDisplay(item);
               return (
                 <li
                   key={`${order.orderId}-${item.productId ?? index}`}
@@ -76,8 +76,8 @@ export default async function OrderCard({ order }: { order: Order }) {
                     {item.packageQuantity ?? 1}x
                   </span>
                   <FreeItemsBadge
-                    count={freeQty}
-                    label={t("orders.freeItems", { count: freeQty })}
+                    count={offer.freePieces}
+                    label={t("orders.freeItems", { count: offer.freePieces })}
                   />
                   <span className="min-w-0 truncate">
                     {item.productName ?? t("product.fallbackName")}

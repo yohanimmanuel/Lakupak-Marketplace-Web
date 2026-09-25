@@ -257,6 +257,7 @@ export type OrderItem = {
   offerNameSnapshot?: string | null;
   offerBadgeSnapshot?: string | null;
   originalPriceSnapshot?: number | null;
+  discountPercentage?: number | null;
   discountAmount?: number | null;
   variantNameSnapshot?: string | null;
   productDeleted?: boolean | null;
