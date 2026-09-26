@@ -31,6 +31,7 @@ import {
   formatOrderDateTime,
   getDistributorUserId,
   getEstimatedDeliveryLabel,
+  getItemCount,
   getOrderTimeline,
   getPaymentColor,
   getScheduleLabel,
@@ -82,6 +83,7 @@ export default async function OrderDetailsPage({ params }: { params: Params }) {
   const sellerLogo = getSellerLogo(order);
   const distributorId = getDistributorUserId(order);
   const productTotal = order.orderItems.reduce((total, item) => total + item.subtotal, 0);
+  const totalItems = getItemCount(order);
   const anyItemPending = order.orderItems.some((item) => !(Number(item.subtotal) > 0));
   const pricingPending = anyItemPending || !(Number(order.totalAmount) > 0);
   const pendingPriceLabel = t("orderDetails.pendingPrice");
@@ -364,6 +366,10 @@ export default async function OrderDetailsPage({ params }: { params: Params }) {
         </ul>
 
         <dl className="mt-4 space-y-2 border-t border-laku-line pt-4 text-sm">
+          <SummaryRow
+            label={t("orderDetails.totalItems")}
+            value={String(totalItems)}
+          />
           <SummaryRow
             label={t("orderDetails.productTotal")}
             value={

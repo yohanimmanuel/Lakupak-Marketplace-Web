@@ -518,6 +518,7 @@
     "note": "Note",
     "distributorInfo": "Distributor information",
     "productInfo": "Product information",
+    "totalItems": "Total items",
     "productTotal": "Product total",
     "pendingPrice": "Pending price",
     "shippingSeparate": "Cost agreed separately",

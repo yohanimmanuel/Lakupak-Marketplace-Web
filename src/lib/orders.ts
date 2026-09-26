@@ -1,6 +1,7 @@
 import { intlLocale, type Locale } from "@/i18n/config";
 import type { Translator } from "@/i18n/translate";
 import type { Order } from "@/lib/api/types";
+import { getOrderItemFreeQuantity } from "@/lib/promotion";
 
 /** Status pill palette ported from getOrderStatusBadgeStyle in the mobile app. */
 const STATUS_STYLES: Record<string, { background: string; color: string }> = {
@@ -63,7 +64,8 @@ export function getDistributorUserId(order: Order): number | null {
 
 export function getItemCount(order: Order): number {
   return order.orderItems.reduce(
-    (total, item) => total + (item.packageQuantity ?? 1),
+    (total, item) =>
+      total + (item.packageQuantity ?? 1) + getOrderItemFreeQuantity(item),
     0,
   );
 }
