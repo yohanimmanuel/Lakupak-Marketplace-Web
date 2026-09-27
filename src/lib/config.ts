@@ -81,7 +81,7 @@ export const IOS_STORE_URL =
 
 export const DASHBOARD_URL = resolveDashboardUrl();
 
-/** Distributor marketing site on the Dashboard (`/[locale]/landing`). */
+/** Distributor sales site on the Dashboard (`/[locale]/landing`). */
 export function dashboardLandingUrl(locale: string = "id"): string {
   const lang = locale === "en" ? "en" : "id";
   return `${DASHBOARD_URL}/${lang}/landing`;
