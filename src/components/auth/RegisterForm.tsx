@@ -17,6 +17,7 @@ type AddressLabel = "work" | "store" | "home";
 
 type SignupData = {
   name: string;
+  phone: string;
   email: string;
   storeName: string;
   bio: string;
@@ -34,6 +35,7 @@ const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const ADDRESS_LABELS: AddressLabel[] = ["work", "store", "home"];
 const INITIAL: SignupData = {
   name: "",
+  phone: "",
   email: "",
   storeName: "",
   bio: "",
@@ -89,7 +91,7 @@ export default function RegisterForm() {
 
   const validateStep = (current: number): string | null => {
     if (current === 1) {
-      if (!data.name.trim() || !data.email.trim()) {
+      if (!data.name.trim() || !data.phone.trim() || !data.email.trim()) {
         return t("auth.signup.errors.missingNameEmail");
       }
       if (!EMAIL_PATTERN.test(data.email.trim())) {
@@ -133,11 +135,15 @@ export default function RegisterForm() {
     setLocationError(null);
     // Prefill recipient name from step 1 when entering the address step.
     if (current === 2) {
-      setData((prev) =>
-        prev.deliveryFullName.trim()
-          ? prev
-          : { ...prev, deliveryFullName: prev.name.trim() },
-      );
+      setData((prev) => ({
+        ...prev,
+        deliveryFullName: prev.deliveryFullName.trim()
+          ? prev.deliveryFullName
+          : prev.name.trim(),
+        deliveryPhone: prev.deliveryPhone.trim()
+          ? prev.deliveryPhone
+          : prev.phone.trim(),
+      }));
     }
     setStep(current + 1);
   };
@@ -263,6 +269,28 @@ export default function RegisterForm() {
                   placeholder={t("auth.signup.fullNamePlaceholder")}
                   value={data.name}
                   onChange={setField("name")}
+                />
+                <AuthField
+                  label={t("auth.signup.phone")}
+                  name="phone"
+                  type="tel"
+                  autoComplete="tel"
+                  placeholder={t("auth.signup.phonePlaceholder")}
+                  value={data.phone}
+                  onChange={(value) => {
+                    setError(null);
+                    setLocationError(null);
+                    setData((prev) => {
+                      const copied =
+                        !prev.deliveryPhone.trim() ||
+                        prev.deliveryPhone.trim() === prev.phone.trim();
+                      return {
+                        ...prev,
+                        phone: value,
+                        deliveryPhone: copied ? value : prev.deliveryPhone,
+                      };
+                    });
+                  }}
                 />
                 <AuthField
                   label={t("auth.signup.email")}

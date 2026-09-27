@@ -1212,6 +1212,8 @@
       "stepAria": "Langkah {{step}} dari 4",
       "fullName": "Nama Lengkap",
       "fullNamePlaceholder": "Masukkan nama lengkap",
+      "phone": "Nomor HP",
+      "phonePlaceholder": "Masukkan nomor HP",
       "email": "Alamat Email",
       "emailPlaceholder": "contoh@gmail.com",
       "storeName": "Nama Toko",
@@ -1250,7 +1252,7 @@
       "footerLink": "Keamanan & Privasi",
       "footerAfter": ".",
       "errors": {
-        "missingNameEmail": "Mohon isi nama dan email.",
+        "missingNameEmail": "Mohon isi nama, nomor HP, dan email.",
         "invalidEmail": "Silakan masukkan alamat email yang valid.",
         "missingStoreName": "Mohon isi nama toko.",
         "missingAddress": "Mohon isi alamat pengiriman Anda.",

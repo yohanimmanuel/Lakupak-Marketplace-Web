@@ -1212,6 +1212,8 @@
       "stepAria": "Step {{step}} of 4",
       "fullName": "Full Name",
       "fullNamePlaceholder": "Enter your full name",
+      "phone": "Phone Number",
+      "phonePlaceholder": "Enter your phone number",
       "email": "Email Address",
       "emailPlaceholder": "example@gmail.com",
       "storeName": "Store Name",
@@ -1250,7 +1252,7 @@
       "footerLink": "Security & Privacy",
       "footerAfter": ".",
       "errors": {
-        "missingNameEmail": "Please fill in your name and email.",
+        "missingNameEmail": "Please fill in your name, phone number, and email.",
         "invalidEmail": "Please enter a valid email address.",
         "missingStoreName": "Please fill in your store name.",
         "missingAddress": "Please fill in your shipping address.",
