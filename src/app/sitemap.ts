@@ -11,6 +11,5 @@ export const revalidate = 3600;
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   return [
     { url: `${SITE_URL}/`, changeFrequency: "daily", priority: 1 },
-    { url: `${SITE_URL}/categories`, changeFrequency: "weekly", priority: 0.8 },
   ];
 }

@@ -6,7 +6,6 @@ import {
   Bell,
   ClipboardList,
   Home,
-  LayoutGrid,
   ShoppingCart,
   UserRound,
 } from "lucide-react";
@@ -15,7 +14,6 @@ import { useTranslations } from "@/i18n/client";
 
 const TABS = [
   { href: "/", labelKey: "nav.home", icon: Home },
-  { href: "/categories", labelKey: "nav.categories", icon: LayoutGrid },
   { href: "/cart", labelKey: "nav.cart", icon: ShoppingCart, badgeKey: "cart" as const },
   { href: "/orders", labelKey: "nav.orders", icon: ClipboardList },
   { href: "/notifications", labelKey: "nav.notifications", icon: Bell },

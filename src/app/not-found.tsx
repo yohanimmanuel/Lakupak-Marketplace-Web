@@ -17,10 +17,10 @@ export default async function NotFound() {
           {t("notFound.home")}
         </Link>
         <Link
-          href="/categories"
+          href="/search"
           className="rounded-lg border border-laku-line bg-white px-5 py-3 text-sm font-bold text-laku-ink transition-colors hover:border-laku-blue hover:text-laku-blue"
         >
-          {t("whatIsLakupak.browseCategories")}
+          {t("nav.allProducts")}
         </Link>
       </div>
     </div>

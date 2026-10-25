@@ -230,10 +230,10 @@ export default async function SearchPage({
             {t("search.emptyBody")}
           </p>
           <Link
-            href="/categories"
+            href="/search"
             className="mt-6 inline-flex rounded-lg bg-laku-blue px-5 py-3 text-sm font-bold text-white transition-colors hover:bg-laku-blue-dark"
           >
-            {t("search.viewCategories")}
+            {t("nav.allProducts")}
           </Link>
         </div>
       ) : null}

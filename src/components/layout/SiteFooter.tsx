@@ -29,11 +29,6 @@ export default async function SiteFooter() {
               </Link>
             </li>
             <li>
-              <Link href="/categories" className="hover:text-laku-blue">
-                {t("nav.categories")}
-              </Link>
-            </li>
-            <li>
               <Link href="/search" className="hover:text-laku-blue">
                 {t("nav.allProducts")}
               </Link>

@@ -57,7 +57,7 @@ export default async function HomePage() {
 
           {categories.length > 0 ? (
             <section className="laku-rise">
-              <SectionHeader title={t("nav.categories")} href="/categories" />
+              <SectionHeader title={t("nav.categories")} href="/search" />
               <CategoryRail categories={categories} layout="directory" />
             </section>
           ) : null}

@@ -11,7 +11,7 @@ import CategoryIcon from "./CategoryIcon";
 
 type Props = {
   categories: BrowseCategory[];
-  /** `directory` = Shopee-style 2-row bordered grid; `grid` = simple wrap for /categories overflow. */
+  /** `directory` = Shopee-style 2-row bordered grid; `grid` = simple wrap. */
   layout?: "directory" | "grid";
 };
 

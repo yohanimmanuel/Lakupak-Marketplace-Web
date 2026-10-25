@@ -55,10 +55,10 @@ export default async function WhatIsLaku() {
             {t("nav.registerFree")}
           </Link>
           <Link
-            href="/categories"
+            href="/search"
             className="rounded-lg border border-laku-line px-5 py-3 text-sm font-bold text-laku-ink transition-colors hover:bg-laku-surface"
           >
-            {t("whatIsLakupak.browseCategories")}
+            {t("nav.allProducts")}
           </Link>
         </div>
       </div>

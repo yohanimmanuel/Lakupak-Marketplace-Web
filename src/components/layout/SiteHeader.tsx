@@ -49,9 +49,6 @@ export default async function SiteHeader({ user, cartCount = 0 }: Props) {
             className="hidden items-center gap-4 md:flex lg:gap-5"
             aria-label={t("header.utilityNavAria")}
           >
-            <Link href="/categories" className={utilityLinkClass}>
-              {t("nav.categories")}
-            </Link>
             <Link href="/notifications" className={utilityLinkClass}>
               <Bell className="size-3.5 shrink-0" aria-hidden />
               {t("nav.notifications")}
