@@ -12,12 +12,8 @@ import {
   Truck,
 } from "lucide-react";
 
-import DistributorReviews from "@/components/distributor/DistributorReviews";
 import { getTranslations } from "@/i18n/server";
-import {
-  getDistributor,
-  getDistributorReviews,
-} from "@/lib/api/marketplace";
+import { getDistributor } from "@/lib/api/marketplace";
 
 type Params = Promise<{ id: string }>;
 
@@ -67,10 +63,7 @@ export default async function SellerInformationPage({
 
   if (!Number.isFinite(sellerId) || sellerId <= 0) notFound();
 
-  const [profile, reviewsData] = await Promise.all([
-    getDistributor(sellerId),
-    getDistributorReviews(sellerId, { page: 1, limit: 10 }),
-  ]);
+  const profile = await getDistributor(sellerId);
 
   if (!profile) notFound();
 
@@ -85,11 +78,11 @@ export default async function SellerInformationPage({
   return (
     <div className="mx-auto max-w-3xl px-4 py-8 md:px-6">
       <Link
-        href={`/distributor/${sellerId}`}
+        href={`/distributor/${sellerId}/details`}
         className="mb-5 inline-flex items-center gap-1.5 text-sm font-semibold text-laku-blue transition-colors hover:text-laku-blue-dark"
       >
         <ArrowLeft className="size-4" aria-hidden />
-        {t("sellerInfo.backToShop")}
+        {t("distributor.viewDetails")}
       </Link>
 
       <h1 className="text-2xl font-bold text-laku-ink">{t("sellerInfo.title")}</h1>
@@ -236,20 +229,12 @@ export default async function SellerInformationPage({
         ) : null}
       </section>
 
-      <section className="mt-4">
-        <DistributorReviews
-          distributorId={sellerId}
-          reviews={reviewsData}
-          variant="panel"
-        />
-      </section>
-
       <div className="mt-5 flex flex-wrap gap-3">
         <Link
-          href={`/distributor/${sellerId}`}
-          className="inline-flex rounded-lg bg-laku-blue px-5 py-3 text-sm font-bold text-white transition-colors hover:bg-laku-blue-dark"
+          href={`/distributor/${sellerId}/details`}
+          className="inline-flex rounded-lg border border-laku-line px-5 py-3 text-sm font-semibold text-laku-ink transition-colors hover:bg-laku-surface"
         >
-          {t("sellerInfo.browseShop")}
+          {t("distributor.viewDetails")}
         </Link>
         <Link
           href={`/seller/${sellerId}/report`}

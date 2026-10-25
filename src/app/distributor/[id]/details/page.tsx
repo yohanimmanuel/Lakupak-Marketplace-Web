@@ -9,18 +9,12 @@ import {
   Mail,
   MapPin,
   Phone,
-  Star,
   Store,
   Truck,
 } from "lucide-react";
 
 import { getTranslations } from "@/i18n/server";
-import {
-  getDistributor,
-  getDistributorReviews,
-} from "@/lib/api/marketplace";
-import { getSession } from "@/lib/auth/session";
-import { formatNumber } from "@/lib/format";
+import { getDistributor } from "@/lib/api/marketplace";
 
 type Params = Promise<{ id: string }>;
 
@@ -58,11 +52,7 @@ export default async function DistributorDetailsPage({
 
   if (!Number.isFinite(distributorId) || distributorId <= 0) notFound();
 
-  const [distributor, reviews, session] = await Promise.all([
-    getDistributor(distributorId),
-    getDistributorReviews(distributorId, { page: 1, limit: 1 }),
-    getSession(),
-  ]);
+  const distributor = await getDistributor(distributorId);
 
   if (!distributor) notFound();
 
@@ -72,8 +62,6 @@ export default async function DistributorDetailsPage({
     t("product.distributorFallback");
   const logo = distributor.logo?.trim() || null;
   const banner = distributor.bannerImage?.trim() || null;
-  const rating = reviews?.overallRating ?? 0;
-  const reviewCount = reviews?.totalReviews ?? 0;
 
   const facts = [
     distributor.industryType
@@ -130,11 +118,11 @@ export default async function DistributorDetailsPage({
   return (
     <div className="mx-auto max-w-3xl px-4 py-8 md:px-6">
       <Link
-        href={`/distributor/${distributorId}`}
+        href={`/seller/${distributorId}`}
         className="mb-5 inline-flex items-center gap-1.5 text-sm font-semibold text-laku-blue transition-colors hover:text-laku-blue-dark"
       >
         <ArrowLeft className="size-4" aria-hidden />
-        {t("distributorDetails.backToShop")}
+        {t("distributor.sellerInfo")}
       </Link>
 
       <div className="overflow-hidden rounded-2xl bg-white">
@@ -158,18 +146,6 @@ export default async function DistributorDetailsPage({
             )}
           </span>
           <h1 className="text-2xl font-bold text-laku-ink">{displayName}</h1>
-          {rating > 0 ? (
-            <p className="mt-1 inline-flex items-center gap-1 text-sm text-laku-muted">
-              <Star
-                className="size-4 fill-laku-rating-star text-laku-rating-star"
-                aria-hidden
-              />
-              <span className="font-semibold text-laku-ink">{rating.toFixed(1)}</span>
-              {t("distributorDetails.reviewsCount", {
-                count: formatNumber(reviewCount, t.locale),
-              })}
-            </p>
-          ) : null}
         </div>
       </div>
 
@@ -209,26 +185,10 @@ export default async function DistributorDetailsPage({
 
       <div className="mt-5 flex flex-wrap gap-3">
         <Link
-          href={
-            session
-              ? `/distributor/${distributorId}/rate`
-              : `/login?next=${encodeURIComponent(`/distributor/${distributorId}/rate`)}`
-          }
-          className="rounded-lg border border-laku-line bg-white px-4 py-2.5 text-sm font-semibold text-laku-ink transition-colors hover:bg-laku-surface"
-        >
-          {t("distributor.rateReview")}
-        </Link>
-        <Link
           href={`/seller/${distributorId}`}
           className="rounded-lg border border-laku-line bg-white px-4 py-2.5 text-sm font-semibold text-laku-ink transition-colors hover:bg-laku-surface"
         >
           {t("distributor.sellerInfo")}
-        </Link>
-        <Link
-          href={`/distributor/${distributorId}`}
-          className="rounded-lg bg-laku-blue px-4 py-2.5 text-sm font-bold text-white transition-colors hover:bg-laku-blue-dark"
-        >
-          {t("distributorDetails.browseProducts")}
         </Link>
       </div>
     </div>

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Suspense } from "react";
 
 import CategoryRail from "@/components/category/CategoryRail";
@@ -7,7 +8,7 @@ import ProductGrid from "@/components/product/ProductGrid";
 import SearchBar from "@/components/search/SearchBar";
 import SectionHeader from "@/components/ui/SectionHeader";
 import { getTranslations } from "@/i18n/server";
-import { getProductsSafe } from "@/lib/api/marketplace";
+import { EMPTY_RESULT, getProductsSafe } from "@/lib/api/marketplace";
 import { getHomeOffersList } from "@/lib/api/offers";
 import { getSession } from "@/lib/auth/session";
 import { buildCategoryDirectory } from "@/lib/categories";
@@ -20,7 +21,7 @@ export default async function HomePage() {
   const session = await getSession();
 
   const [{ products, facets }, offers] = await Promise.all([
-    getProductsSafe({ limit: 20 }),
+    session ? getProductsSafe({ limit: 20 }) : Promise.resolve(EMPTY_RESULT),
     // Sale banners only (Admin Offers). Announcements stay on /notifications.
     session ? getHomeOffersList(session.token) : Promise.resolve([]),
   ]);
@@ -66,6 +67,24 @@ export default async function HomePage() {
             <div className="px-4 md:px-0">
               {products.length > 0 ? (
                 <ProductGrid products={products} priorityCount={5} />
+              ) : !session ? (
+                <div className="rounded-card bg-white p-8 text-center">
+                  <p className="text-sm text-laku-muted">{t("home.closedCatalog")}</p>
+                  <div className="mt-5 flex flex-wrap justify-center gap-3">
+                    <Link
+                      href="/login"
+                      className="rounded-lg bg-laku-blue px-5 py-3 text-sm font-bold text-white transition-colors hover:bg-laku-blue-dark"
+                    >
+                      {t("nav.login")}
+                    </Link>
+                    <Link
+                      href="/register"
+                      className="rounded-lg border border-laku-line bg-white px-5 py-3 text-sm font-bold text-laku-ink transition-colors hover:border-laku-blue hover:text-laku-blue"
+                    >
+                      {t("nav.registerFree")}
+                    </Link>
+                  </div>
+                </div>
               ) : (
                 <p className="rounded-card bg-white p-8 text-center text-sm text-laku-muted">
                   {t("home.emptyCatalog")}

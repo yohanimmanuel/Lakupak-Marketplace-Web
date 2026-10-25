@@ -135,7 +135,7 @@ export default function SearchDiscovery({
                 <Link
                   href={
                     item.id
-                      ? `/distributor/${item.id}`
+                      ? `/distributor/${item.id}/details`
                       : `/search?q=${encodeURIComponent(item.name)}`
                   }
                   className="flex items-center gap-3 rounded-xl border border-laku-line px-3 py-2.5 transition-colors hover:border-laku-blue"

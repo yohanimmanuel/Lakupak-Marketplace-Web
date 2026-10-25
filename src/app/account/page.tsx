@@ -15,16 +15,18 @@ import {
   Store,
   Truck,
   UserRound,
-  Users,
 } from "lucide-react";
 
 import SignedOutPrompt from "@/components/auth/SignedOutPrompt";
 import LogoutButton from "@/components/auth/LogoutButton";
 import { getTranslations } from "@/i18n/server";
+import { getDistributor } from "@/lib/api/marketplace";
 import { getOrders } from "@/lib/api/orders";
 import { getProfile } from "@/lib/api/profile";
 import { getSession } from "@/lib/auth/session";
+import { getStorefrontDistributorId } from "@/lib/auth/storefront";
 import { buildNetworksFromOrders } from "@/lib/networks";
+import { getDistributorUserId } from "@/lib/orders";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations();
@@ -75,9 +77,12 @@ export default async function AccountPage() {
     );
   }
 
-  const [profile, { orders }] = await Promise.all([
+  const storefrontId = getStorefrontDistributorId(session.token);
+
+  const [profile, { orders }, storefrontProfile] = await Promise.all([
     getProfile({ userId: session.user.id, token: session.token }),
     getOrders({ userId: session.user.id, token: session.token, limit: 100 }),
+    storefrontId ? getDistributor(storefrontId) : Promise.resolve(null),
   ]);
 
   const displayName =
@@ -88,7 +93,36 @@ export default async function AccountPage() {
   const countFor = (statuses: string[]) =>
     orders.filter((order) => statuses.includes(order.orderStatus)).length;
 
-  const networks = buildNetworksFromOrders(orders, t).slice(0, 2);
+  // Closed marketplace: always show the session storefront, even with 0 orders.
+  const orderNetworks = buildNetworksFromOrders(orders, t);
+  const storefrontOrderCount = storefrontId
+    ? orders.filter((order) => {
+        if (order.orderStatus === "Deleted" || order.orderStatus === "Cancelled") {
+          return false;
+        }
+        return getDistributorUserId(order) === storefrontId;
+      }).length
+    : 0;
+  // Only the JWT storefront belongs under this heading — never fall back to
+  // order-derived distributors (those are purchase history, not membership).
+  const networks =
+    storefrontId != null
+      ? [
+          {
+            id: storefrontId,
+            name:
+              storefrontProfile?.companyName?.trim() ||
+              storefrontProfile?.name?.trim() ||
+              orderNetworks.find((item) => item.id === storefrontId)?.name ||
+              t("product.distributorFallback"),
+            logo:
+              storefrontProfile?.logo?.trim() ||
+              orderNetworks.find((item) => item.id === storefrontId)?.logo ||
+              null,
+            totalOrders: storefrontOrderCount,
+          },
+        ]
+      : [];
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-10 md:px-6">
@@ -190,65 +224,56 @@ export default async function AccountPage() {
       </section>
 
       <section className="mt-4 rounded-2xl bg-white p-5">
-        <div className="mb-4 flex items-center justify-between gap-3">
-          <h2 className="text-sm font-bold text-laku-ink">
-            {t("account.myNetworks")}
-          </h2>
-          <Link
-            href="/account/networks"
-            className="inline-flex items-center gap-0.5 text-sm font-semibold text-laku-blue hover:text-laku-blue-dark"
-          >
-            {t("account.viewAllNetworks")}
-            <ChevronRight className="size-3.5" aria-hidden />
-          </Link>
-        </div>
+        <h2 className="mb-4 text-sm font-bold text-laku-ink">
+          {t("account.distributorStorefront")}
+        </h2>
 
         {networks.length > 0 ? (
-          <div className="grid gap-3 sm:grid-cols-2">
+          <div className="flex flex-col gap-3">
             {networks.map((item) => (
-              <Link
-                key={item.id}
-                href={`/distributor/${item.id}`}
-                className="flex items-center gap-3 rounded-xl border border-laku-line px-3 py-3 transition-colors hover:bg-laku-blue/5"
-              >
-                <span className="relative flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-laku-chip">
-                  {item.logo ? (
-                    <Image
-                      src={item.logo}
-                      alt=""
-                      fill
-                      sizes="40px"
-                      className="object-cover"
-                      unoptimized
-                    />
-                  ) : (
-                    <Store className="size-4 text-laku-faint" aria-hidden />
-                  )}
-                </span>
-                <span className="min-w-0">
-                  <span className="block truncate text-sm font-semibold text-laku-ink">
-                    {item.name}
+              <div key={item.id} className="flex flex-col gap-2">
+                <Link
+                  href={`/distributor/${item.id}/details`}
+                  className="flex w-full items-center gap-3 rounded-xl border border-laku-line px-3 py-3 transition-colors hover:bg-laku-blue/5"
+                >
+                  <span className="relative flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-laku-chip">
+                    {item.logo ? (
+                      <Image
+                        src={item.logo}
+                        alt=""
+                        fill
+                        sizes="40px"
+                        className="object-cover"
+                        unoptimized
+                      />
+                    ) : (
+                      <Store className="size-4 text-laku-faint" aria-hidden />
+                    )}
                   </span>
-                  <span className="block text-xs text-laku-muted">
-                    {t("account.networksOrdersCount", {
-                      count: item.totalOrders,
-                    })}
+                  <span className="min-w-0">
+                    <span className="block truncate text-sm font-semibold text-laku-ink">
+                      {item.name}
+                    </span>
+                    <span className="block text-xs text-laku-muted">
+                      {t("account.networksOrdersCount", {
+                        count: item.totalOrders,
+                      })}
+                    </span>
                   </span>
-                </span>
-              </Link>
+                </Link>
+                <Link
+                  href={`/seller/${item.id}`}
+                  className="inline-flex w-full items-center justify-center rounded-lg border border-laku-line bg-white px-4 py-2.5 text-sm font-semibold text-laku-ink transition-colors hover:bg-laku-surface"
+                >
+                  {t("account.viewDistributorInformation")}
+                </Link>
+              </div>
             ))}
           </div>
         ) : (
           <p className="text-sm text-laku-muted">{t("account.noNetworksYet")}</p>
         )}
 
-        <Link
-          href="/account/followings"
-          className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-laku-blue hover:text-laku-blue-dark"
-        >
-          <Users className="size-3.5" aria-hidden />
-          {t("account.viewAllFollowings")}
-        </Link>
       </section>
 
       <section className="mt-4 overflow-hidden rounded-2xl bg-white">

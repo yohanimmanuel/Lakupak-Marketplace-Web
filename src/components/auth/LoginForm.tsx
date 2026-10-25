@@ -28,6 +28,7 @@ export default function LoginForm({ redirectTo = "/" }: { redirectTo?: string })
         body: JSON.stringify({
           username: formData.get("username"),
           password: formData.get("password"),
+          referralCode: String(formData.get("referralCode") ?? "").trim() || undefined,
         }),
       });
 
@@ -61,6 +62,14 @@ export default function LoginForm({ redirectTo = "/" }: { redirectTo?: string })
         name="password"
         type="password"
         autoComplete="current-password"
+      />
+      <AuthField
+        label={t("auth.referralCode.label")}
+        name="referralCode"
+        autoComplete="off"
+        maxLength={24}
+        placeholder={t("auth.referralCode.placeholder")}
+        hint={t("auth.referralCode.loginHint")}
       />
 
       <div className="-mt-2 flex justify-end">

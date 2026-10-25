@@ -10,14 +10,11 @@ import ProductGrid from "@/components/product/ProductGrid";
 import ProductGallery from "@/components/product/ProductGallery";
 import ProductAssuranceBadges from "@/components/product/ProductAssuranceBadges";
 import ProductPurchasePanel from "@/components/product/ProductPurchasePanel";
-import ProductReviews from "@/components/product/ProductReviews";
 import ShareButton from "@/components/share/ShareButton";
 import SectionHeader from "@/components/ui/SectionHeader";
 import { getTranslations } from "@/i18n/server";
 import {
-  getDistributorReviews,
   getProductById,
-  getProductReviews,
   getProductsSafe,
 } from "@/lib/api/marketplace";
 import { getSession } from "@/lib/auth/session";
@@ -87,12 +84,7 @@ export default async function ProductPage({ params }: { params: Params }) {
 
   const sessionUserId = session?.user.id ?? null;
 
-  const [reviews, related, sellerReviews] = await Promise.all([
-    getProductReviews(product.id),
-    getProductsSafe({ category: categoryKey, limit: 10 }),
-    // GraphQL hardcodes seller.rating to 0 — use the reviews API instead.
-    product.userId ? getDistributorReviews(product.userId) : Promise.resolve(null),
-  ]);
+  const related = await getProductsSafe({ category: categoryKey, limit: 10 });
 
   const relatedProducts = related.products
     .filter((item) => item.id !== product.id)
@@ -100,12 +92,8 @@ export default async function ProductPage({ params }: { params: Params }) {
 
   const delivery = getDeliveryLabel(product, t);
   const location = getShippingLocation(product);
-  const rating = reviews?.overallRating ?? product.reviews?.overallRating ?? 0;
-  const totalReviews = reviews?.totalReviews ?? product.reviews?.totalReviews ?? 0;
-  const sellerRating =
-    sellerReviews?.overallRating ?? product.seller?.rating ?? 0;
-  const sellerReviewCount =
-    sellerReviews?.totalReviews ?? product.seller?.reviewCount ?? 0;
+  const rating = product.reviews?.overallRating ?? product.rating ?? 0;
+  const totalReviews = product.reviews?.totalReviews ?? product.reviewCount ?? 0;
   const sellerName = product.seller?.company?.name ?? product.seller?.name;
   const sellerImage =
     product.seller?.company?.logo?.trim() ||
@@ -284,22 +272,6 @@ export default async function ProductPage({ params }: { params: Params }) {
                     <p className="truncate text-sm font-semibold text-laku-ink">
                       {sellerName}
                     </p>
-                    <p className="mt-0.5 flex flex-wrap items-center gap-x-2 gap-y-0.5 text-xs text-laku-muted">
-                      <span className="inline-flex items-center gap-1 font-semibold text-laku-ink">
-                        <Star
-                          className="size-3 fill-laku-rating-star text-laku-rating-star"
-                          aria-hidden
-                        />
-                        {sellerRating > 0 ? sellerRating.toFixed(1) : "—"}
-                      </span>
-                      {sellerReviewCount > 0 ? (
-                        <span>
-                          {t("product.sellerReviews", {
-                            count: sellerReviewCount,
-                          })}
-                        </span>
-                      ) : null}
-                    </p>
                     <p className="mt-0.5 truncate text-xs text-laku-muted">
                       {product.seller?.company?.businessAddress ??
                         t("product.distributorFallback")}
@@ -325,22 +297,6 @@ export default async function ProductPage({ params }: { params: Params }) {
                     <p className="truncate text-sm font-semibold text-laku-ink">
                       {sellerName}
                     </p>
-                    <p className="mt-0.5 flex flex-wrap items-center gap-x-2 gap-y-0.5 text-xs text-laku-muted">
-                      <span className="inline-flex items-center gap-1 font-semibold text-laku-ink">
-                        <Star
-                          className="size-3 fill-laku-rating-star text-laku-rating-star"
-                          aria-hidden
-                        />
-                        {sellerRating > 0 ? sellerRating.toFixed(1) : "—"}
-                      </span>
-                      {sellerReviewCount > 0 ? (
-                        <span>
-                          {t("product.sellerReviews", {
-                            count: sellerReviewCount,
-                          })}
-                        </span>
-                      ) : null}
-                    </p>
                     <p className="mt-0.5 truncate text-xs text-laku-muted">
                       {product.seller?.company?.businessAddress ??
                         t("product.distributorFallback")}
@@ -349,20 +305,12 @@ export default async function ProductPage({ params }: { params: Params }) {
                 </div>
               )}
               {product.userId ? (
-                <div className="mt-3 flex flex-wrap gap-2">
-                  <Link
-                    href={`/distributor/${product.userId}`}
-                    className="rounded-lg border border-laku-line px-3 py-1.5 text-xs font-semibold text-laku-ink transition-colors hover:bg-laku-surface"
-                  >
-                    {t("product.viewShop")}
-                  </Link>
-                  <Link
-                    href={`/seller/${product.userId}`}
-                    className="rounded-lg bg-laku-blue/10 px-3 py-1.5 text-xs font-semibold text-laku-blue transition-colors hover:bg-laku-blue/15"
-                  >
-                    {t("product.viewSellerInfo")}
-                  </Link>
-                </div>
+                <Link
+                  href={`/seller/${product.userId}`}
+                  className="mt-3 inline-flex w-full items-center justify-center rounded-lg border border-laku-line bg-white px-4 py-2.5 text-sm font-semibold text-laku-ink transition-colors hover:bg-laku-surface"
+                >
+                  {t("product.viewSellerInfo")}
+                </Link>
               ) : null}
             </div>
           ) : null}
@@ -379,10 +327,6 @@ export default async function ProductPage({ params }: { params: Params }) {
           </p>
         </section>
       ) : null}
-
-      <section className="mt-14">
-        <ProductReviews productId={product.id} reviews={reviews} />
-      </section>
 
       {relatedProducts.length > 0 ? (
         <section className="mt-14">

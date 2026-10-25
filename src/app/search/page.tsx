@@ -5,7 +5,9 @@ import SearchPagination from "@/components/search/SearchPagination";
 import SearchDiscovery from "@/components/search/SearchDiscovery";
 import SearchResultsClient from "@/components/search/SearchResultsClient";
 import { getTranslations } from "@/i18n/server";
+import SignedOutPrompt from "@/components/auth/SignedOutPrompt";
 import { getProductsSafe } from "@/lib/api/marketplace";
+import { getSession } from "@/lib/auth/session";
 import { buildCategoryDirectory, translateCategory } from "@/lib/categories";
 import { formatNumber } from "@/lib/format";
 import {
@@ -39,7 +41,7 @@ export async function generateMetadata({
 }: {
   searchParams: Promise<SearchParams>;
 }): Promise<Metadata> {
-  const t = await getTranslations();
+  const [t, session] = await Promise.all([getTranslations(), getSession()]);
   const { q, category } = await searchParams;
   const categoryKey = category
     ? (resolveProductTypeKey(category) ?? category)
@@ -58,6 +60,9 @@ export async function generateMetadata({
   if (category) params.set("category", category);
   const query = params.toString();
 
+  // Closed catalog: signed-out search is a login wall; never index it (or query URLs).
+  const noIndex = !session || Boolean(q);
+
   return {
     title,
     description: displayQuery
@@ -66,7 +71,7 @@ export async function generateMetadata({
         ? t("search.metaDescriptionCategory", { category: categoryLabel })
         : t("search.metaDescriptionAll"),
     alternates: { canonical: query ? `/search?${query}` : "/search" },
-    robots: q ? { index: false, follow: true } : undefined,
+    robots: noIndex ? { index: false, follow: true } : undefined,
   };
 }
 
@@ -76,6 +81,9 @@ export default async function SearchPage({
   searchParams: Promise<SearchParams>;
 }) {
   const t = await getTranslations();
+  if (!(await getSession())) {
+    return <SignedOutPrompt title={t("search.signedOutTitle")} body={t("home.closedCatalog")} />;
+  }
   const { q, category, page: pageParam } = await searchParams;
   const page = parsePage(pageParam);
 

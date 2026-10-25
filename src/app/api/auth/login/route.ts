@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import { getTranslations } from "@/i18n/server";
 import { LAKU_API_BASE_URL } from "@/lib/config";
 import { applySessionCookies } from "@/lib/auth/cookies";
+import { referralErrorMessage } from "@/lib/auth/referral";
 
 export async function POST(request: Request) {
   const t = await getTranslations();
@@ -24,11 +25,15 @@ export async function POST(request: Request) {
     token?: string;
     user?: { id: number; name: string; email: string; address?: string };
     error?: string;
+    code?: string;
   };
 
   if (!upstream.ok || !payload.token || !payload.user) {
     return NextResponse.json(
-      { error: payload.error ?? t("auth.loginError") },
+      {
+        error: referralErrorMessage(t, payload.code) ?? payload.error ?? t("auth.loginError"),
+        code: payload.code,
+      },
       { status: upstream.status === 200 ? 401 : upstream.status },
     );
   }

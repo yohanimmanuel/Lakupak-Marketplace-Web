@@ -223,7 +223,7 @@ export default async function OrderDetailsPage({ params }: { params: Params }) {
         </h2>
         {distributorId ? (
           <Link
-            href={`/distributor/${distributorId}`}
+            href={`/distributor/${distributorId}/details`}
             className="flex items-center gap-3 transition-opacity hover:opacity-90"
           >
             <span className="relative flex size-11 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-laku-blue/10 text-laku-blue">

@@ -16,6 +16,7 @@ import UseCurrentLocationButton from "./UseCurrentLocationButton";
 type AddressLabel = "work" | "store" | "home";
 
 type SignupData = {
+  referralCode: string;
   name: string;
   phone: string;
   email: string;
@@ -34,6 +35,7 @@ type SignupData = {
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const ADDRESS_LABELS: AddressLabel[] = ["work", "store", "home"];
 const INITIAL: SignupData = {
+  referralCode: "",
   name: "",
   phone: "",
   email: "",
@@ -120,6 +122,9 @@ export default function RegisterForm() {
       if (data.password !== data.confirmPassword) {
         return t("auth.signup.errors.passwordMismatch");
       }
+      if (!data.referralCode.trim()) {
+        return t("auth.referralCode.required");
+      }
     }
     return null;
   };
@@ -167,6 +172,7 @@ export default function RegisterForm() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          referralCode: data.referralCode.trim(),
           name: data.name.trim(),
           email: data.email.trim().toLowerCase(),
           storeName: data.storeName.trim() || undefined,
@@ -186,7 +192,9 @@ export default function RegisterForm() {
       if (!response.ok) {
         const payload = (await response.json().catch(() => ({}))) as {
           error?: string;
+          code?: string;
         };
+        if (payload.code?.startsWith("REFERRAL_CODE_")) setStep(4);
         setError(payload.error ?? t("auth.registerError"));
         return;
       }
@@ -441,6 +449,16 @@ export default function RegisterForm() {
                   placeholder={t("auth.signup.confirmPasswordPlaceholder")}
                   value={data.confirmPassword}
                   onChange={setField("confirmPassword")}
+                />
+                <AuthField
+                  label={t("auth.referralCode.label")}
+                  name="referralCode"
+                  autoComplete="off"
+                  placeholder={t("auth.referralCode.placeholder")}
+                  hint={t("auth.referralCode.signupHint")}
+                  maxLength={24}
+                  value={data.referralCode}
+                  onChange={(value) => setField("referralCode")(value.toUpperCase())}
                 />
               </>
             ) : null}

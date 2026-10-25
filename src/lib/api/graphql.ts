@@ -1,6 +1,8 @@
 import "server-only";
 
-import { LAKU_API_BASE_URL } from "@/lib/config";
+import { cookies } from "next/headers";
+
+import { LAKU_API_BASE_URL, SESSION_COOKIE } from "@/lib/config";
 
 type GraphQLResponse<T> = {
   data?: T;
@@ -15,6 +17,15 @@ export class LakuApiError extends Error {
 }
 
 /**
+ * The marketplace is closed per distributor, so catalog reads carry the signed-in
+ * retailer's token and are never shared through the fetch cache.
+ */
+async function resolveToken(explicit?: string): Promise<string | undefined> {
+  if (explicit) return explicit;
+  return (await cookies()).get(SESSION_COOKIE)?.value || undefined;
+}
+
+/**
  * The Dashboard sends no CORS headers, so every catalog call is made from the
  * Next.js server (RSC or route handler), never from the browser.
  */
@@ -23,15 +34,16 @@ export async function graphqlRequest<T>(
   variables: Record<string, unknown> = {},
   options: { token?: string; revalidate?: number } = {},
 ): Promise<T> {
+  const token = await resolveToken(options.token);
   const headers: Record<string, string> = { "Content-Type": "application/json" };
-  if (options.token) headers.Authorization = `Bearer ${options.token}`;
+  if (token) headers.Authorization = `Bearer ${token}`;
 
   const response = await fetch(`${LAKU_API_BASE_URL}/api/graphql`, {
     method: "POST",
     headers,
     body: JSON.stringify({ query, variables }),
-    next: options.token ? undefined : { revalidate: options.revalidate ?? 60 },
-    cache: options.token ? "no-store" : undefined,
+    next: token ? undefined : { revalidate: options.revalidate ?? 60 },
+    cache: token ? "no-store" : undefined,
   });
 
   if (!response.ok) {
@@ -70,13 +82,14 @@ export async function restRequest<T>(
   path: string,
   options: { token?: string; revalidate?: number } = {},
 ): Promise<T> {
+  const token = await resolveToken(options.token);
   const headers: Record<string, string> = {};
-  if (options.token) headers.Authorization = `Bearer ${options.token}`;
+  if (token) headers.Authorization = `Bearer ${token}`;
 
   const response = await fetch(`${LAKU_API_BASE_URL}${path}`, {
     headers,
-    next: options.token ? undefined : { revalidate: options.revalidate ?? 60 },
-    cache: options.token ? "no-store" : undefined,
+    next: token ? undefined : { revalidate: options.revalidate ?? 60 },
+    cache: token ? "no-store" : undefined,
   });
 
   if (!response.ok) {

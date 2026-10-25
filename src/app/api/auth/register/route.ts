@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 
 import { getTranslations } from "@/i18n/server";
 import { applySessionCookies } from "@/lib/auth/cookies";
+import { referralErrorMessage } from "@/lib/auth/referral";
 import { LAKU_API_BASE_URL } from "@/lib/config";
 
 type RegisterBody = {
@@ -18,6 +19,7 @@ type RegisterBody = {
   addressIsDefault?: boolean;
   countryCode?: string;
   countryDialCode?: string;
+  referralCode?: string;
 };
 
 export async function POST(request: Request) {
@@ -36,6 +38,7 @@ export async function POST(request: Request) {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
+      referralCode: typeof body.referralCode === "string" ? body.referralCode.trim() : undefined,
       name,
       storeName: body.storeName?.trim() || name,
       bio: body.bio?.trim() || undefined,
@@ -57,11 +60,15 @@ export async function POST(request: Request) {
     token?: string;
     user?: { id: number; name: string; email: string; address?: string };
     error?: string;
+    code?: string;
   };
 
   if (!upstream.ok || !payload.token || !payload.user) {
     return NextResponse.json(
-      { error: payload.error ?? t("auth.registerError") },
+      {
+        error: referralErrorMessage(t, payload.code) ?? payload.error ?? t("auth.registerError"),
+        code: payload.code,
+      },
       { status: upstream.ok ? 400 : upstream.status },
     );
   }

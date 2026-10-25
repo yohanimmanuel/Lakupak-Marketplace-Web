@@ -215,27 +215,6 @@ export type Distributor = {
   pickupAddress?: string | null;
 };
 
-export type DistributorReview = {
-  id: number;
-  overallRating: number;
-  comment?: string;
-  createdAt: string;
-  reviewerDisplayName: string;
-  reviewerProfileImage?: string;
-  wouldOrderAgain?: string;
-};
-
-export type DistributorReviews = {
-  distributorId: number;
-  totalReviews: number;
-  overallRating: number;
-  breakdown?: Record<number, number>;
-  reviews: DistributorReview[];
-  page?: number;
-  limit?: number;
-  totalPages?: number;
-};
-
 /**
  * Order shapes follow GET /api/mobile/orders, which spreads the Prisma row and
  * therefore carries the numeric id and payment proof state that the GraphQL

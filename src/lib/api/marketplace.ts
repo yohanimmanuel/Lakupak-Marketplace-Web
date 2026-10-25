@@ -1,9 +1,8 @@
 import "server-only";
 
-import { graphqlRequest, restMutate, restRequest } from "@/lib/api/graphql";
+import { graphqlRequest, restRequest } from "@/lib/api/graphql";
 import type {
   Distributor,
-  DistributorReviews,
   Facet,
   LatestUpdate,
   MarketplaceProduct,
@@ -179,7 +178,7 @@ function normalizeProduct(raw: RawProduct): MarketplaceProduct {
   };
 }
 
-const EMPTY_RESULT: ProductsResult = {
+export const EMPTY_RESULT: ProductsResult = {
   products: [],
   pagination: { page: 1, limit: 0, totalCount: 0, totalPages: 0 },
   facets: { productTypes: [], productCategories: [] },
@@ -296,49 +295,6 @@ export async function getDistributor(userId: number): Promise<Distributor | null
   } catch {
     return null;
   }
-}
-
-export async function getDistributorReviews(
-  distributorId: number,
-  options?: { page?: number; limit?: number },
-): Promise<DistributorReviews | null> {
-  const page = options?.page ?? 1;
-  const limit = options?.limit ?? 10;
-  try {
-    return await restRequest<DistributorReviews>(
-      `/api/mobile/reviews/distributor?distributorId=${encodeURIComponent(String(distributorId))}&page=${page}&limit=${limit}`,
-      { revalidate: 300 },
-    );
-  } catch {
-    return null;
-  }
-}
-
-export async function submitDistributorReview(params: {
-  token: string;
-  distributorId: number;
-  overallRating: number;
-  communicationRating?: number;
-  deliveryRating?: number;
-  productQualityRating?: number;
-  wouldOrderAgain?: "yes" | "no" | "maybe" | null;
-  comment?: string;
-}): Promise<{ ok: true } | { ok: false; error: string }> {
-  const result = await restMutate<unknown>("/api/mobile/reviews/distributor", {
-    method: "POST",
-    token: params.token,
-    body: {
-      id: String(params.distributorId),
-      overallRating: params.overallRating,
-      communicationRating: params.communicationRating ?? 0,
-      deliveryRating: params.deliveryRating ?? 0,
-      productQualityRating: params.productQualityRating ?? 0,
-      wouldOrderAgain: params.wouldOrderAgain,
-      comment: params.comment?.trim() || "",
-    },
-  });
-  if (!result.ok) return { ok: false, error: result.error };
-  return { ok: true };
 }
 
 /**
