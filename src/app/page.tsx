@@ -8,9 +8,10 @@ import ProductGrid from "@/components/product/ProductGrid";
 import SearchBar from "@/components/search/SearchBar";
 import SectionHeader from "@/components/ui/SectionHeader";
 import { getTranslations } from "@/i18n/server";
-import { EMPTY_RESULT, getProductsSafe } from "@/lib/api/marketplace";
+import { EMPTY_RESULT, getDistributor, getProductsSafe } from "@/lib/api/marketplace";
 import { getHomeOffersList } from "@/lib/api/offers";
 import { getSession } from "@/lib/auth/session";
+import { getStorefrontDistributorId } from "@/lib/auth/storefront";
 import { buildCategoryDirectory } from "@/lib/categories";
 import { dashboardLandingUrl } from "@/lib/config";
 
@@ -19,14 +20,18 @@ export const revalidate = 60;
 export default async function HomePage() {
   const t = await getTranslations();
   const session = await getSession();
+  const storefrontId = session ? getStorefrontDistributorId(session.token) : null;
 
-  const [{ products, facets }, offers] = await Promise.all([
+  const [{ products, facets }, offers, storefront] = await Promise.all([
     session ? getProductsSafe({ limit: 20 }) : Promise.resolve(EMPTY_RESULT),
     // Sale banners only (Admin Offers). Announcements stay on /notifications.
     session ? getHomeOffersList(session.token) : Promise.resolve([]),
+    storefrontId ? getDistributor(storefrontId) : Promise.resolve(null),
   ]);
 
   const categories = buildCategoryDirectory(facets.productTypes, products, t);
+  const storefrontName =
+    storefront?.companyName?.trim() || storefront?.name?.trim() || "";
 
   return (
     <div className="bg-laku-blue">
@@ -37,7 +42,9 @@ export default async function HomePage() {
             : t("home.guestLabel")}
         </p>
         <h1 className="mt-2 max-w-2xl text-3xl font-extrabold text-balance text-white md:text-4xl">
-          {t("home.heroTitle")}
+          {storefrontName
+            ? t("home.heroTitleWithDistributor", { distributor: storefrontName })
+            : t("home.heroTitle")}
         </h1>
         <div className="mt-6 max-w-xl md:hidden">
           <Suspense fallback={<div className="h-10 rounded-pill bg-white" />}>

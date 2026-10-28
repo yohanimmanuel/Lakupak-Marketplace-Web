@@ -53,6 +53,7 @@
     "greeting": "Hi, {{name}}",
     "guestLabel": "Lakupak wholesale marketplace",
     "heroTitle": "Stock your store straight from verified distributors",
+    "heroTitleWithDistributor": "Stock your store straight from {{distributor}}",
     "specialOffers": "Special Offers",
     "featured": "Featured Products",
     "emptyCatalog": "The catalog is unavailable right now. Please reload this page shortly.",

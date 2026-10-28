@@ -53,6 +53,7 @@
     "greeting": "Halo, {{name}}",
     "guestLabel": "Pasar grosir Lakupak",
     "heroTitle": "Belanja stok warung langsung dari distributor terverifikasi",
+    "heroTitleWithDistributor": "Belanja stok warung langsung dari {{distributor}}",
     "specialOffers": "Penawaran Spesial",
     "featured": "Produk Unggulan",
     "emptyCatalog": "Katalog belum tersedia. Coba muat ulang halaman ini sebentar lagi.",
