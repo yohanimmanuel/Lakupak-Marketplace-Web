@@ -5,7 +5,14 @@ import { notFound } from "next/navigation";
 
 import { getTranslations } from "@/i18n/server";
 import { getLatestUpdate } from "@/lib/api/marketplace";
+import { getSession } from "@/lib/auth/session";
+import { getStorefrontDistributorId } from "@/lib/auth/storefront";
 import { formatDate } from "@/lib/format";
+
+async function currentStorefrontId(): Promise<number | null> {
+  const session = await getSession();
+  return session ? getStorefrontDistributorId(session.token) : null;
+}
 
 export const revalidate = 300;
 
@@ -18,7 +25,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const t = await getTranslations();
   const { id } = await params;
-  const promo = await getLatestUpdate(Number(id));
+  const promo = await getLatestUpdate(Number(id), await currentStorefrontId());
 
   if (!promo) return { title: t("promo.notFound") };
 
@@ -37,7 +44,7 @@ export async function generateMetadata({
 export default async function PromoPage({ params }: { params: Params }) {
   const t = await getTranslations();
   const { id } = await params;
-  const promo = await getLatestUpdate(Number(id));
+  const promo = await getLatestUpdate(Number(id), await currentStorefrontId());
 
   if (!promo) notFound();
 

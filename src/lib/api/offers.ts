@@ -24,7 +24,7 @@ function normalizeOffer(
   };
 }
 
-/** Auth-required homepage sale banners (Laku Admin → Offers). */
+/** Auth-required homepage sale banners for the signed-in storefront. */
 export async function getHomeOffersList(
   token: string,
 ): Promise<MarketplaceHomeOffer[]> {

@@ -304,9 +304,13 @@ export async function getDistributor(userId: number): Promise<Distributor | null
 export async function getLatestUpdates(options?: {
   limit?: number;
   category?: string;
+  distributorId?: number | null;
 }): Promise<LatestUpdate[]> {
   const params = new URLSearchParams({ limit: String(options?.limit ?? 6) });
   if (options?.category) params.set("category", options.category);
+  if (options?.distributorId != null && options.distributorId > 0) {
+    params.set("distributorId", String(options.distributorId));
+  }
 
   try {
     const data = await restRequest<{ announcements?: LatestUpdate[] }>(
@@ -319,10 +323,16 @@ export async function getLatestUpdates(options?: {
   }
 }
 
-export async function getLatestUpdate(id: number): Promise<LatestUpdate | null> {
+export async function getLatestUpdate(
+  id: number,
+  distributorId?: number | null,
+): Promise<LatestUpdate | null> {
+  const params = new URLSearchParams();
+  if (distributorId != null && distributorId > 0) params.set("distributorId", String(distributorId));
+  const query = params.toString();
   try {
     const data = await restRequest<{ announcement?: LatestUpdate } | LatestUpdate>(
-      `/api/marketplace/latest-updates/${id}`,
+      `/api/marketplace/latest-updates/${id}${query ? `?${query}` : ""}`,
       { revalidate: 300 },
     );
     if (data && typeof data === "object" && "announcement" in data) {

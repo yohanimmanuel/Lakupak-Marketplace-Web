@@ -7,6 +7,7 @@ import { getTranslations } from "@/i18n/server";
 import { getOrders } from "@/lib/api/orders";
 import { getLatestUpdates } from "@/lib/api/marketplace";
 import { getSession } from "@/lib/auth/session";
+import { getStorefrontDistributorId } from "@/lib/auth/storefront";
 import { formatDate } from "@/lib/format";
 import { getSellerName, getStatusMessage } from "@/lib/orders";
 
@@ -31,9 +32,10 @@ export default async function NotificationsPage({
   const { category } = await searchParams;
   const t = await getTranslations();
   const session = await getSession();
+  const storefrontId = session ? getStorefrontDistributorId(session.token) : null;
 
   const [updates, orderResult] = await Promise.all([
-    getLatestUpdates({ limit: 40, category: category || undefined }),
+    getLatestUpdates({ limit: 40, category: category || undefined, distributorId: storefrontId }),
     session
       ? getOrders({ userId: session.user.id, token: session.token, limit: 5 })
       : Promise.resolve(null),

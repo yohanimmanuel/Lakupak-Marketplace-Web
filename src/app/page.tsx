@@ -24,7 +24,7 @@ export default async function HomePage() {
 
   const [{ products, facets }, offers, storefront] = await Promise.all([
     session ? getProductsSafe({ limit: 20 }) : Promise.resolve(EMPTY_RESULT),
-    // Sale banners only (Admin Offers). Announcements stay on /notifications.
+    // Sale banners for this storefront. Announcements stay on /notifications.
     session ? getHomeOffersList(session.token) : Promise.resolve([]),
     storefrontId ? getDistributor(storefrontId) : Promise.resolve(null),
   ]);
