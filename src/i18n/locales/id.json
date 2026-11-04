@@ -888,6 +888,8 @@
     "title": "Bayar pesanan",
     "backToDetails": "Kembali ke detail pesanan",
     "totalPayment": "Total pembayaran",
+    "paid": "Dibayar",
+    "unpaid": "Belum dibayar",
     "productCount": "{{count}} produk · {{terms}}",
     "payTo": "Dibayarkan kepada",
     "bankTitle": "Rekening bank (transfer manual)",

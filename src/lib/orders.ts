@@ -136,6 +136,23 @@ export function hasSubmittedPaymentProof(order: Order): boolean {
   );
 }
 
+/** Amount already received, and the remainder of the order total. */
+export function orderPaymentSplit(order: Order): { paid: number; unpaid: number } {
+  const calculated = Math.max(
+    0,
+    Number(order.subtotal || 0) + Number(order.shippingFee || 0) - Number(order.discounts || 0),
+  );
+  const headerTotal = Math.max(0, Number(order.totalAmount || 0));
+  const orderTotal = headerTotal > 0 ? headerTotal : calculated;
+  const recorded =
+    order.amountPaid != null && Number.isFinite(Number(order.amountPaid))
+      ? Math.min(orderTotal, Math.max(0, Number(order.amountPaid)))
+      : order.paymentStatus === "Paid"
+        ? orderTotal
+        : 0;
+  return { paid: recorded, unpaid: Math.max(0, orderTotal - recorded) };
+}
+
 export function isPayable(order: Order): boolean {
   const status = order.orderStatus?.toLowerCase();
   return (

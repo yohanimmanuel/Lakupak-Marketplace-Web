@@ -16,6 +16,7 @@ import {
   isBankTransferOrder,
   isCodOrder,
   isPayable,
+  orderPaymentSplit,
 } from "@/lib/orders";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -53,6 +54,7 @@ export default async function PayOrderPage({ params }: { params: Params }) {
   if (!order) notFound();
   if (!isPayable(order)) redirect(`/orders/${encodeURIComponent(order.orderId)}`);
 
+  const paymentSplit = orderPaymentSplit(order);
   const isCod = isCodOrder(order);
   const isBankTransfer = isBankTransferOrder(order);
   const sellerUserId = getDistributorUserId(order);
@@ -88,6 +90,21 @@ export default async function PayOrderPage({ params }: { params: Params }) {
             terms: order.paymentTerms ?? t("payOrder.paymentFallback"),
           })}
         </p>
+      </section>
+
+      <section className="mt-4 grid grid-cols-2 gap-3">
+        <div className="rounded-2xl bg-white p-5">
+          <p className="text-sm font-semibold text-green-600">{t("payOrder.paid")}</p>
+          <p className="mt-1 text-lg font-bold text-laku-ink">
+            {formatCurrency(paymentSplit.paid, t.locale)}
+          </p>
+        </div>
+        <div className="rounded-2xl bg-white p-5">
+          <p className="text-sm font-semibold text-red-600">{t("payOrder.unpaid")}</p>
+          <p className="mt-1 text-lg font-bold text-laku-ink">
+            {formatCurrency(paymentSplit.unpaid, t.locale)}
+          </p>
+        </div>
       </section>
 
       <section className="mt-4 rounded-2xl bg-white p-5">

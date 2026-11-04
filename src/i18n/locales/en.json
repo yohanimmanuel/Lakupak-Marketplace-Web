@@ -888,6 +888,8 @@
     "title": "Pay order",
     "backToDetails": "Back to order details",
     "totalPayment": "Total payment",
+    "paid": "Paid",
+    "unpaid": "Unpaid",
     "productCount": "{{count}} products · {{terms}}",
     "payTo": "Paid to",
     "bankTitle": "Bank account (manual transfer)",

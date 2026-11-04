@@ -263,6 +263,7 @@ export type Order = {
   orderId: string;
   orderStatus: string;
   paymentStatus: string;
+  amountPaid?: number | null;
   paymentTerms?: string | null;
   deliveryMethod?: string | null;
   deliveryOption?: string | null;
