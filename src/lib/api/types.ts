@@ -283,9 +283,9 @@ export type Order = {
   cancellationReason?: string | null;
   returnStatus?: string | null;
   returnedAt?: string | null;
-  estimatedDeliveryDate?: string | null;
-  estimatedDeliveryMinDays?: number | null;
-  estimatedDeliveryMaxDays?: number | null;
+  estimatedArrivalDate?: string | null;
+  estimatedArrivalMinDays?: number | null;
+  estimatedArrivalMaxDays?: number | null;
   preferredDeliveryDate?: string | null;
   preferredDeliveryTime?: string | null;
   preferredPickupDate?: string | null;

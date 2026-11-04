@@ -219,14 +219,14 @@ export function getEstimatedDeliveryLabel(
     return null;
   }
 
-  if (order.estimatedDeliveryDate) {
+  if (order.estimatedArrivalDate) {
     return new Intl.DateTimeFormat(intlLocale(t.locale), { dateStyle: "full" }).format(
-      new Date(order.estimatedDeliveryDate),
+      new Date(order.estimatedArrivalDate),
     );
   }
 
-  const min = order.estimatedDeliveryMinDays;
-  const max = order.estimatedDeliveryMaxDays;
+  const min = order.estimatedArrivalMinDays;
+  const max = order.estimatedArrivalMaxDays;
   if (min && max) {
     return min === max
       ? t("product.estimatedDaysSingle", { days: min })
