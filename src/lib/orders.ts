@@ -188,7 +188,8 @@ export type ReturnNotice = "pending" | "accepted" | "accepted_received" | "rejec
  * Banner under the status header.
  * Driven only by OrderReturnRequest rows — deleting the request clears the UI.
  * Pending: request exists while the order is still Received.
- * Accepted / rejected: request exists and the order is Returned.
+ * Rejected: request exists (order usually stays Received).
+ * Accepted: request exists and the order is Returned.
  */
 export function getReturnNotice(order: Order): ReturnNotice | null {
   const latest = [...(order.returnRequests ?? [])].sort((a, b) => {
@@ -199,10 +200,10 @@ export function getReturnNotice(order: Order): ReturnNotice | null {
   if (!latest?.status) return null;
 
   const status = latest.status.trim().toLowerCase();
+  if (status === "rejected") return "rejected";
   if (status === "pending" && order.orderStatus === "Received") return "pending";
   if (order.orderStatus !== "Returned") return null;
-  if (status === "rejected") return "rejected";
-  if (status === "accepted" || status === "approved") {
+  if (status === "accepted") {
     return order.returnItemsReceivedAt ? "accepted_received" : "accepted";
   }
   return null;
