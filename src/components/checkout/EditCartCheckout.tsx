@@ -2,14 +2,14 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useSyncExternalStore } from "react";
 
 import CheckoutForm from "@/components/checkout/CheckoutForm";
 import type { CheckoutLine } from "@/app/checkout/page";
 import { useTranslations } from "@/i18n/client";
 import type { MarketplaceAddress } from "@/lib/api/addresses";
 import { getAvailableDeliveryOptions, type DeliveryOptionId, type PaymentMethodId } from "@/lib/checkout";
-import { readEditCart } from "@/lib/editCart";
+import { getEditCartServerSnapshot, getEditCartSnapshot, subscribeEditCart } from "@/lib/editCart";
 
 type Buyer = {
   name: string;
@@ -36,25 +36,25 @@ export default function EditCartCheckout({
 }) {
   const t = useTranslations();
   const router = useRouter();
-  const [addedLines, setAddedLines] = useState<CheckoutLine[] | null>(null);
+  const session = useSyncExternalStore(
+    subscribeEditCart,
+    getEditCartSnapshot,
+    getEditCartServerSnapshot,
+  );
+  const sessionMatches = Boolean(session && session.orderId === appendOrderId);
 
   useEffect(() => {
-    const session = readEditCart();
-    if (!session || session.orderId !== appendOrderId) {
-      router.replace("/orders");
-      return;
-    }
-    const items = session.items;
-    setAddedLines(
-      items.map((item) => ({
-        product: item.product,
-        quantity: Math.max(1, item.quantity),
-        variant: item.variant || "Default",
-      })),
-    );
+    const current = getEditCartSnapshot();
+    if (!current || current.orderId !== appendOrderId) router.replace("/orders");
   }, [appendOrderId, router]);
 
-  if (!addedLines) return null;
+  if (!session || !sessionMatches) return null;
+
+  const addedLines: CheckoutLine[] = session.items.map((item) => ({
+    product: item.product,
+    quantity: Math.max(1, item.quantity),
+    variant: item.variant || "Default",
+  }));
 
   if (addedLines.length === 0) {
     return (
