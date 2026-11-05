@@ -657,13 +657,11 @@ export default function CheckoutForm({
                   ))}
                 </div>
 
-                {editingExisting ? null : (
+                {isPickup ? (
                   <>
                     <div className="mt-3 grid gap-3 sm:grid-cols-2">
                       <label className="block text-xs font-semibold text-laku-muted">
-                        {isPickup
-                          ? t("checkout.pickupDate")
-                          : t("checkout.deliveryDate")}
+                        {t("checkout.pickupDate")}
                         <input
                           type="date"
                           value={shipping.preferredDate}
@@ -674,9 +672,7 @@ export default function CheckoutForm({
                         />
                       </label>
                       <label className="block text-xs font-semibold text-laku-muted">
-                        {isPickup
-                          ? t("checkout.pickupTime")
-                          : t("checkout.deliveryTime")}
+                        {t("checkout.pickupTime")}
                         <input
                           type="time"
                           value={shipping.preferredTime}
@@ -692,7 +688,7 @@ export default function CheckoutForm({
                       {t("checkout.scheduleNote")}
                     </p>
                   </>
-                )}
+                ) : null}
               </div>
             </section>
           );

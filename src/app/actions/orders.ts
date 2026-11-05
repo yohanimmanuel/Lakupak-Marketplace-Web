@@ -197,6 +197,14 @@ export async function updateOrderDetailsAction(
       deliveryAddress,
       deliveryOption,
       paymentMethod,
+      ...(deliveryOption === "self_pickup"
+        ? {
+            preferredPickupDate: shippingChoice?.preferredDate
+              ? new Date(shippingChoice.preferredDate).toISOString()
+              : null,
+            preferredPickupTime: shippingChoice?.preferredTime?.trim() || null,
+          }
+        : { preferredPickupDate: null, preferredPickupTime: null }),
     },
     session.token,
   );
@@ -395,8 +403,6 @@ export async function placeOrderAction(
       deliveryOption: deliveryOption.id,
       shippingMethodLabel: shippingLabel,
       shippingMethod: shippingLabel,
-      preferredDeliveryDate: isPickup ? null : scheduledDate,
-      preferredDeliveryTime: isPickup ? null : preferredTime || null,
       preferredPickupDate: isPickup ? scheduledDate : null,
       preferredPickupTime: isPickup ? preferredTime || null : null,
       ...(deliveryNote ? { deliveryNote } : {}),

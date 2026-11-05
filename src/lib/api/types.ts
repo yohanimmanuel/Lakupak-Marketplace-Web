@@ -287,8 +287,6 @@ export type Order = {
   estimatedArrivalDate?: string | null;
   estimatedArrivalMinDays?: number | null;
   estimatedArrivalMaxDays?: number | null;
-  preferredDeliveryDate?: string | null;
-  preferredDeliveryTime?: string | null;
   preferredPickupDate?: string | null;
   preferredPickupTime?: string | null;
   trackingNumber?: string | null;

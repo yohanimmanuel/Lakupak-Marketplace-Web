@@ -209,10 +209,12 @@ export function getOrderTimeline(order: Order, t: Translator): TimelineStep[] | 
   }));
 }
 
-/** Pickup and delivery use different columns; only one pair is ever populated. */
+/** Only self pickup stores a buyer-chosen date and time. */
 export function getScheduleLabel(order: Order, locale: Locale = "id"): string | null {
-  const date = order.preferredPickupDate ?? order.preferredDeliveryDate;
-  const time = order.preferredPickupTime ?? order.preferredDeliveryTime;
+  const method = `${order.deliveryOption ?? ""} ${order.deliveryMethod ?? ""} ${order.shippingMethod ?? ""}`.toLowerCase();
+  if (!method.includes("pickup")) return null;
+  const date = order.preferredPickupDate;
+  const time = order.preferredPickupTime;
   if (!date && !time) return null;
 
   const formattedDate = date

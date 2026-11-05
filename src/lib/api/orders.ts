@@ -122,8 +122,6 @@ export type CreateOrderPayload = {
   deliveryOption: string;
   shippingMethodLabel: string;
   shippingMethod: string;
-  preferredDeliveryDate?: string | null;
-  preferredDeliveryTime?: string | null;
   preferredPickupDate?: string | null;
   preferredPickupTime?: string | null;
   deliveryNote?: string | null;
@@ -149,6 +147,8 @@ export async function updateOrderDetails(
     deliveryAddress: string;
     deliveryOption: "self_pickup" | "seller_delivery" | "buyer_courier";
     paymentMethod: "cod" | "bank_transfer";
+    preferredPickupDate?: string | null;
+    preferredPickupTime?: string | null;
   },
   token: string,
 ): Promise<MutationResult<{ success: boolean; order: Order }>> {
