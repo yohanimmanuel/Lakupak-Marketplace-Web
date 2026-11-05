@@ -23,7 +23,7 @@ import ContactSellerButton from "@/components/messages/ContactSellerButton";
 import SignedOutPrompt from "@/components/auth/SignedOutPrompt";
 import FreeItemsBadge from "@/components/ui/FreeItemsBadge";
 import { getTranslations } from "@/i18n/server";
-import { getOrderById, getOrderReviews } from "@/lib/api/orders";
+import { getOrderById } from "@/lib/api/orders";
 import { getSession } from "@/lib/auth/session";
 import { formatCurrency } from "@/lib/format";
 import { displayPackageType } from "@/lib/packageLabel";
@@ -42,7 +42,6 @@ import {
   getStatusLabel,
   getStatusMessage,
   getStatusStyle,
-  isReviewable,
 } from "@/lib/orders";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -95,14 +94,6 @@ export default async function OrderDetailsPage({ params }: { params: Params }) {
     Number(amount) > 0 ? formatCurrency(amount, t.locale) : pendingPriceLabel;
   const formatOrderTotal = () =>
     pricingPending ? pendingPriceLabel : formatCurrency(order.totalAmount, t.locale);
-
-  const existingReviews = isReviewable(order)
-    ? await getOrderReviews({
-        orderId: order.orderId,
-        token: session.token,
-      })
-    : null;
-  const hasExistingReview = Boolean(existingReviews?.productReviews?.length);
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-8 md:px-6">
@@ -480,7 +471,7 @@ export default async function OrderDetailsPage({ params }: { params: Params }) {
         </dl>
       </section>
 
-      <OrderActions order={order} hasExistingReview={hasExistingReview} />
+      <OrderActions order={order} />
 
       <section className="mt-4 rounded-2xl bg-white p-5">
         <h2 className="mb-3 flex items-center gap-2 text-sm font-bold text-laku-ink">

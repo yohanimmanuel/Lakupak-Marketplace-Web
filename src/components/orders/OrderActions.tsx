@@ -7,7 +7,6 @@ import {
   CheckCircle2,
   CreditCard,
   RotateCcw,
-  Star,
   XCircle,
 } from "lucide-react";
 
@@ -18,16 +17,9 @@ import {
   isCancellable,
   isPayable,
   isReturnable,
-  isReviewable,
 } from "@/lib/orders";
 
-export default function OrderActions({
-  order,
-  hasExistingReview = false,
-}: {
-  order: Order;
-  hasExistingReview?: boolean;
-}) {
+export default function OrderActions({ order }: { order: Order }) {
   const t = useTranslations();
   const router = useRouter();
   const [pending, startTransition] = useTransition();
@@ -39,9 +31,8 @@ export default function OrderActions({
   const canCancel = isCancellable(order);
   const canConfirm = order.orderStatus === "Delivered";
   const canReturn = isReturnable(order) && !order.returnStatus;
-  const canReview = isReviewable(order);
 
-  if (!canPay && !canCancel && !canConfirm && !canReturn && !canReview) {
+  if (!canPay && !canCancel && !canConfirm && !canReturn) {
     return null;
   }
 
@@ -87,18 +78,6 @@ export default function OrderActions({
             <CheckCircle2 className="size-4" aria-hidden />
             {t("orderDetails.markReceived")}
           </button>
-        ) : null}
-
-        {canReview ? (
-          <Link
-            href={`${detailsHref}/review`}
-            className="inline-flex items-center gap-2 rounded-lg border border-laku-line px-4 py-2.5 text-sm font-semibold text-laku-ink transition-colors hover:bg-laku-surface"
-          >
-            <Star className="size-4" aria-hidden />
-            {hasExistingReview
-              ? t("orderDetails.editReview")
-              : t("orderDetails.writeReview")}
-          </Link>
         ) : null}
 
         {canReturn ? (
