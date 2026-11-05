@@ -192,8 +192,19 @@ export type TimelineStep = {
   state: "done" | "current" | "upcoming";
 };
 
+export type FulfillmentKind = "pickup" | "buyer_courier" | "delivery";
+
+/** Self pickup and buyer-arranged courier do not follow a distributor delivery. */
+export function getFulfillmentKind(order: Order): FulfillmentKind {
+  const method = `${order.deliveryOption ?? ""} ${order.deliveryMethod ?? ""} ${order.shippingMethod ?? ""} ${order.shippingMethodLabel ?? ""}`.toLowerCase();
+  if (method.includes("pickup")) return "pickup";
+  if (method.includes("courier") || method.includes("buyer")) return "buyer_courier";
+  return "delivery";
+}
+
 /** Cancelled, returned, and failed orders stop the tracker instead of advancing it. */
 export function getOrderTimeline(order: Order, t: Translator): TimelineStep[] | null {
+  if (getFulfillmentKind(order) !== "delivery") return null;
   const status = order.orderStatus;
   if (["Cancelled", "Returned", "Failed"].includes(status)) return null;
 

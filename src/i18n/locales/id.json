@@ -522,6 +522,8 @@
     "backToOrders": "Kembali ke pesanan",
     "editOrder": "Ubah pesanan",
     "estimatedArrival": "Estimasi tiba {{date}}",
+    "pickupDateOn": "Tanggal pengambilan pada {{date}}",
+    "youArrangeLogistics": "Anda mengatur logistik",
     "recipient": "Penerima",
     "phone": "Telepon",
     "address": "Alamat",

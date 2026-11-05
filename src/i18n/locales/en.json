@@ -522,6 +522,8 @@
     "backToOrders": "Back to orders",
     "editOrder": "Edit order",
     "estimatedArrival": "Estimated arrival {{date}}",
+    "pickupDateOn": "Pickup Date on {{date}}",
+    "youArrangeLogistics": "You arrange logistics",
     "recipient": "Recipient",
     "phone": "Phone",
     "address": "Address",

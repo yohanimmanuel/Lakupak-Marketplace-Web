@@ -32,6 +32,7 @@ import {
   formatOrderDateTime,
   getDistributorUserId,
   getEstimatedDeliveryLabel,
+  getFulfillmentKind,
   getItemCount,
   getOrderTimeline,
   getPaymentColor,
@@ -78,9 +79,11 @@ export default async function OrderDetailsPage({ params }: { params: Params }) {
   if (!order) notFound();
 
   const statusStyle = getStatusStyle(order.orderStatus);
+  const fulfillment = getFulfillmentKind(order);
   const timeline = getOrderTimeline(order, t);
   const estimate = getEstimatedDeliveryLabel(order, t);
   const schedule = getScheduleLabel(order, t.locale);
+  const pickupWhen = fulfillment === "pickup" ? schedule : null;
   const sellerLogo = getSellerLogo(order);
   const distributorId = getDistributorUserId(order);
   const productTotal = order.orderItems.reduce((total, item) => total + item.subtotal, 0);
@@ -141,7 +144,13 @@ export default async function OrderDetailsPage({ params }: { params: Params }) {
             <Truck className="size-5" aria-hidden />
             {getStatusMessage(order.orderStatus, t)}
           </h2>
-          {estimate ? (
+          {fulfillment === "buyer_courier" ? (
+            <p className="mt-1 text-sm text-white/85">{t("orderDetails.youArrangeLogistics")}</p>
+          ) : fulfillment === "pickup" && pickupWhen ? (
+            <p className="mt-1 text-sm text-white/85">
+              {t("orderDetails.pickupDateOn", { date: pickupWhen })}
+            </p>
+          ) : fulfillment === "delivery" && estimate ? (
             <p className="mt-1 text-sm text-white/85">
               {t("orderDetails.estimatedArrival", { date: estimate })}
             </p>
@@ -196,21 +205,21 @@ export default async function OrderDetailsPage({ params }: { params: Params }) {
               label={t("orderDetails.address")}
               value={order.deliveryAddress}
             />
-            {schedule ? (
+            {fulfillment === "delivery" && schedule ? (
               <DetailRow
                 icon={CalendarClock}
                 label={t("orderDetails.schedule")}
                 value={schedule}
               />
             ) : null}
-            {order.assignedLogistics ? (
+            {fulfillment === "delivery" && order.assignedLogistics ? (
               <DetailRow
                 icon={Truck}
                 label={t("orderDetails.logistics")}
                 value={order.assignedLogistics}
               />
             ) : null}
-            {order.trackingNumber ? (
+            {fulfillment === "delivery" && order.trackingNumber ? (
               <DetailRow
                 icon={Package}
                 label={t("orderDetails.trackingNumber")}
