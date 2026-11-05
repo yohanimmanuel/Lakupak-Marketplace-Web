@@ -177,9 +177,24 @@ export function hasReturnRequest(order: Order): boolean {
   return (order.returnRequests?.length ?? 0) > 0;
 }
 
-/** Received orders can request return/refund until a return request exists. */
+/** Latest return request by createdAt, if any. */
+function getLatestReturnRequest(order: Order) {
+  return [...(order.returnRequests ?? [])].sort((a, b) => {
+    const aTime = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+    const bTime = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+    return bTime - aTime;
+  })[0];
+}
+
+/**
+ * Received orders can request return/refund when there is no open request.
+ * A rejected request can be followed by another submission.
+ */
 export function canRequestReturn(order: Order): boolean {
-  return order.orderStatus === "Received" && !hasReturnRequest(order);
+  if (order.orderStatus !== "Received") return false;
+  const latest = getLatestReturnRequest(order);
+  if (!latest?.status) return true;
+  return latest.status.trim().toLowerCase() === "rejected";
 }
 
 export type ReturnNotice = "pending" | "accepted" | "accepted_received" | "rejected";
