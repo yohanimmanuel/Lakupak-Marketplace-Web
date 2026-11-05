@@ -55,10 +55,12 @@ export default function SearchResultsClient({
   products,
   emptyTitle,
   emptyBody,
+  appendOrderId,
 }: {
   products: MarketplaceProduct[];
   emptyTitle: string;
   emptyBody: string;
+  appendOrderId?: string | null;
 }) {
   const t = useTranslations();
   const [sort, setSort] = useState<SortKey>("relevance");
@@ -264,7 +266,7 @@ export default function SearchResultsClient({
       ) : null}
 
       {filtered.length > 0 ? (
-        <ProductGrid products={filtered} />
+        <ProductGrid products={filtered} appendOrderId={appendOrderId} />
       ) : (
         <div className="rounded-card bg-white p-8 text-center">
           <p className="font-semibold text-laku-ink">{emptyTitle}</p>

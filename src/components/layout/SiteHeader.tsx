@@ -15,6 +15,7 @@ import type { SessionUser } from "@/lib/api/types";
 import { dashboardLandingUrl } from "@/lib/config";
 
 import AccountMenu from "./AccountMenu";
+import CartHrefLink from "./CartHrefLink";
 
 type Props = {
   user: SessionUser | null;
@@ -23,8 +24,6 @@ type Props = {
 
 export default async function SiteHeader({ user, cartCount = 0 }: Props) {
   const t = await getTranslations();
-  const badge =
-    cartCount > 99 ? "99+" : cartCount > 0 ? String(cartCount) : null;
   const sellHref = dashboardLandingUrl(t.locale);
 
   const utilityLinkClass =
@@ -96,22 +95,24 @@ export default async function SiteHeader({ user, cartCount = 0 }: Props) {
           >
             <MessageCircle className="size-5" aria-hidden />
           </Link>
-          <Link
-            href="/cart"
-            aria-label={
-              badge
-                ? t("header.cartCountAria", { count: cartCount })
-                : t("header.cartAria")
+          <Suspense
+            fallback={
+              <Link
+                href="/cart"
+                aria-label={t("header.cartAria")}
+                className="relative flex size-9 items-center justify-center rounded-lg text-white/90"
+              >
+                <ShoppingCart className="size-5" aria-hidden />
+              </Link>
             }
-            className="relative flex size-9 items-center justify-center rounded-lg text-white/90 transition-colors hover:bg-white/10 hover:text-white"
           >
-            <ShoppingCart className="size-5" aria-hidden />
-            {badge ? (
-              <span className="absolute top-0.5 right-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-laku-alert px-1 text-[10px] font-bold text-white">
-                {badge}
-              </span>
-            ) : null}
-          </Link>
+            <CartHrefLink
+              cartCount={cartCount}
+              className="relative flex size-9 items-center justify-center rounded-lg text-white/90 transition-colors hover:bg-white/10 hover:text-white"
+            >
+              <ShoppingCart className="size-5" aria-hidden />
+            </CartHrefLink>
+          </Suspense>
           <AccountMenu user={user} sellHref={sellHref} />
         </nav>
       </div>

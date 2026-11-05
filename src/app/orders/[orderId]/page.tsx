@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 
 import OrderActions from "@/components/orders/OrderActions";
+import { ClearAppendOrder } from "@/components/orders/RememberAppendOrder";
 import ContactSellerButton from "@/components/messages/ContactSellerButton";
 import SignedOutPrompt from "@/components/auth/SignedOutPrompt";
 import FreeItemsBadge from "@/components/ui/FreeItemsBadge";
@@ -102,13 +103,24 @@ export default async function OrderDetailsPage({ params }: { params: Params }) {
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-8 md:px-6">
-      <Link
-        href="/orders"
-        className="mb-5 inline-flex items-center gap-1.5 text-sm font-semibold text-laku-blue transition-colors hover:text-laku-blue-dark"
-      >
-        <ArrowLeft className="size-4" aria-hidden />
-        {t("orderDetails.backToOrders")}
-      </Link>
+      <ClearAppendOrder />
+      <div className="mb-5 flex items-center justify-between gap-3">
+        <Link
+          href="/orders"
+          className="inline-flex items-center gap-1.5 text-sm font-semibold text-laku-blue transition-colors hover:text-laku-blue-dark"
+        >
+          <ArrowLeft className="size-4" aria-hidden />
+          {t("orderDetails.backToOrders")}
+        </Link>
+        {order.orderStatus === "Pending" && order.paymentStatus === "Unpaid" ? (
+          <Link
+            href={`/checkout?editOrderId=${encodeURIComponent(order.orderId)}`}
+            className="text-sm font-semibold text-laku-blue transition-colors hover:text-laku-blue-dark"
+          >
+            {t("orderDetails.editOrder")}
+          </Link>
+        ) : null}
+      </div>
 
       <header className="mb-5 flex flex-wrap items-start justify-between gap-3">
         <div>

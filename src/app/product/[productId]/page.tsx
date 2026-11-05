@@ -20,11 +20,12 @@ import {
 import { getSession } from "@/lib/auth/session";
 import { canonicalizeCategory, translateCategory } from "@/lib/categories";
 import { formatBasePrice, getDeliveryLabel, getShippingLocation } from "@/lib/format";
-import { absoluteProductUrl, productAppUrl, productUrl } from "@/lib/share";
+import { absoluteProductUrl, keepAppendOrder, productAppUrl, productUrl } from "@/lib/share";
 
 export const revalidate = 120;
 
 type Params = Promise<{ productId: string }>;
+type ProductSearchParams = Promise<{ appendOrderId?: string }>;
 
 export async function generateMetadata({
   params,
@@ -68,9 +69,17 @@ export async function generateMetadata({
   };
 }
 
-export default async function ProductPage({ params }: { params: Params }) {
+export default async function ProductPage({
+  params,
+  searchParams,
+}: {
+  params: Params;
+  searchParams: ProductSearchParams;
+}) {
   const t = await getTranslations();
   const { productId } = await params;
+  const { appendOrderId } = await searchParams;
+  const appendToOrderId = appendOrderId?.trim() || null;
   const decodedId = decodeURIComponent(productId);
   const [product, session] = await Promise.all([
     getProductById(decodedId),
@@ -127,7 +136,10 @@ export default async function ProductPage({ params }: { params: Params }) {
         </Link>
         <span className="px-2">/</span>
         <Link
-          href={`/search?q=${encodeURIComponent(categoryLabel)}&category=${encodeURIComponent(categoryKey)}`}
+          href={keepAppendOrder(
+            `/search?q=${encodeURIComponent(categoryLabel)}&category=${encodeURIComponent(categoryKey)}`,
+            appendToOrderId,
+          )}
           className="hover:text-laku-blue"
         >
           {categoryLabel}
@@ -219,7 +231,7 @@ export default async function ProductPage({ params }: { params: Params }) {
 
           <ProductAssuranceBadges assurance={product.assurance} />
 
-          <ProductPurchasePanel product={product} />
+          <ProductPurchasePanel product={product} appendOrderId={appendToOrderId} />
 
           <div className="mt-4 flex flex-wrap gap-3">
             <ShareButton
@@ -332,9 +344,12 @@ export default async function ProductPage({ params }: { params: Params }) {
         <section className="mt-14">
           <SectionHeader
             title={t("product.related")}
-            href={`/search?q=${encodeURIComponent(categoryLabel)}&category=${encodeURIComponent(categoryKey)}`}
+            href={keepAppendOrder(
+            `/search?q=${encodeURIComponent(categoryLabel)}&category=${encodeURIComponent(categoryKey)}`,
+            appendToOrderId,
+          )}
           />
-          <ProductGrid products={relatedProducts} />
+          <ProductGrid products={relatedProducts} appendOrderId={appendToOrderId} />
         </section>
       ) : null}
     </div>

@@ -8,6 +8,7 @@ import { getProductById } from "@/lib/api/marketplace";
 import {
   cancelOrder,
   createOrders,
+  updateOrderDetails,
   createReturnRequest,
   markOrderReceived,
   submitOrderReviews,
@@ -106,6 +107,33 @@ async function resolveLineItems(params: {
   }));
 }
 
+async function resolveEditCartLines(raw: string): Promise<LineItem[]> {
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(raw);
+  } catch {
+    return [];
+  }
+  if (!Array.isArray(parsed)) return [];
+  const lines: LineItem[] = [];
+  for (const entry of parsed) {
+    if (!entry || typeof entry !== "object") continue;
+    const record = entry as { productId?: unknown; quantity?: unknown; variant?: unknown };
+    const productId = String(record.productId ?? "").trim();
+    if (!productId) continue;
+    const product = await getProductById(productId);
+    if (!product) continue;
+    const variant = String(record.variant ?? "").trim() || "Default";
+    const requested = Math.max(1, Number(record.quantity) || 1);
+    lines.push({
+      product,
+      quantity: Math.max(requested, getMinPackageQuantity(product, variant)),
+      variant,
+    });
+  }
+  return lines;
+}
+
 function parseShippingByDistributor(
   raw: string,
 ): Record<string, GroupShippingInput> {
@@ -127,6 +155,56 @@ function isDuplicateOrderError(error: string): boolean {
     msg.includes("already exists") ||
     (msg.includes("duplicate") && msg.includes("order"))
   );
+}
+
+export async function updateOrderDetailsAction(
+  _prev: ActionState,
+  formData: FormData,
+): Promise<ActionState> {
+  const session = await getSession();
+  const t = await getTranslations();
+  if (!session) return { ok: false, error: t("checkout.errors.sessionExpired") };
+
+  const orderId = String(formData.get("orderId") ?? "").trim();
+  const shippingChoice = Object.values(
+    parseShippingByDistributor(String(formData.get("shippingByDistributor") ?? "")),
+  )[0];
+  const deliveryOption = String(shippingChoice?.delivery || formData.get("deliveryOption") || "");
+  const paymentMethod = String(formData.get("paymentMethod") ?? "");
+  const deliveryAddress = String(formData.get("deliveryAddress") ?? "").trim();
+  const contactPerson = String(formData.get("contactPerson") ?? "").trim();
+  const contactPhone = String(formData.get("contactPhone") ?? "").trim();
+  const storeName = String(formData.get("storeName") ?? "").trim();
+
+  if (!orderId) return { ok: false, error: t("checkout.errors.empty") };
+  if (!contactPerson) return { ok: false, error: t("checkout.errors.name") };
+  if (!contactPhone) return { ok: false, error: t("checkout.errors.phone") };
+  if (!deliveryAddress) return { ok: false, error: t("checkout.errors.address") };
+  if (deliveryOption !== "self_pickup" && deliveryOption !== "seller_delivery" && deliveryOption !== "buyer_courier") {
+    return { ok: false, error: t("checkout.errors.delivery") };
+  }
+  if (paymentMethod !== "cod" && paymentMethod !== "bank_transfer") {
+    return { ok: false, error: t("checkout.errors.payment") };
+  }
+
+  const result = await updateOrderDetails(
+    {
+      orderId,
+      userId: session.user.id,
+      contactPerson,
+      contactPhone,
+      storeName: storeName || contactPerson,
+      deliveryAddress,
+      deliveryOption,
+      paymentMethod,
+    },
+    session.token,
+  );
+  if (!result.ok) return { ok: false, error: result.error };
+
+  revalidatePath("/orders");
+  revalidatePath(`/orders/${orderId}`);
+  redirect(`/orders/${encodeURIComponent(orderId)}`);
 }
 
 export async function placeOrderAction(
@@ -170,7 +248,9 @@ export async function placeOrderAction(
   const deliveryNote =
     deliveryNoteParts.length > 0 ? deliveryNoteParts.join("\n") : null;
 
-  const lineItems = await resolveLineItems({
+  const lineItems = source === "editCart"
+    ? await resolveEditCartLines(String(formData.get("editCartLines") ?? ""))
+    : await resolveLineItems({
     userId: session.user.id,
     token: session.token,
     source,
@@ -190,6 +270,10 @@ export async function placeOrderAction(
   }
 
   const expectedGroupCount = groups.size;
+  const appendOrderId = String(formData.get("appendOrderId") ?? "").trim();
+  if (appendOrderId && groups.size !== 1) {
+    return { ok: false, error: t("checkout.singleDistributorOnly") };
+  }
   const orderIds: string[] = [];
   let totalAmount = 0;
   // Stable per checkout submit so a retry of the same attempt cannot mint
@@ -209,7 +293,7 @@ export async function placeOrderAction(
       },
     });
 
-    if (source !== "direct") {
+    if (source !== "direct" && source !== "editCart") {
       await clearCart({
         userId: session.user.id,
         token: session.token,
@@ -219,6 +303,7 @@ export async function placeOrderAction(
 
     revalidatePath("/cart");
     revalidatePath("/orders");
+    if (appendOrderId) revalidatePath(`/orders/${appendOrderId}`);
     revalidatePath("/", "layout");
 
     const params = new URLSearchParams({
@@ -229,6 +314,9 @@ export async function placeOrderAction(
     if (partial) {
       params.set("partial", "1");
       params.set("expected", String(expectedGroupCount));
+    }
+    if (appendOrderId) {
+      redirect(`/orders/${encodeURIComponent(appendOrderId)}?appended=1`);
     }
     redirect(`/checkout/success?${params.toString()}`);
   };
@@ -316,6 +404,7 @@ export async function placeOrderAction(
       orderStatus: "Pending" as const,
       paymentStatus: "Unpaid" as const,
       paymentTerms: getPaymentTerms(paymentMethodId),
+      ...(appendOrderId ? { appendToOrderId: appendOrderId } : {}),
     };
 
     const result = await createOrders(payload, session.token);

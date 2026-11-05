@@ -4,6 +4,7 @@ import Link from "next/link";
 import SearchPagination from "@/components/search/SearchPagination";
 import SearchDiscovery from "@/components/search/SearchDiscovery";
 import SearchResultsClient from "@/components/search/SearchResultsClient";
+import { RememberAppendOrder } from "@/components/orders/RememberAppendOrder";
 import { getTranslations } from "@/i18n/server";
 import SignedOutPrompt from "@/components/auth/SignedOutPrompt";
 import { getProductsSafe } from "@/lib/api/marketplace";
@@ -20,6 +21,7 @@ import {
   generateTopBrands,
   generateTopDistributors,
 } from "@/lib/searchDiscovery";
+import { keepAppendOrder } from "@/lib/share";
 
 export const revalidate = 30;
 
@@ -29,6 +31,7 @@ type SearchParams = {
   q?: string;
   category?: string;
   page?: string;
+  appendOrderId?: string;
 };
 
 function parsePage(value?: string): number {
@@ -84,7 +87,8 @@ export default async function SearchPage({
   if (!(await getSession())) {
     return <SignedOutPrompt title={t("search.signedOutTitle")} body={t("home.closedCatalog")} />;
   }
-  const { q, category, page: pageParam } = await searchParams;
+  const { q, category, page: pageParam, appendOrderId } = await searchParams;
+  const appendToOrderId = appendOrderId?.trim() || null;
   const page = parsePage(pageParam);
 
   const { displayQuery, apiQuery, category: resolvedCategory } =
@@ -127,6 +131,7 @@ export default async function SearchPage({
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-10 md:px-6">
+      <RememberAppendOrder orderId={appendToOrderId} />
       <header className="mb-6">
         <h1 className="text-2xl font-bold text-laku-ink">{heading}</h1>
         <p className="mt-1 text-sm text-laku-muted">
@@ -136,12 +141,20 @@ export default async function SearchPage({
               })
             : t("search.noMatch")}
         </p>
+        {appendToOrderId ? (
+          <p className="mt-3 text-sm font-semibold text-laku-blue">
+            {t("orderDetails.addingToOrder", { orderId: appendToOrderId })}
+          </p>
+        ) : null}
 
         {didYouMeanLabel && didYouMeanKey ? (
           <p className="mt-3 rounded-card border border-laku-line bg-white px-4 py-3 text-sm text-laku-ink">
             {t("search.didYouMean")}{" "}
             <Link
-              href={`/search?q=${encodeURIComponent(didYouMeanLabel)}`}
+              href={keepAppendOrder(
+                `/search?q=${encodeURIComponent(didYouMeanLabel)}`,
+                appendToOrderId,
+              )}
               className="font-semibold text-laku-blue hover:underline"
             >
               {didYouMeanLabel}
@@ -156,11 +169,12 @@ export default async function SearchPage({
           className="laku-rail mb-8 flex gap-2 overflow-x-auto pb-1"
         >
           <Link
-            href={
+            href={keepAppendOrder(
               displayQuery && !resolveProductTypeKeyExact(displayQuery)
                 ? `/search?q=${encodeURIComponent(displayQuery)}`
-                : "/search"
-            }
+                : "/search",
+              appendToOrderId,
+            )}
             className={`shrink-0 rounded-card border px-3 py-2 text-[13px] font-semibold transition-colors ${
               effectiveCategory
                 ? "border-laku-line bg-white text-laku-ink hover:border-laku-blue"
@@ -183,7 +197,7 @@ export default async function SearchPage({
             return (
               <Link
                 key={item.name}
-                href={`/search?${params.toString()}`}
+                href={keepAppendOrder(`/search?${params.toString()}`, appendToOrderId)}
                 className={`shrink-0 rounded-card border px-3 py-2 text-[13px] font-semibold transition-colors ${
                   isActive
                     ? "border-laku-blue bg-laku-blue text-white"
@@ -203,6 +217,7 @@ export default async function SearchPage({
             brands={topBrands}
             distributors={topDistributors}
             categories={popularCategories}
+            appendOrderId={appendToOrderId}
           />
         </div>
       ) : null}
@@ -213,12 +228,14 @@ export default async function SearchPage({
             products={products}
             emptyTitle={t("search.emptyTitle")}
             emptyBody={t("search.emptyBody")}
+            appendOrderId={appendToOrderId}
           />
           <SearchPagination
             page={pagination.page}
             totalPages={pagination.totalPages}
             q={displayQuery || undefined}
             category={effectiveCategory || undefined}
+            appendOrderId={appendToOrderId}
           />
         </>
       ) : !isEmptyQuery ? (
@@ -230,7 +247,7 @@ export default async function SearchPage({
             {t("search.emptyBody")}
           </p>
           <Link
-            href="/search"
+            href={keepAppendOrder("/search", appendToOrderId)}
             className="mt-6 inline-flex rounded-lg bg-laku-blue px-5 py-3 text-sm font-bold text-white transition-colors hover:bg-laku-blue-dark"
           >
             {t("nav.allProducts")}

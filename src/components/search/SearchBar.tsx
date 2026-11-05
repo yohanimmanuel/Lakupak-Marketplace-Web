@@ -5,7 +5,9 @@ import { useMemo, useState, type FormEvent } from "react";
 import { Search } from "lucide-react";
 
 import { useTranslations } from "@/i18n/client";
+import { readEditCart } from "@/lib/editCart";
 import { resolveSearchQuery } from "@/lib/resolveSearchQuery";
+import { keepAppendOrder } from "@/lib/share";
 import { pushRecentSearch, readRecentSearches } from "@/lib/searchDiscovery";
 
 type Props = {
@@ -36,9 +38,13 @@ export default function SearchBar({ tone = "onBlue", autoFocus = false }: Props)
   }, [value, recent]);
 
   function goToSearch(raw: string) {
+    const appendOrderId =
+      searchParams.get("appendOrderId") ||
+      searchParams.get("editOrderId") ||
+      readEditCart()?.orderId;
     const { displayQuery, category } = resolveSearchQuery(raw);
     if (!displayQuery) {
-      router.push("/search");
+      router.push(keepAppendOrder("/search", appendOrderId));
       setFocused(false);
       return;
     }
@@ -47,7 +53,7 @@ export default function SearchBar({ tone = "onBlue", autoFocus = false }: Props)
     const params = new URLSearchParams();
     params.set("q", displayQuery);
     if (category) params.set("category", category);
-    router.push(`/search?${params.toString()}`);
+    router.push(keepAppendOrder(`/search?${params.toString()}`, appendOrderId));
     setFocused(false);
   }
 

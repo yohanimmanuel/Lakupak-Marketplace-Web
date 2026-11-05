@@ -65,13 +65,25 @@ export async function getOrderById(params: {
   userId: number;
   token: string;
 }): Promise<Order | null> {
-  const { orders } = await getOrders({
-    userId: params.userId,
-    token: params.token,
-    limit: 100,
-  });
+  const limit = 100;
+  let page = 1;
+  let totalPages = 1;
+  while (page <= totalPages) {
+    const { orders, pagination } = await getOrders({
+      userId: params.userId,
+      token: params.token,
+      page,
+      limit,
+    });
+    const match = orders.find((order) => order.orderId === params.orderId);
+    if (match) return match;
+    const reportedPages = pagination.totalPages;
+    totalPages = Number.isFinite(reportedPages) && reportedPages > 0 ? reportedPages : page;
+    if (orders.length < limit) break;
+    page += 1;
+  }
 
-  return orders.find((order) => order.orderId === params.orderId) ?? null;
+  return null;
 }
 
 export type CreateOrderItemPayload = {
@@ -118,6 +130,8 @@ export type CreateOrderPayload = {
   orderStatus: "Pending";
   paymentStatus: "Unpaid";
   paymentTerms: string;
+  /** When set, the products are added to this pending unpaid order. */
+  appendToOrderId?: string;
 };
 
 /**
@@ -125,6 +139,22 @@ export type CreateOrderPayload = {
  * carts with different shipping). Omit it to let the Dashboard split a mixed
  * basket itself using one shared shipping choice.
  */
+export async function updateOrderDetails(
+  payload: {
+    orderId: string;
+    userId: number;
+    contactPerson: string;
+    contactPhone: string;
+    storeName: string;
+    deliveryAddress: string;
+    deliveryOption: "self_pickup" | "seller_delivery" | "buyer_courier";
+    paymentMethod: "cod" | "bank_transfer";
+  },
+  token: string,
+): Promise<MutationResult<{ success: boolean; order: Order }>> {
+  return restMutate("/api/mobile/orders", { method: "PATCH", token, body: payload });
+}
+
 export async function createOrders(
   payload: CreateOrderPayload,
   token: string,

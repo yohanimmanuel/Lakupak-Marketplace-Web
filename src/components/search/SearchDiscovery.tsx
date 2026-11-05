@@ -7,6 +7,7 @@ import { Clock, Store, Tag, X } from "lucide-react";
 
 import { useTranslations } from "@/i18n/client";
 import { translateCategory } from "@/lib/categories";
+import { keepAppendOrder } from "@/lib/share";
 import {
   clearRecentSearches,
   readRecentSearches,
@@ -19,12 +20,14 @@ type Props = {
   brands: TopBrand[];
   distributors: TopDistributor[];
   categories: PopularCategory[];
+  appendOrderId?: string | null;
 };
 
 export default function SearchDiscovery({
   brands,
   distributors,
   categories,
+  appendOrderId,
 }: Props) {
   const t = useTranslations();
   const [recent, setRecent] = useState(() => readRecentSearches());
@@ -53,7 +56,7 @@ export default function SearchDiscovery({
             {recent.map((query) => (
               <li key={query} className="inline-flex items-center gap-1">
                 <Link
-                  href={`/search?q=${encodeURIComponent(query)}`}
+                  href={keepAppendOrder(`/search?q=${encodeURIComponent(query)}`, appendOrderId)}
                   className="rounded-lg border border-laku-line px-3 py-1.5 text-sm font-semibold text-laku-ink transition-colors hover:border-laku-blue hover:text-laku-blue"
                 >
                   {query}
@@ -92,7 +95,10 @@ export default function SearchDiscovery({
             {categories.map((item) => (
               <li key={item.name}>
                 <Link
-                  href={`/search?q=${encodeURIComponent(translateCategory(item.name, t))}&category=${encodeURIComponent(item.name)}`}
+                  href={keepAppendOrder(
+                    `/search?q=${encodeURIComponent(translateCategory(item.name, t))}&category=${encodeURIComponent(item.name)}`,
+                    appendOrderId,
+                  )}
                   className="inline-flex items-center gap-1.5 rounded-lg border border-laku-line px-3 py-1.5 text-sm font-semibold text-laku-ink transition-colors hover:border-laku-blue hover:text-laku-blue"
                 >
                   <Tag className="size-3.5 text-laku-muted" aria-hidden />
@@ -113,7 +119,7 @@ export default function SearchDiscovery({
             {brands.map((brand) => (
               <li key={brand.name}>
                 <Link
-                  href={`/search?q=${encodeURIComponent(brand.name)}`}
+                  href={keepAppendOrder(`/search?q=${encodeURIComponent(brand.name)}`, appendOrderId)}
                   className="rounded-lg border border-laku-line px-3 py-1.5 text-sm font-semibold text-laku-ink transition-colors hover:border-laku-blue hover:text-laku-blue"
                 >
                   {brand.name}
@@ -136,7 +142,7 @@ export default function SearchDiscovery({
                   href={
                     item.id
                       ? `/distributor/${item.id}/details`
-                      : `/search?q=${encodeURIComponent(item.name)}`
+                      : keepAppendOrder(`/search?q=${encodeURIComponent(item.name)}`, appendOrderId)
                   }
                   className="flex items-center gap-3 rounded-xl border border-laku-line px-3 py-2.5 transition-colors hover:border-laku-blue"
                 >

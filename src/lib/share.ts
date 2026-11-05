@@ -4,6 +4,39 @@ export function productUrl(productId: string): string {
   return `/product/${encodeURIComponent(productId)}`;
 }
 
+/** Keep an in-progress "add to this order" id on the next search or product link. */
+const APPEND_ORDER_STORAGE_KEY = "lakuAppendOrderId";
+
+export function rememberAppendOrder(orderId?: string | null) {
+  if (typeof window === "undefined") return;
+  const id = orderId?.trim();
+  if (!id) return;
+  sessionStorage.setItem(APPEND_ORDER_STORAGE_KEY, id);
+}
+
+export function readAppendOrder(): string {
+  if (typeof window === "undefined") return "";
+  return sessionStorage.getItem(APPEND_ORDER_STORAGE_KEY)?.trim() || "";
+}
+
+export function clearAppendOrder() {
+  if (typeof window === "undefined") return;
+  sessionStorage.removeItem(APPEND_ORDER_STORAGE_KEY);
+}
+
+export function keepAppendOrder(href: string, appendOrderId?: string | null): string {
+  const id = appendOrderId?.trim();
+  if (!id) return href;
+  const hashIndex = href.indexOf("#");
+  const hash = hashIndex >= 0 ? href.slice(hashIndex) : "";
+  const withoutHash = hashIndex >= 0 ? href.slice(0, hashIndex) : href;
+  const queryIndex = withoutHash.indexOf("?");
+  const path = queryIndex >= 0 ? withoutHash.slice(0, queryIndex) : withoutHash;
+  const params = new URLSearchParams(queryIndex >= 0 ? withoutHash.slice(queryIndex + 1) : "");
+  params.set("appendOrderId", id);
+  return `${path}?${params.toString()}${hash}`;
+}
+
 export function absoluteProductUrl(productId: string): string {
   return `${SITE_URL}${productUrl(productId)}`;
 }

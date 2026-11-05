@@ -15,7 +15,7 @@ import {
   Wallet,
 } from "lucide-react";
 
-import { placeOrderAction } from "@/app/actions/orders";
+import { placeOrderAction, updateOrderDetailsAction } from "@/app/actions/orders";
 import type { CheckoutLine } from "@/app/checkout/page";
 import { useTranslations } from "@/i18n/client";
 import FreeItemsBadge from "@/components/ui/FreeItemsBadge";
@@ -38,8 +38,12 @@ type Props = {
   lines: CheckoutLine[];
   /** Fallback when a group has no product-level shipping prefs. */
   deliveryOptions: ReturnType<typeof getAvailableDeliveryOptions>;
-  source: "cart" | "direct";
+  source: "cart" | "direct" | "editCart";
   productId: string | null;
+  appendOrderId?: string | null;
+  editOrderId?: string | null;
+  initialDelivery?: DeliveryOptionId | null;
+  initialPayment?: PaymentMethodId | null;
   addresses: MarketplaceAddress[];
   buyer: {
     name: string;
@@ -63,11 +67,19 @@ export default function CheckoutForm({
   deliveryOptions,
   source,
   productId,
+  appendOrderId,
+  editOrderId,
+  initialDelivery,
+  initialPayment,
   addresses,
   buyer,
 }: Props) {
   const t = useTranslations();
-  const [state, formAction, pending] = useActionState(placeOrderAction, INITIAL);
+  const editingExisting = Boolean(editOrderId) && !appendOrderId;
+  const [state, formAction, pending] = useActionState(
+    editingExisting ? updateOrderDetailsAction : placeOrderAction,
+    INITIAL,
+  );
   const [checkoutAttemptId] = useState(() => {
     const entropy = Math.floor(10_000_000 + Math.random() * 90_000_000);
     return `LKO-${Date.now()}${entropy}`;
@@ -86,7 +98,9 @@ export default function CheckoutForm({
   });
   const [poReference, setPoReference] = useState("");
   const [noteToDistributor, setNoteToDistributor] = useState("");
-  const [paymentMethod, setPaymentMethod] = useState<PaymentMethodId>("cod");
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethodId>(
+    initialPayment ?? "cod",
+  );
 
   const groups = useMemo(() => {
     const map = new Map<
@@ -117,7 +131,9 @@ export default function CheckoutForm({
   }, [lines, deliveryOptions]);
 
   const lineTotalFor = (line: CheckoutLine) =>
-    getBaseLineTotal(line.product, line.variant, line.quantity);
+    typeof line.displaySubtotal === "number"
+      ? line.displaySubtotal
+      : getBaseLineTotal(line.product, line.variant, line.quantity);
   const distributorSummaries = [...groups.entries()].map(([key, group]) => ({
     key,
     distributor: group.label || t("product.distributorFallback"),
@@ -132,8 +148,12 @@ export default function CheckoutForm({
   >(() => {
     const initial: Record<string, GroupShipping> = {};
     for (const [key, group] of groups) {
+      const preferred = initialDelivery && group.options.some((option) => option.id === initialDelivery)
+        ? initialDelivery
+        : undefined;
       initial[key] = {
-        delivery: (group.options[0]?.id ??
+        delivery: (preferred ??
+          group.options[0]?.id ??
           deliveryOptions[0]?.id ??
           "seller_delivery") as DeliveryOptionId,
         preferredDate: "",
@@ -143,7 +163,10 @@ export default function CheckoutForm({
     return initial;
   });
 
-  const directVariant = lines[0]?.variant;
+  const submittedLine = productId
+    ? lines.filter((line) => line.product.id === productId).at(-1) ?? lines[0]
+    : lines[0];
+  const directVariant = submittedLine?.variant;
   const shippingPayload = useMemo(() => {
     const payload: Record<
       string,
@@ -207,8 +230,27 @@ export default function CheckoutForm({
     >
       <input type="hidden" name="source" value={source} />
       {productId ? <input type="hidden" name="productId" value={productId} /> : null}
+      {appendOrderId ? (
+        <input type="hidden" name="appendOrderId" value={appendOrderId} />
+      ) : null}
+      {editOrderId ? <input type="hidden" name="orderId" value={editOrderId} /> : null}
+      {source === "editCart" ? (
+        <input
+          type="hidden"
+          name="editCartLines"
+          value={JSON.stringify(
+            lines
+              .filter((line) => line.displaySubtotal == null)
+              .map((line) => ({
+                productId: line.product.id,
+                quantity: line.quantity,
+                variant: line.variant ?? "Default",
+              })),
+          )}
+        />
+      ) : null}
       {productId ? (
-        <input type="hidden" name="quantity" value={lines[0]?.quantity ?? 1} />
+        <input type="hidden" name="quantity" value={submittedLine?.quantity ?? 1} />
       ) : null}
       {productId && directVariant ? (
         <input type="hidden" name="variant" value={directVariant} />
@@ -224,6 +266,28 @@ export default function CheckoutForm({
       <input type="hidden" name="noteToDistributor" value={noteToDistributor} />
 
       <div className="space-y-4">
+        {editingExisting && distributorSummaries[0] ? (
+          <section className="rounded-2xl bg-white p-5">
+            <h2 className="flex items-center gap-2 text-sm font-bold text-laku-ink">
+              <Store className="size-4 text-laku-blue" aria-hidden />
+              {t("distributorDetails.infoTitle")}
+            </h2>
+            <p className="mt-3 text-base font-semibold text-laku-ink">
+              {distributorSummaries[0].distributor}
+            </p>
+            {lines[0]?.product.seller?.company?.industryType ? (
+              <p className="mt-1 text-sm text-laku-muted">
+                {t("distributorDetails.industry")}: {lines[0].product.seller.company.industryType}
+              </p>
+            ) : null}
+            {lines[0]?.product.seller?.name &&
+            lines[0].product.seller.name !== distributorSummaries[0].distributor ? (
+              <p className="mt-1 text-sm text-laku-muted">
+                {lines[0].product.seller.name}
+              </p>
+            ) : null}
+          </section>
+        ) : null}
         <section className="rounded-2xl bg-white p-5">
           <h2 className="flex items-center gap-2 text-sm font-bold text-laku-ink">
             <MapPin className="size-4 text-laku-blue" aria-hidden />
@@ -481,7 +545,7 @@ export default function CheckoutForm({
               </h2>
 
               <ul className="divide-y divide-laku-line border-b border-laku-line">
-                {group.lines.map((line) => {
+                {group.lines.map((line, lineIndex) => {
                   const packageType = displayPackageType(line.product.packageType);
                   const { option } = resolveVariantPricing(
                     line.product,
@@ -497,7 +561,7 @@ export default function CheckoutForm({
                   const lineTotal = lineTotalFor(line);
                   return (
                     <li
-                      key={`${line.product.id}-${line.variant ?? "Default"}`}
+                      key={`${line.product.id}-${line.variant ?? "Default"}-${lineIndex}`}
                       className="flex gap-4 px-5 py-4"
                     >
                       <div className="relative size-16 shrink-0 overflow-hidden rounded-lg bg-laku-chip">
@@ -544,6 +608,17 @@ export default function CheckoutForm({
                 })}
               </ul>
 
+              {editOrderId || appendOrderId ? (
+                <div className="border-b border-laku-line px-5 py-4">
+                  <Link
+                    href={`/search?appendOrderId=${encodeURIComponent(editOrderId || appendOrderId || "")}`}
+                    className="inline-flex w-full items-center justify-center rounded-lg border border-laku-blue bg-white px-4 py-3 text-sm font-bold text-laku-blue transition-colors hover:bg-laku-blue/5"
+                  >
+                    {t("orderDetails.addMoreProducts")}
+                  </Link>
+                </div>
+              ) : null}
+
               <div className="px-5 py-4">
                 <h3 className="mb-3 flex items-center gap-2 text-xs font-bold uppercase tracking-wide text-laku-muted">
                   <Truck className="size-3.5 text-laku-blue" aria-hidden />
@@ -582,43 +657,48 @@ export default function CheckoutForm({
                   ))}
                 </div>
 
-                <div className="mt-3 grid gap-3 sm:grid-cols-2">
-                  <label className="block text-xs font-semibold text-laku-muted">
-                    {isPickup
-                      ? t("checkout.pickupDate")
-                      : t("checkout.deliveryDate")}
-                    <input
-                      type="date"
-                      value={shipping.preferredDate}
-                      onChange={(event) =>
-                        updateGroup(key, { preferredDate: event.target.value })
-                      }
-                      className="mt-1 h-10 w-full rounded-lg border border-laku-line px-3 text-sm text-laku-ink outline-none focus:border-laku-blue"
-                    />
-                  </label>
-                  <label className="block text-xs font-semibold text-laku-muted">
-                    {isPickup
-                      ? t("checkout.pickupTime")
-                      : t("checkout.deliveryTime")}
-                    <input
-                      type="time"
-                      value={shipping.preferredTime}
-                      onChange={(event) =>
-                        updateGroup(key, { preferredTime: event.target.value })
-                      }
-                      className="mt-1 h-10 w-full rounded-lg border border-laku-line px-3 text-sm text-laku-ink outline-none focus:border-laku-blue"
-                    />
-                  </label>
-                </div>
-                <p className="mt-2 flex items-start gap-1.5 text-xs text-laku-muted">
-                  <CalendarClock className="mt-0.5 size-3.5 shrink-0" aria-hidden />
-                  {t("checkout.scheduleNote")}
-                </p>
+                {editingExisting ? null : (
+                  <>
+                    <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                      <label className="block text-xs font-semibold text-laku-muted">
+                        {isPickup
+                          ? t("checkout.pickupDate")
+                          : t("checkout.deliveryDate")}
+                        <input
+                          type="date"
+                          value={shipping.preferredDate}
+                          onChange={(event) =>
+                            updateGroup(key, { preferredDate: event.target.value })
+                          }
+                          className="mt-1 h-10 w-full rounded-lg border border-laku-line px-3 text-sm text-laku-ink outline-none focus:border-laku-blue"
+                        />
+                      </label>
+                      <label className="block text-xs font-semibold text-laku-muted">
+                        {isPickup
+                          ? t("checkout.pickupTime")
+                          : t("checkout.deliveryTime")}
+                        <input
+                          type="time"
+                          value={shipping.preferredTime}
+                          onChange={(event) =>
+                            updateGroup(key, { preferredTime: event.target.value })
+                          }
+                          className="mt-1 h-10 w-full rounded-lg border border-laku-line px-3 text-sm text-laku-ink outline-none focus:border-laku-blue"
+                        />
+                      </label>
+                    </div>
+                    <p className="mt-2 flex items-start gap-1.5 text-xs text-laku-muted">
+                      <CalendarClock className="mt-0.5 size-3.5 shrink-0" aria-hidden />
+                      {t("checkout.scheduleNote")}
+                    </p>
+                  </>
+                )}
               </div>
             </section>
           );
         })}
 
+        {editingExisting ? null : (
         <section className="rounded-2xl bg-white p-5">
           <h2 className="flex items-center gap-2 text-sm font-bold text-laku-ink">
             <ClipboardList className="size-4 text-laku-blue" aria-hidden />
@@ -658,6 +738,7 @@ export default function CheckoutForm({
             </div>
           </div>
         </section>
+        )}
       </div>
 
       <aside className="space-y-4 lg:sticky lg:top-24">
@@ -720,6 +801,12 @@ export default function CheckoutForm({
             </p>
           ) : null}
 
+          {appendOrderId ? (
+            <p className="mt-4 text-sm font-semibold text-laku-blue">
+              {t("checkout.addingToOrder", { orderId: appendOrderId })}
+            </p>
+          ) : null}
+
           <button
             type="submit"
             disabled={
@@ -730,7 +817,9 @@ export default function CheckoutForm({
             className="mt-5 flex w-full items-center justify-center gap-2 rounded-lg bg-laku-blue px-5 py-3.5 text-sm font-bold text-white transition-colors hover:bg-laku-blue-dark disabled:opacity-60"
           >
             <ShieldCheck className="size-4" aria-hidden />
-            {pending ? t("checkout.submitting") : t("checkout.submitPo")}
+            {pending
+              ? t(editingExisting ? "checkout.confirming" : appendOrderId ? "checkout.adding" : "checkout.submitting")
+              : t(editingExisting ? "checkout.confirm" : appendOrderId ? "checkout.addToOrder" : "checkout.submitPo")}
           </button>
           <p className="mt-3 text-xs text-laku-muted">{t("checkout.terms")}</p>
         </section>

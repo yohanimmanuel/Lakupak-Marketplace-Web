@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { Geist, Geist_Mono } from "next/font/google";
 
 import MobileTabBar from "@/components/layout/MobileTabBar";
+import UnwindFinishedEdit from "@/components/orders/UnwindFinishedEdit";
 import SiteFooter from "@/components/layout/SiteFooter";
 import SiteHeader from "@/components/layout/SiteHeader";
 import { I18nProvider } from "@/i18n/client";
@@ -62,7 +64,10 @@ export default async function RootLayout({
           <SiteFooter />
           {/* Bottom tab bar overlays content on phones, so reserve space for it. */}
           <div className="h-16 sm:hidden" aria-hidden />
-          <MobileTabBar cartCount={cartCount} />
+          <Suspense fallback={null}>
+            <MobileTabBar cartCount={cartCount} />
+          </Suspense>
+          <UnwindFinishedEdit />
         </I18nProvider>
       </body>
     </html>

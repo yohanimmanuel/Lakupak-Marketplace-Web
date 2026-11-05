@@ -8,6 +8,8 @@ import { addToCartAction } from "@/app/actions/cart";
 import { recordProductViewAction, toggleFavoriteAction } from "@/app/actions/activity";
 import QuantityStepper from "@/components/ui/QuantityStepper";
 import { useTranslations } from "@/i18n/client";
+import { addEditCartItem, beginEditCart, endEditCart, landedByBrowserBack, readEditCart } from "@/lib/editCart";
+import { clearAppendOrder, rememberAppendOrder } from "@/lib/share";
 import type { MarketplaceProduct } from "@/lib/api/types";
 import {
   findSelectedVariantOption,
@@ -20,8 +22,10 @@ import {
 
 export default function ProductPurchasePanel({
   product,
+  appendOrderId,
 }: {
   product: MarketplaceProduct;
+  appendOrderId?: string | null;
 }) {
   const t = useTranslations();
   const router = useRouter();
@@ -106,6 +110,17 @@ export default function ProductPurchasePanel({
     };
   }, [product.id]);
 
+  useEffect(() => {
+    if (appendOrderId) {
+      if (landedByBrowserBack() && !readEditCart()) return;
+      rememberAppendOrder(appendOrderId);
+      beginEditCart(appendOrderId);
+    } else {
+      clearAppendOrder();
+      endEditCart();
+    }
+  }, [appendOrderId]);
+
   const requireAuth = () => {
     router.push(loginHref);
   };
@@ -115,6 +130,13 @@ export default function ProductPurchasePanel({
     if (!moqMet) return;
 
     setError(null);
+    if (appendOrderId) {
+      beginEditCart(appendOrderId);
+      addEditCartItem({ product, quantity: purchaseQuantity, variant: variantName });
+      setAdded(true);
+      setTimeout(() => setAdded(false), 2500);
+      return;
+    }
     startTransition(async () => {
       const result = await addToCartAction(product.id, purchaseQuantity, variantName);
       if (result.ok) {
@@ -139,6 +161,7 @@ export default function ProductPurchasePanel({
     if (variantName && variantName !== "Default") {
       params.set("variant", variantName);
     }
+    if (appendOrderId) params.set("appendOrderId", appendOrderId);
     router.push(`/checkout?${params.toString()}`);
   };
 
@@ -254,7 +277,7 @@ export default function ProductPurchasePanel({
           onClick={handleRequestOrder}
           className="inline-flex flex-1 items-center justify-center gap-2 rounded-lg bg-laku-blue px-5 py-3.5 text-sm font-bold text-white transition-colors hover:bg-laku-blue-dark disabled:cursor-not-allowed disabled:opacity-50"
         >
-          {t("product.requestOrder")}
+          {appendOrderId ? t("product.addToThisOrder") : t("product.requestOrder")}
         </button>
 
         <button

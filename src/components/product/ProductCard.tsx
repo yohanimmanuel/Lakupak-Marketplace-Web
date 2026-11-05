@@ -7,11 +7,12 @@ import { ImageIcon, MapPin, Store, Truck } from "lucide-react";
 import { useTranslations } from "@/i18n/client";
 import type { MarketplaceProduct } from "@/lib/api/types";
 import { formatBasePrice, getDeliveryLabel, getShippingLocation } from "@/lib/format";
-import { productUrl } from "@/lib/share";
+import { keepAppendOrder, productUrl } from "@/lib/share";
 
 type Props = {
   product: MarketplaceProduct;
   priority?: boolean;
+  appendOrderId?: string | null;
 };
 
 function distributorLabel(product: MarketplaceProduct, fallback: string): string {
@@ -22,7 +23,7 @@ function distributorLabel(product: MarketplaceProduct, fallback: string): string
   );
 }
 
-export default function ProductCard({ product, priority = false }: Props) {
+export default function ProductCard({ product, priority = false, appendOrderId }: Props) {
   const t = useTranslations();
   const image = product.images[0];
   const delivery = getDeliveryLabel(product, t);
@@ -37,7 +38,7 @@ export default function ProductCard({ product, priority = false }: Props) {
 
   return (
     <Link
-      href={productUrl(product.id)}
+      href={keepAppendOrder(productUrl(product.id), appendOrderId)}
       className="group block overflow-hidden rounded-card bg-white transition-transform duration-200 ease-out hover:-translate-y-0.5 focus-visible:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-laku-blue"
     >
       <div className="relative aspect-7/6 overflow-hidden bg-laku-surface">

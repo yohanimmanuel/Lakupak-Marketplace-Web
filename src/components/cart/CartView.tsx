@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState, useTransition } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore, useTransition } from "react";
 import { Package, Store, Trash2 } from "lucide-react";
 
 import { removeCartItemAction, updateCartItemAction } from "@/app/actions/cart";
@@ -11,6 +11,12 @@ import QuantityStepper from "@/components/ui/QuantityStepper";
 import { useTranslations } from "@/i18n/client";
 import type { CartItem } from "@/lib/api/types";
 import { getBaseLineTotal, getCartVariant } from "@/lib/cartPricing";
+import {
+  getEditCartServerSnapshot,
+  getEditCartSnapshot,
+  subscribeEditCart,
+  updateEditCartLine,
+} from "@/lib/editCart";
 import { formatCurrency } from "@/lib/format";
 import {
   getMaxPackageQuantity,
@@ -21,19 +27,58 @@ import {
 import { displayPackageType } from "@/lib/packageLabel";
 import { getSelectedMoq, resolveVariantPricing } from "@/lib/variants";
 
-type Props = { items: CartItem[] };
+type Props = {
+  items: CartItem[];
+  appendOrderId?: string | null;
+  editOrderId?: string | null;
+};
+
+function editLineId(productId: string, variant: string): number {
+  let hash = 2166136261;
+  const key = `${productId}\0${variant}`;
+  for (let i = 0; i < key.length; i += 1) {
+    hash ^= key.charCodeAt(i);
+    hash = Math.imul(hash, 16777619);
+  }
+  return hash === 0 ? 1 : hash | 0;
+}
+
+function editSessionToCartItems(
+  orderId: string,
+  session: ReturnType<typeof getEditCartSnapshot>,
+): CartItem[] {
+  if (!session || session.orderId !== orderId) return [];
+  const now = new Date().toISOString();
+  return session.items.map((item) => ({
+    id: editLineId(item.productId, item.variant),
+    productId: item.productId,
+    productData: item.product,
+    metadata: { quantity: item.quantity, variant: item.variant, selected: true },
+    createdAt: now,
+    updatedAt: now,
+  }));
+}
 
 function quantityOf(item: CartItem): number {
   const quantity = Number(item.metadata?.quantity);
   return Number.isFinite(quantity) && quantity > 0 ? quantity : 1;
 }
 
-export default function CartView({ items }: Props) {
+export default function CartView({ items: serverItems, appendOrderId, editOrderId }: Props) {
   const t = useTranslations();
   const router = useRouter();
   const [pending, startTransition] = useTransition();
   const [checkoutFlushing, setCheckoutFlushing] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const editingId = editOrderId?.trim() || "";
+  const editSession = useSyncExternalStore(
+    subscribeEditCart,
+    getEditCartSnapshot,
+    getEditCartServerSnapshot,
+  );
+  const sessionMatches = Boolean(editingId && editSession?.orderId === editingId);
+  const items = sessionMatches ? editSessionToCartItems(editingId, editSession) : serverItems;
+  const orderBeingEdited = sessionMatches ? editingId : appendOrderId?.trim() || "";
   // Local edits only; display falls back to server quantity so new/removed
   // lines sync without a props→state effect (react-hooks/set-state-in-effect).
   const [quantityOverrides, setQuantityOverrides] = useState<
@@ -99,6 +144,11 @@ export default function CartView({ items }: Props) {
       // Serialize per line so an older write cannot finish after a newer one.
       if (prior) await prior;
       setError(null);
+      if (sessionMatches) {
+        const line = items.find((item) => item.id === itemId);
+        if (line) updateEditCartLine(line.productId, getCartVariant(line), next);
+        return true;
+      }
       const result = await updateCartItemAction(itemId, next);
       if (!result.ok) {
         setError(result.error ?? t("cart.updateError"));
@@ -117,7 +167,7 @@ export default function CartView({ items }: Props) {
 
     startTransition(() => {
       void promise.then((ok) => {
-        if (ok) router.refresh();
+        if (ok && !sessionMatches) router.refresh();
       });
     });
 
@@ -144,6 +194,11 @@ export default function CartView({ items }: Props) {
     delete persistTimers.current[itemId];
     delete pendingEdits.current[itemId];
     startTransition(async () => {
+      if (sessionMatches) {
+        const line = items.find((item) => item.id === itemId);
+        if (line) updateEditCartLine(line.productId, getCartVariant(line), 0);
+        return;
+      }
       const result = await removeCartItemAction(itemId);
       if (!result.ok) setError(result.error ?? t("cart.updateError"));
       router.refresh();
@@ -190,7 +245,13 @@ export default function CartView({ items }: Props) {
       return;
     }
 
-    router.push("/checkout");
+    router.push(
+      sessionMatches
+        ? `/checkout?appendOrderId=${encodeURIComponent(editingId)}&editCart=1`
+        : orderBeingEdited
+          ? `/checkout?appendOrderId=${encodeURIComponent(orderBeingEdited)}`
+          : "/checkout",
+    );
   };
 
   return (
@@ -219,7 +280,11 @@ export default function CartView({ items }: Props) {
                 return (
                   <li key={item.id} className="flex gap-4 px-5 py-4">
                     <Link
-                      href={`/product/${encodeURIComponent(product.id)}`}
+                      href={
+                        sessionMatches
+                          ? `/product/${encodeURIComponent(product.id)}?appendOrderId=${encodeURIComponent(editingId)}`
+                          : `/product/${encodeURIComponent(product.id)}`
+                      }
                       className="relative size-20 shrink-0 overflow-hidden rounded-lg bg-laku-chip"
                     >
                       {product.images?.[0] ? (
@@ -239,7 +304,11 @@ export default function CartView({ items }: Props) {
 
                     <div className="min-w-0 flex-1">
                       <Link
-                        href={`/product/${encodeURIComponent(product.id)}`}
+                        href={
+                          sessionMatches
+                            ? `/product/${encodeURIComponent(product.id)}?appendOrderId=${encodeURIComponent(editingId)}`
+                            : `/product/${encodeURIComponent(product.id)}`
+                        }
                         className="line-clamp-2 text-sm font-semibold text-laku-ink hover:text-laku-blue"
                       >
                         {product.name}
@@ -353,6 +422,12 @@ export default function CartView({ items }: Props) {
         {groups.size > 1 ? (
           <p className="mt-3 text-xs text-laku-muted">
             {t("cart.splitNote", { count: groups.size })}
+          </p>
+        ) : null}
+
+        {orderBeingEdited ? (
+          <p className="mt-3 text-sm font-semibold text-laku-blue">
+            {t("checkout.addingToOrder", { orderId: orderBeingEdited })}
           </p>
         ) : null}
 

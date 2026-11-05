@@ -2,21 +2,28 @@ import Link from "next/link";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 import { getTranslations } from "@/i18n/server";
+import { keepAppendOrder } from "@/lib/share";
 
 type Props = {
   page: number;
   totalPages: number;
   q?: string;
   category?: string;
+  appendOrderId?: string | null;
 };
 
-function buildHref(page: number, q?: string, category?: string): string {
+function buildHref(
+  page: number,
+  q?: string,
+  category?: string,
+  appendOrderId?: string | null,
+): string {
   const params = new URLSearchParams();
   if (q) params.set("q", q);
   if (category) params.set("category", category);
   if (page > 1) params.set("page", String(page));
   const query = params.toString();
-  return query ? `/search?${query}` : "/search";
+  return keepAppendOrder(query ? `/search?${query}` : "/search", appendOrderId);
 }
 
 export default async function SearchPagination({
@@ -24,6 +31,7 @@ export default async function SearchPagination({
   totalPages,
   q,
   category,
+  appendOrderId,
 }: Props) {
   if (totalPages <= 1) return null;
 
@@ -40,7 +48,7 @@ export default async function SearchPagination({
       className="mt-10 flex items-center justify-center gap-4"
     >
       {page > 1 ? (
-        <Link href={buildHref(page - 1, q, category)} className={linkClass} rel="prev">
+        <Link href={buildHref(page - 1, q, category, appendOrderId)} className={linkClass} rel="prev">
           <ChevronLeft className="size-4" aria-hidden />
           {t("search.previous")}
         </Link>
@@ -56,7 +64,7 @@ export default async function SearchPagination({
       </span>
 
       {page < totalPages ? (
-        <Link href={buildHref(page + 1, q, category)} className={linkClass} rel="next">
+        <Link href={buildHref(page + 1, q, category, appendOrderId)} className={linkClass} rel="next">
           {t("search.next")}
           <ChevronRight className="size-4" aria-hidden />
         </Link>

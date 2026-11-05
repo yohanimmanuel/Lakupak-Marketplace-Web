@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { cookies } from "next/headers";
 import { ShoppingCart } from "lucide-react";
 
 import CartView from "@/components/cart/CartView";
@@ -32,8 +33,9 @@ export default async function CartPage() {
   }
 
   const items = await getCart({ userId: session.user.id, token: session.token });
+  const editOrderId = decodeURIComponent((await cookies()).get("laku_edit_order")?.value ?? "").trim();
 
-  if (items.length === 0) {
+  if (!editOrderId && items.length === 0) {
     return (
       <div className="mx-auto max-w-3xl px-4 py-16 md:px-6">
         <div className="rounded-2xl bg-white p-12 text-center">
@@ -58,7 +60,10 @@ export default async function CartPage() {
   return (
     <div className="mx-auto max-w-6xl px-4 py-10 md:px-6">
       <h1 className="mb-6 text-2xl font-bold text-laku-ink">{t("cart.title")}</h1>
-      <CartView items={items} />
+      <CartView
+        items={items}
+        editOrderId={editOrderId || null}
+      />
     </div>
   );
 }

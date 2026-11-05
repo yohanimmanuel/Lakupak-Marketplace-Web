@@ -59,6 +59,33 @@ export function getDeliveryOption(id: string): DeliveryOption | undefined {
   return DELIVERY_OPTIONS.find((option) => option.id === id);
 }
 
+/** Prefer the stored id, then a catalog method label, then legacy wording. */
+export function resolveStoredDeliveryId(
+  deliveryOption: string | null | undefined,
+  deliveryMethod: string | null | undefined,
+): DeliveryOptionId {
+  const stored = (deliveryOption ?? "").trim();
+  const exactId = DELIVERY_OPTIONS.find((option) => option.id === stored);
+  if (exactId) return exactId.id;
+
+  const storedLabel = stored.toLowerCase();
+  const optionMethod = DELIVERY_OPTIONS.find(
+    (option) => option.method.toLowerCase() === storedLabel,
+  );
+  if (optionMethod) return optionMethod.id;
+
+  const methodText = (deliveryMethod ?? "").trim().toLowerCase();
+  const storedMethod = DELIVERY_OPTIONS.find(
+    (option) => option.method.toLowerCase() === methodText,
+  );
+  if (storedMethod) return storedMethod.id;
+
+  const legacy = `${stored} ${deliveryMethod ?? ""}`.toLowerCase();
+  if (legacy.includes("pickup")) return "self_pickup";
+  if (legacy.includes("courier") || legacy.includes("buyer")) return "buyer_courier";
+  return "seller_delivery";
+}
+
 function supportsOption(product: MarketplaceProduct, id: DeliveryOptionId): boolean {
   const shipping = product.shipping;
   // Products without shipping preferences offer everything, as in the app.
