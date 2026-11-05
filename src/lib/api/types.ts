@@ -284,6 +284,11 @@ export type Order = {
   cancellationReason?: string | null;
   returnStatus?: string | null;
   returnedAt?: string | null;
+  returnItemsReceivedAt?: string | null;
+  returnRequests?: Array<{
+    status: string;
+    createdAt?: string | null;
+  }>;
   estimatedArrivalDate?: string | null;
   estimatedArrivalMinDays?: number | null;
   estimatedArrivalMaxDays?: number | null;

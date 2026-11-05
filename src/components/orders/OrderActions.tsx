@@ -14,9 +14,9 @@ import { markOrderReceivedAction } from "@/app/actions/orders";
 import { useTranslations } from "@/i18n/client";
 import type { Order } from "@/lib/api/types";
 import {
+  canRequestReturn,
   isCancellable,
   isPayable,
-  isReturnable,
 } from "@/lib/orders";
 
 export default function OrderActions({ order }: { order: Order }) {
@@ -30,7 +30,7 @@ export default function OrderActions({ order }: { order: Order }) {
   const canPay = isPayable(order);
   const canCancel = isCancellable(order);
   const canConfirm = order.orderStatus === "Delivered";
-  const canReturn = isReturnable(order) && !order.returnStatus;
+  const canReturn = canRequestReturn(order);
 
   if (!canPay && !canCancel && !canConfirm && !canReturn) {
     return null;

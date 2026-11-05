@@ -172,6 +172,42 @@ export function isReturnable(order: Order): boolean {
   return ["Delivered", "Received", "Returned"].includes(order.orderStatus);
 }
 
+/** True when an OrderReturnRequest row still exists for this order. */
+export function hasReturnRequest(order: Order): boolean {
+  return (order.returnRequests?.length ?? 0) > 0;
+}
+
+/** Received orders can request return/refund until a return request exists. */
+export function canRequestReturn(order: Order): boolean {
+  return order.orderStatus === "Received" && !hasReturnRequest(order);
+}
+
+export type ReturnNotice = "pending" | "accepted" | "accepted_received" | "rejected";
+
+/**
+ * Banner under the status header.
+ * Driven only by OrderReturnRequest rows — deleting the request clears the UI.
+ * Pending: request exists while the order is still Received.
+ * Accepted / rejected: request exists and the order is Returned.
+ */
+export function getReturnNotice(order: Order): ReturnNotice | null {
+  const latest = [...(order.returnRequests ?? [])].sort((a, b) => {
+    const aTime = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+    const bTime = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+    return bTime - aTime;
+  })[0];
+  if (!latest?.status) return null;
+
+  const status = latest.status.trim().toLowerCase();
+  if (status === "pending" && order.orderStatus === "Received") return "pending";
+  if (order.orderStatus !== "Returned") return null;
+  if (status === "rejected") return "rejected";
+  if (status === "accepted" || status === "approved") {
+    return order.returnItemsReceivedAt ? "accepted_received" : "accepted";
+  }
+  return null;
+}
+
 /** Buyers can write a review only after confirming the order was received. */
 export function isReviewable(order: Order): boolean {
   return order.orderStatus === "Received";

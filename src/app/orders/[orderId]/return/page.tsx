@@ -6,7 +6,7 @@ import SignedOutPrompt from "@/components/auth/SignedOutPrompt";
 import { getTranslations } from "@/i18n/server";
 import { getOrderById } from "@/lib/api/orders";
 import { getSession } from "@/lib/auth/session";
-import { isReturnable } from "@/lib/orders";
+import { canRequestReturn } from "@/lib/orders";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations();
@@ -40,7 +40,7 @@ export default async function ReturnOrderPage({ params }: { params: Params }) {
   });
 
   if (!order) notFound();
-  if (!isReturnable(order) || order.returnStatus) {
+  if (!canRequestReturn(order)) {
     redirect(`/orders/${encodeURIComponent(order.orderId)}`);
   }
 

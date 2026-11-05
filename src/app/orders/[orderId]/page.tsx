@@ -36,6 +36,7 @@ import {
   getItemCount,
   getOrderTimeline,
   getPaymentColor,
+  getReturnNotice,
   getScheduleLabel,
   getSellerLogo,
   getSellerName,
@@ -83,6 +84,27 @@ export default async function OrderDetailsPage({ params }: { params: Params }) {
   const estimate = getEstimatedDeliveryLabel(order, t);
   const schedule = getScheduleLabel(order, t.locale);
   const pickupWhen = fulfillment === "pickup" ? schedule : null;
+  const returnNotice = getReturnNotice(order);
+  const returnNoticeStyle =
+    returnNotice === "accepted" || returnNotice === "accepted_received"
+      ? "bg-[#16a34a] text-white"
+      : returnNotice === "rejected"
+        ? "bg-[#b91c1c] text-white"
+        : "bg-[#fef9c3] text-[#854d0e]";
+  const returnNoticeText =
+    returnNotice === "accepted_received"
+      ? t("orderDetails.returnAcceptedReceived")
+      : returnNotice === "accepted"
+        ? t("orderDetails.returnAccepted")
+        : returnNotice === "rejected"
+          ? t("orderDetails.returnRejected")
+          : t("orderDetails.returnPending");
+  const returnStatusLabel =
+    returnNotice === "pending"
+      ? t("orderDetails.returnStatusPending")
+      : returnNotice === "rejected"
+        ? t("orderDetails.returnStatusRejected")
+        : t("orderDetails.returnStatusAccepted");
   const sellerLogo = getSellerLogo(order);
   const distributorId = getDistributorUserId(order);
   const productTotal = order.orderItems.reduce((total, item) => total + item.subtotal, 0);
@@ -149,6 +171,27 @@ export default async function OrderDetailsPage({ params }: { params: Params }) {
         </div>
 
         <div className="px-5 py-5">
+          {returnNotice ? (
+            <div className="mb-4">
+              <p className={`rounded-lg px-3 py-2.5 text-sm font-medium ${returnNoticeStyle}`}>
+                {returnNoticeText}
+              </p>
+              <div className="mt-2 px-1">
+                <p className="text-xs text-laku-muted">{t("orderDetails.returnStatus")}</p>
+                <p
+                  className={`text-sm font-semibold ${
+                    returnNotice === "rejected"
+                      ? "text-[#dc2626]"
+                      : returnNotice === "pending"
+                        ? "text-[#a16207]"
+                        : "text-[#16a34a]"
+                  }`}
+                >
+                  {returnStatusLabel}
+                </p>
+              </div>
+            </div>
+          ) : null}
           {timeline ? (
             <ol className="mb-5 space-y-3">
               {timeline.map((step) => (
@@ -460,12 +503,6 @@ export default async function OrderDetailsPage({ params }: { params: Params }) {
             <SummaryRow
               label={t("orderDetails.cancelReason")}
               value={order.cancellationReason}
-            />
-          ) : null}
-          {order.returnStatus ? (
-            <SummaryRow
-              label={t("orderDetails.returnStatus")}
-              value={order.returnStatus}
             />
           ) : null}
         </dl>
