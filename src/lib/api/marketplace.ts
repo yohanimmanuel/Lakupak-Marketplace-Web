@@ -46,6 +46,7 @@ const PRODUCT_FIELDS = `
   publishedAt
   piecesPerPackage
   packageType
+  stockUnit
   variants
   variantOptionsFormatted
   seller {

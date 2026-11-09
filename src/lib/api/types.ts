@@ -107,6 +107,7 @@ export type MarketplaceProduct = {
   unit?: string | null;
   sku?: string | null;
   packageType?: string | null;
+  stockUnit?: string | null;
   piecesPerPackage?: number | null;
   /** Minimum order quantity in pieces, from the default variant option. */
   moq?: number | null;

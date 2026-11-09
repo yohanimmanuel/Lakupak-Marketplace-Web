@@ -11,6 +11,7 @@ import { useTranslations } from "@/i18n/client";
 import { addEditCartItem, beginEditCart, endEditCart, landedByBrowserBack, readEditCart } from "@/lib/editCart";
 import { clearAppendOrder, rememberAppendOrder } from "@/lib/share";
 import type { MarketplaceProduct } from "@/lib/api/types";
+import { displayStockUnit } from "@/lib/packageLabel";
 import {
   findSelectedVariantOption,
   formatVariantName,
@@ -258,7 +259,10 @@ export default function ProductPurchasePanel({
             {t("product.poItemsLabel")}
           </p>
           <p className="text-2xl font-bold text-laku-ink">
-            {t("product.poQuantityCount", { count: purchaseQuantity })}
+            {t("product.poQuantityCount", {
+              count: purchaseQuantity,
+              unit: displayStockUnit(product.stockUnit ?? product.packageType),
+            })}
           </p>
           <p className="text-xs text-laku-muted">
             {t("product.pricingConfirmedBy", { distributor: distributorName })}

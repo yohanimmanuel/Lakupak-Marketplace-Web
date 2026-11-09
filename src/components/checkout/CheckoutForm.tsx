@@ -30,7 +30,7 @@ import {
 } from "@/lib/checkout";
 import { getBaseLineTotal } from "@/lib/cartPricing";
 import { formatCurrency } from "@/lib/format";
-import { displayPackageType } from "@/lib/packageLabel";
+import { displayStockUnit } from "@/lib/packageLabel";
 import { calculateProductPromotionGift } from "@/lib/promotion";
 import { getSelectedMoq, resolveVariantPricing } from "@/lib/variants";
 
@@ -546,7 +546,9 @@ export default function CheckoutForm({
 
               <ul className="divide-y divide-laku-line border-b border-laku-line">
                 {group.lines.map((line, lineIndex) => {
-                  const packageType = displayPackageType(line.product.packageType);
+                  const stockUnit = displayStockUnit(
+                    line.product.stockUnit ?? line.product.packageType,
+                  );
                   const { option } = resolveVariantPricing(
                     line.product,
                     line.variant,
@@ -584,7 +586,7 @@ export default function CheckoutForm({
                         <p className="mt-1 text-xs text-laku-muted">
                           {t("checkout.lineQty", {
                             quantity: line.quantity,
-                            packageType,
+                            unit: stockUnit,
                           })}
                           {line.variant && line.variant !== "Default"
                             ? ` · ${line.variant}`

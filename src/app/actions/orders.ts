@@ -63,7 +63,7 @@ function toOrderItem({ product, quantity, variant }: LineItem): CreateOrderItemP
     quantity: packageQuantity * piecesPerPackage,
     priceAtPurchase: "0",
     subtotal: 0,
-    packageType: product.packageType ?? "Box",
+    packageType: product.packageType ?? product.stockUnit ?? "Pieces",
     piecesPerPackage,
     packageQuantity,
     pricePerPackage: 0,

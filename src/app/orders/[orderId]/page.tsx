@@ -26,7 +26,7 @@ import { getTranslations } from "@/i18n/server";
 import { getOrderById } from "@/lib/api/orders";
 import { getSession } from "@/lib/auth/session";
 import { formatCurrency } from "@/lib/format";
-import { displayPackageType } from "@/lib/packageLabel";
+import { displayStockUnit } from "@/lib/packageLabel";
 import { getOrderOfferDisplay } from "@/lib/promotion";
 import {
   formatOrderDateTime,
@@ -342,7 +342,7 @@ export default async function OrderDetailsPage({ params }: { params: Params }) {
 
         <ul className="divide-y divide-laku-line">
           {order.orderItems.map((item, index) => {
-            const packageType = displayPackageType(item.packageType);
+            const stockUnit = displayStockUnit(item.packageType);
             const offer = getOrderOfferDisplay(item);
             const discountLabel =
               offer.percentOff != null
@@ -386,12 +386,10 @@ export default async function OrderDetailsPage({ params }: { params: Params }) {
                 <div className="mt-0.5 flex flex-wrap items-center gap-2 text-xs text-laku-muted">
                   <span>
                     {item.variantNameSnapshot ? `${item.variantNameSnapshot} · ` : ""}
-                    {packageType
-                      ? t("orderDetails.itemUnits", {
-                          quantity: item.packageQuantity ?? 1,
-                          packageType,
-                        })
-                      : `×${item.packageQuantity ?? 1}`}
+                    {t("orderDetails.itemUnits", {
+                      quantity: item.packageQuantity ?? 1,
+                      unit: stockUnit,
+                    })}
                   </span>
                   <FreeItemsBadge
                     count={offer.freePieces}

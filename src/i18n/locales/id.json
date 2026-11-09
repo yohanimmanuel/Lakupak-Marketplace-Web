@@ -269,7 +269,7 @@
     "addToPo": "Tambah ke PO",
     "addedToPo": "Ditambahkan ke PO",
     "poItemsLabel": "Jumlah PO",
-    "poQuantityCount": "{{count}} item",
+    "poQuantityCount": "{{count}} {{unit}}",
     "pricingConfirmedBy": "Harga akan dikonfirmasi oleh {{distributor}}"
   },
   "productReviewsList": {
@@ -400,7 +400,7 @@
     "singleDistributorOnly": "Purchase order tidak boleh berisi produk dari lebih dari satu distributor.",
     "submitPo": "Kirim PO",
     "submitting": "Mengirim PO…",
-    "lineQty": "{{quantity}} {{packageType}}"
+    "lineQty": "{{quantity}} {{unit}}"
   },
   "delivery": {
     "self_pickup": {
@@ -560,7 +560,7 @@
     "returnAccepted": "Pengajuan retur Anda diterima. Kami sedang memproses retur/refund Anda.",
     "returnAcceptedReceived": "Pengajuan retur Anda diterima. Barang retur Anda sudah diterima kami.",
     "returnRejected": "Pengajuan retur Anda ditolak. Jika butuh bantuan, silakan hubungi dukungan.",
-    "itemUnits": "{{quantity}} {{packageType}}",
+    "itemUnits": "×{{quantity}} {{unit}}",
     "freeItems": "+{{count}} gratis",
     "buyXGetY": "Beli {{buy}} Gratis {{free}}",
     "percentOff": "Diskon {{percent}}%",
