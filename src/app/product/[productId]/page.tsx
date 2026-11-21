@@ -118,7 +118,6 @@ export default async function ProductPage({
     name: product.name,
     description: product.description,
     image: product.images.slice(0, 3),
-    sku: product.sku ?? undefined,
     brand: product.brand ? { "@type": "Brand", name: product.brand } : undefined,
     url: shareUrl,
   };

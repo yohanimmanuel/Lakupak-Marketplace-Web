@@ -105,7 +105,7 @@ export type MarketplaceProduct = {
   salesChannel?: string | null;
   brand?: string | null;
   unit?: string | null;
-  sku?: string | null;
+  /** Legacy top-level SKU, no longer returned by MobileMarketplaceProduct. */
   packageType?: string | null;
   stockUnit?: string | null;
   piecesPerPackage?: number | null;
