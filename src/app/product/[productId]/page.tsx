@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { MapPin, ShieldCheck, Star, Store, Truck } from "lucide-react";
+import { MapPin, ShieldCheck, Star, Truck } from "lucide-react";
+import SellerLogo from "@/components/seller/SellerLogo";
 
 import OpenInAppButton from "@/components/app/OpenInAppButton";
 import ContactSellerButton from "@/components/messages/ContactSellerButton";
@@ -267,17 +267,7 @@ export default async function ProductPage({
                   className="flex items-center gap-3 transition-opacity hover:opacity-90"
                 >
                   <span className="relative flex size-11 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-laku-blue/10 text-laku-blue">
-                    {sellerImage ? (
-                      <Image
-                        src={sellerImage}
-                        alt=""
-                        fill
-                        sizes="44px"
-                        className="object-cover"
-                      />
-                    ) : (
-                      <Store className="size-5" aria-hidden />
-                    )}
+                    <SellerLogo src={sellerImage} />
                   </span>
                   <div className="min-w-0 flex-1">
                     <p className="truncate text-sm font-semibold text-laku-ink">
@@ -292,17 +282,7 @@ export default async function ProductPage({
               ) : (
                 <div className="flex items-center gap-3">
                   <span className="relative flex size-11 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-laku-blue/10 text-laku-blue">
-                    {sellerImage ? (
-                      <Image
-                        src={sellerImage}
-                        alt=""
-                        fill
-                        sizes="44px"
-                        className="object-cover"
-                      />
-                    ) : (
-                      <Store className="size-5" aria-hidden />
-                    )}
+                    <SellerLogo src={sellerImage} />
                   </span>
                   <div className="min-w-0">
                     <p className="truncate text-sm font-semibold text-laku-ink">
