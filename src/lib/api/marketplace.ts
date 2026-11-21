@@ -42,7 +42,6 @@ const PRODUCT_FIELDS = `
   salesChannel
   brand
   unit
-  sku
   publishedAt
   piecesPerPackage
   packageType
