@@ -4,15 +4,15 @@ import { useState } from "react";
 import Image from "next/image";
 import { Store } from "lucide-react";
 
-type SellerLogoProps = { src?: string | null };
+type SellerLogoProps = { src?: string | null; iconClassName?: string; sizes?: string };
 
-export default function SellerLogo({ src }: SellerLogoProps) {
+export default function SellerLogo({ src, iconClassName = "size-5", sizes = "44px" }: SellerLogoProps) {
   const [failedSrc, setFailedSrc] = useState<string | null>(null);
   const validSrc = src?.trim();
   const isPlaceholder = validSrc?.split("?")[0].endsWith("/default-avatar.png");
 
   if (!validSrc || isPlaceholder || failedSrc === validSrc) {
-    return <Store className="size-5" aria-hidden />;
+    return <Store className={iconClassName} aria-hidden />;
   }
 
   return (
@@ -20,7 +20,7 @@ export default function SellerLogo({ src }: SellerLogoProps) {
       src={validSrc}
       alt=""
       fill
-      sizes="44px"
+      sizes={sizes}
       className="object-cover"
       onError={() => setFailedSrc(validSrc)}
     />
