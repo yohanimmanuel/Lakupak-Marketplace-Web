@@ -2,7 +2,8 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { ImageIcon, MapPin, Store, Truck } from "lucide-react";
+import { ImageIcon, MapPin, Truck } from "lucide-react";
+import SellerLogo from "@/components/seller/SellerLogo";
 
 import { useTranslations } from "@/i18n/client";
 import type { MarketplaceProduct } from "@/lib/api/types";
@@ -79,11 +80,7 @@ export default function ProductCard({ product, priority = false, appendOrderId }
 
         <div className="mb-1.5 flex items-center gap-1.5">
           <span className="relative flex size-5 shrink-0 items-center justify-center overflow-hidden rounded-full bg-laku-blue/10 text-laku-blue">
-            {sellerLogo ? (
-              <Image src={sellerLogo} alt="" fill sizes="20px" className="object-cover" />
-            ) : (
-              <Store className="size-3" aria-hidden />
-            )}
+            <SellerLogo src={sellerLogo} iconClassName="size-3" sizes="20px" />
           </span>
           <span className="truncate text-xs font-semibold text-laku-ink">
             {sellerName}
