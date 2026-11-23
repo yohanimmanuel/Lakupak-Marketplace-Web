@@ -14,6 +14,8 @@ export async function addToCartAction(
   productId: string,
   quantity: number,
   variant?: string,
+  packageType?: string,
+  piecesPerPackage?: number,
 ): Promise<ActionState> {
   const session = await getSession();
   if (!session) return { ok: false, error: "unauthenticated" };
@@ -24,13 +26,17 @@ export async function addToCartAction(
   if (!product) return { ok: false, error: t("checkout.errors.productMissing") };
 
   const variantLabel = variant?.trim() || "Default";
-  const minQuantity = getMinPackageQuantity(product, variantLabel);
+  const validatedLevel = product.stockLevels?.find(level => level.name === packageType && level.piecesPerUnit === piecesPerPackage);
+  const ratio = validatedLevel?.piecesPerUnit ?? (Number(product.piecesPerPackage) || 1);
+  const minQuantity = Math.max(1, Math.ceil(getMinPackageQuantity(product, variantLabel) * (Number(product.piecesPerPackage) || 1) / ratio));
   const result = await addToCart({
     userId: session.user.id,
     token: session.token,
     product,
     quantity: Math.max(minQuantity, Math.trunc(quantity) || 1),
     variant: variantLabel,
+    packageType: validatedLevel?.name ?? product.packageType ?? product.stockUnit ?? "Pieces",
+    piecesPerPackage: ratio,
   });
 
   if (!result.ok) return { ok: false, error: result.error };

@@ -111,6 +111,8 @@ async function resolveLineItems(params: {
     product: item.productData,
     quantity: getCartQuantity(item),
     variant: getCartVariant(item),
+    packageType: item.metadata?.packageType,
+    piecesPerPackage: item.metadata?.piecesPerPackage,
   }));
 }
 

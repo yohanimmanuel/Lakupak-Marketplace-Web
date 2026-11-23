@@ -144,7 +144,7 @@ export default function ProductPurchasePanel({
       return;
     }
     startTransition(async () => {
-      const result = await addToCartAction(product.id, purchaseQuantity, variantName);
+      const result = await addToCartAction(product.id, purchaseQuantity, variantName, selectedLevel.name, pieces);
       if (result.ok) {
         setAdded(true);
         setTimeout(() => setAdded(false), 2500);
