@@ -199,7 +199,10 @@ export default function ProductPurchasePanel({
                   key={level.name}
                   type="button"
                   aria-pressed={active}
-                  onClick={() => { setSelectedLevelName(level.name); setQuantity(1); }}
+                  onClick={() => {
+                    setSelectedLevelName(level.name);
+                    setQuantity(getMinPackageQuantity(product, formatVariantName(selected, option), level.piecesPerUnit, level.name));
+                  }}
                   className={`rounded-md border px-3 py-2 text-xs font-medium transition-colors ${active ? "border-laku-blue bg-laku-blue/10 text-laku-blue" : "border-laku-line bg-white text-laku-ink hover:border-laku-blue"}`}
                 >
                   {level.name}
@@ -262,7 +265,7 @@ export default function ProductPurchasePanel({
           <p className="text-xs font-semibold text-laku-muted">{t("product.quantity")}</p>
           <div className="mt-2 flex flex-wrap items-center gap-2.5">
             <QuantityStepper
-              value={quantity}
+              value={purchaseQuantity}
               onChange={setQuantity}
               min={minQuantity}
               max={maxQuantity}
