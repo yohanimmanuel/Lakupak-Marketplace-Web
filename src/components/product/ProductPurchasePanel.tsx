@@ -12,6 +12,7 @@ import { addEditCartItem, beginEditCart, endEditCart, landedByBrowserBack, readE
 import { clearAppendOrder, rememberAppendOrder } from "@/lib/share";
 import type { MarketplaceProduct } from "@/lib/api/types";
 import { displayStockUnit } from "@/lib/packageLabel";
+import { getMinPackageQuantity } from "@/lib/checkout";
 import {
   findSelectedVariantOption,
   formatVariantName,
