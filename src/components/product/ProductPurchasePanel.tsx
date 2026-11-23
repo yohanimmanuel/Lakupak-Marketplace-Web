@@ -273,7 +273,7 @@ export default function ProductPurchasePanel({
             />
           </div>
           <p className="mt-2 text-xs text-laku-muted">{(purchaseQuantity * pieces).toLocaleString()} pieces</p>
-          {moq ? (
+          {minQuantity > 1 ? (
             <p
               className={`mt-2 text-xs font-medium ${
                 moqMet ? "text-laku-muted" : "text-laku-alert"
