@@ -320,11 +320,9 @@ export default function CartView({ items: serverItems, appendOrderId, editOrderI
                           {variant}
                         </p>
                       ) : null}
-                      {packageType ? (
-                        <p className="mt-0.5 text-xs text-laku-muted">
-                          {t("cart.packageInfo", { packageType })}
-                        </p>
-                      ) : null}
+                      <p className="mt-0.5 text-xs text-laku-muted">
+                        {packageType || "Pieces"}
+                      </p>
 
                       <p className="mt-2 text-xs text-laku-muted">{(quantity * piecesPerPackage).toLocaleString()} pieces</p>
                       <div className="mt-3 flex flex-wrap items-center gap-2.5">
