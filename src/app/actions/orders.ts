@@ -58,7 +58,7 @@ function toOrderItem({ product, quantity, variant, packageType, piecesPerPackage
   const piecesPerPackage = configured?.piecesPerUnit ?? (Number(product.piecesPerPackage) || 1);
   const { variantOptionId, option } = resolveVariantPricing(product, variant);
   const packageQuantity = Math.max(
-    Math.max(1, Math.ceil((Number(option?.moq) || Number(product.moq) || 1) / piecesPerPackage)),
+    getMinPackageQuantity(product, variant, piecesPerPackage, configured?.name ?? packageType),
     Math.trunc(quantity) || 1,
   );
   const variantLabel = variant?.trim() || "Default";
@@ -103,7 +103,7 @@ async function resolveLineItems(params: {
     return [
       {
         product,
-        quantity: Math.max(requested, getMinPackageQuantity(product, variant, params.piecesPerPackage)),
+        quantity: Math.max(requested, getMinPackageQuantity(product, variant, params.piecesPerPackage, params.packageType ?? undefined)),
         variant,
         packageType: params.packageType ?? undefined,
         piecesPerPackage: params.piecesPerPackage,
@@ -141,7 +141,7 @@ async function resolveEditCartLines(raw: string): Promise<LineItem[]> {
     const requested = Math.max(1, Number(record.quantity) || 1);
     lines.push({
       product,
-      quantity: Math.max(requested, getMinPackageQuantity(product, variant, Number(record.piecesPerPackage) || undefined)),
+      quantity: Math.max(requested, getMinPackageQuantity(product, variant, Number(record.piecesPerPackage) || undefined, String(record.packageType ?? '') || undefined)),
       variant,
       packageType: String(record.packageType ?? "") || undefined,
       piecesPerPackage: Number(record.piecesPerPackage) || undefined,

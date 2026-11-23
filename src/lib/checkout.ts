@@ -174,9 +174,12 @@ export function getMinPackageQuantity(
   product: MarketplaceProduct,
   variantName?: string | null,
   piecesPerPackage?: number,
+  packageType?: string,
 ): number {
   const pieces = Math.max(1, Number(piecesPerPackage ?? product.piecesPerPackage) || 1);
   const { option } = resolveVariantPricing(product, variantName);
+  const levelMoq = packageType ? option?.moqByStockLevel?.[packageType] : undefined;
+  if (levelMoq != null && Number.isSafeInteger(levelMoq) && levelMoq >= 0) return Math.max(1, levelMoq);
   const moq = Number(option?.moq);
   if (Number.isFinite(moq) && moq > 0) {
     return Math.max(1, Math.ceil(moq / pieces));
@@ -200,9 +203,12 @@ export function meetsMoq(
   packageQuantity: number,
   variantName?: string | null,
   piecesPerPackage?: number,
+  packageType?: string,
 ): boolean {
   const pieces = Math.max(1, Number(piecesPerPackage ?? product.piecesPerPackage) || 1);
   const { option } = resolveVariantPricing(product, variantName);
+  const levelMoq = packageType ? option?.moqByStockLevel?.[packageType] : undefined;
+  if (levelMoq != null && Number.isSafeInteger(levelMoq) && levelMoq >= 0) return packageQuantity >= Math.max(1, levelMoq);
   const moq = Number(option?.moq);
   if (Number.isFinite(moq) && moq > 0) {
     return packageQuantity * pieces >= moq;

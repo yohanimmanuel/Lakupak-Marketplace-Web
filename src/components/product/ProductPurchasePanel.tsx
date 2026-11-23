@@ -12,10 +12,10 @@ import { addEditCartItem, beginEditCart, endEditCart, landedByBrowserBack, readE
 import { clearAppendOrder, rememberAppendOrder } from "@/lib/share";
 import type { MarketplaceProduct } from "@/lib/api/types";
 import { displayStockUnit } from "@/lib/packageLabel";
+import { getMinPackageQuantity } from "@/lib/checkout";
 import {
   findSelectedVariantOption,
   formatVariantName,
-  getSelectedMoq,
   getSelectedStock,
   getSelectedStockStatus,
   initialVariantSelection,
@@ -54,10 +54,9 @@ export default function ProductPurchasePanel({
   const [selectedLevelName, setSelectedLevelName] = useState(stockLevels[0].name);
   const selectedLevel = stockLevels.find((level) => level.name === selectedLevelName) ?? stockLevels[0];
   const pieces = selectedLevel.piecesPerUnit;
-  const moq = getSelectedMoq(product, option);
   const stock = getSelectedStock(product, option);
   const stockStatus = getSelectedStockStatus(product, option);
-  const minQuantity = moq ? Math.max(1, Math.ceil(moq / pieces)) : 1;
+  const minQuantity = getMinPackageQuantity(product, formatVariantName(selected, option), pieces, selectedLevel.name);
   const maxQuantity =
     stock > 0 ? Math.max(1, Math.floor(stock / pieces)) : 9999;
 
@@ -70,7 +69,7 @@ export default function ProductPurchasePanel({
   }
 
   const purchaseQuantity = Math.min(maxQuantity, Math.max(minQuantity, quantity));
-  const moqMet = !moq || purchaseQuantity * pieces >= moq;
+  const moqMet = purchaseQuantity >= minQuantity;
   const outOfStock = stockStatus === "Out of Stock" || stock <= 0;
   const canPurchase = !pending && !outOfStock && stock >= pieces && moqMet;
   const variantName = formatVariantName(selected, option);
@@ -272,7 +271,7 @@ export default function ProductPurchasePanel({
             />
           </div>
           <p className="mt-2 text-xs text-laku-muted">{(purchaseQuantity * pieces).toLocaleString()} pieces</p>
-          {moq ? (
+          {minQuantity > 1 ? (
             <p
               className={`mt-2 text-xs font-medium ${
                 moqMet ? "text-laku-muted" : "text-laku-alert"
