@@ -390,6 +390,9 @@ export default async function OrderDetailsPage({ params }: { params: Params }) {
                       quantity: item.packageQuantity ?? 1,
                       unit: stockUnit,
                     })}
+                    {Math.max(1, Number(item.piecesPerPackage) || 1) > 1
+                      ? ` (${Math.max(1, Number(item.piecesPerPackage) || 1)} pieces)`
+                      : ""}
                   </span>
                   <FreeItemsBadge
                     count={offer.freePieces}
