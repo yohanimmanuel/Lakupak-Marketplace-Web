@@ -50,6 +50,9 @@ type GroupShippingInput = {
 
 function toOrderItem({ product, quantity, variant, packageType, piecesPerPackage: requestedRatio }: LineItem): CreateOrderItemPayload {
   const configured = product.stockLevels?.find(level => level.name === packageType && level.piecesPerUnit === requestedRatio);
+  if (packageType && requestedRatio && !configured) {
+    throw new Error("The selected stock level is no longer available. Please review your cart.");
+  }
   const piecesPerPackage = configured?.piecesPerUnit ?? (Number(product.piecesPerPackage) || 1);
   const { variantOptionId, option } = resolveVariantPricing(product, variant);
   const packageQuantity = Math.max(
