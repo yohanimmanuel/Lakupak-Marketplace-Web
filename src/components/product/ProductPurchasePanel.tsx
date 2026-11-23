@@ -271,6 +271,7 @@ export default function ProductPurchasePanel({
               disabled={pending || outOfStock}
             />
           </div>
+          <p className="mt-2 text-xs text-laku-muted">{(purchaseQuantity * pieces).toLocaleString()} pieces</p>
           {moq ? (
             <p
               className={`mt-2 text-xs font-medium ${
@@ -291,9 +292,6 @@ export default function ProductPurchasePanel({
               count: purchaseQuantity,
               unit: displayStockUnit(selectedLevel.name),
             })}
-          </p>
-          <p className="text-xs text-laku-muted">
-            1 {displayStockUnit(selectedLevel.name)} = {pieces.toLocaleString()} pieces
           </p>
           <p className="text-xs text-laku-muted">
             {t("product.pricingConfirmedBy", { distributor: distributorName })}
