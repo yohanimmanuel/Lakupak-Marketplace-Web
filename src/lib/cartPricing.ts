@@ -23,13 +23,14 @@ export function getBaseLineTotal(
   product: MarketplaceProduct,
   variant: string | null | undefined,
   quantity: number,
+  piecesPerPackage?: number,
 ): number {
-  const pieces = Number(product?.piecesPerPackage) || 1;
+  const pieces = Number(piecesPerPackage ?? product?.piecesPerPackage) || 1;
   const { unitPrice } = resolveVariantPricing(product, variant);
   return unitPrice * pieces * quantity;
 }
 
 /** Package price × qty using the cart line's stored variant (mobile math). */
 export function getCartLineTotal(item: CartItem): number {
-  return getBaseLineTotal(item.productData, getCartVariant(item), getCartQuantity(item));
+  return getBaseLineTotal(item.productData, getCartVariant(item), getCartQuantity(item), item.metadata?.piecesPerPackage);
 }
