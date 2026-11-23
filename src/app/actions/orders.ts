@@ -51,9 +51,9 @@ type GroupShippingInput = {
 function toOrderItem({ product, quantity, variant, packageType, piecesPerPackage: requestedRatio }: LineItem): CreateOrderItemPayload {
   const configured = product.stockLevels?.find(level => level.name === packageType && level.piecesPerUnit === requestedRatio);
   const piecesPerPackage = configured?.piecesPerUnit ?? (Number(product.piecesPerPackage) || 1);
-  const { variantOptionId } = resolveVariantPricing(product, variant);
+  const { variantOptionId, option } = resolveVariantPricing(product, variant);
   const packageQuantity = Math.max(
-    getMinPackageQuantity(product, variant),
+    Math.max(1, Math.ceil((Number(option?.moq) || Number(product.moq) || 1) / piecesPerPackage)),
     Math.trunc(quantity) || 1,
   );
   const variantLabel = variant?.trim() || "Default";
