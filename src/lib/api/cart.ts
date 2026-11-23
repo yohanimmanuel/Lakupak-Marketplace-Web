@@ -83,6 +83,8 @@ export async function addToCart(params: {
   product: MarketplaceProduct;
   quantity: number;
   variant?: string;
+  packageType?: string;
+  piecesPerPackage?: number;
 }): Promise<MutationResult<unknown>> {
   return graphqlMutate(
     ADD_TO_CART,
@@ -93,6 +95,8 @@ export async function addToCart(params: {
         productData: params.product,
         quantity: params.quantity,
         variant: params.variant ?? "Default",
+        packageType: params.packageType,
+        piecesPerPackage: params.piecesPerPackage,
       },
     },
     params.token,
