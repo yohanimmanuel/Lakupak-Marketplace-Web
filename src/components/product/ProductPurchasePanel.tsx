@@ -16,7 +16,6 @@ import { getMinPackageQuantity } from "@/lib/checkout";
 import {
   findSelectedVariantOption,
   formatVariantName,
-  getSelectedMoq,
   getSelectedStock,
   getSelectedStockStatus,
   initialVariantSelection,
@@ -55,7 +54,6 @@ export default function ProductPurchasePanel({
   const [selectedLevelName, setSelectedLevelName] = useState(stockLevels[0].name);
   const selectedLevel = stockLevels.find((level) => level.name === selectedLevelName) ?? stockLevels[0];
   const pieces = selectedLevel.piecesPerUnit;
-  const moq = getSelectedMoq(product, option);
   const stock = getSelectedStock(product, option);
   const stockStatus = getSelectedStockStatus(product, option);
   const minQuantity = getMinPackageQuantity(product, formatVariantName(selected, option), pieces, selectedLevel.name);
