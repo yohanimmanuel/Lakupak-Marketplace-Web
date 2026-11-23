@@ -101,7 +101,7 @@ async function resolveLineItems(params: {
     return [
       {
         product,
-        quantity: Math.max(requested, getMinPackageQuantity(product, variant)),
+        quantity: Math.max(requested, getMinPackageQuantity(product, variant, params.piecesPerPackage)),
         variant,
         packageType: params.packageType ?? undefined,
         piecesPerPackage: params.piecesPerPackage,
@@ -139,7 +139,7 @@ async function resolveEditCartLines(raw: string): Promise<LineItem[]> {
     const requested = Math.max(1, Number(record.quantity) || 1);
     lines.push({
       product,
-      quantity: Math.max(requested, getMinPackageQuantity(product, variant)),
+      quantity: Math.max(requested, getMinPackageQuantity(product, variant, Number(record.piecesPerPackage) || undefined)),
       variant,
       packageType: String(record.packageType ?? "") || undefined,
       piecesPerPackage: Number(record.piecesPerPackage) || undefined,

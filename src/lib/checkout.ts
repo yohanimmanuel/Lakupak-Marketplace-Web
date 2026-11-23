@@ -173,8 +173,9 @@ export function getPackagePrice(
 export function getMinPackageQuantity(
   product: MarketplaceProduct,
   variantName?: string | null,
+  piecesPerPackage?: number,
 ): number {
-  const pieces = Math.max(1, Number(product.piecesPerPackage) || 1);
+  const pieces = Math.max(1, Number(piecesPerPackage ?? product.piecesPerPackage) || 1);
   const { option } = resolveVariantPricing(product, variantName);
   const moq = Number(option?.moq);
   if (Number.isFinite(moq) && moq > 0) {
