@@ -4,6 +4,8 @@ export type EditCartLine = {
   productId: string;
   quantity: number;
   variant: string;
+  packageType?: string;
+  piecesPerPackage?: number;
   product: MarketplaceProduct;
 };
 
@@ -120,39 +122,52 @@ export function addEditCartItem(input: {
   product: MarketplaceProduct;
   quantity: number;
   variant?: string;
+  packageType?: string;
+  piecesPerPackage?: number;
 }) {
   const current = readEditCart();
   if (!current) return;
   const variant = input.variant?.trim() || "Default";
   const items = [...current.items];
+  const packageType = input.packageType ?? input.product.packageType ?? input.product.stockUnit ?? 'Pieces';
+  const piecesPerPackage = input.piecesPerPackage ?? input.product.piecesPerPackage ?? 1;
   const index = items.findIndex(
-    (item) => item.productId === input.product.id && item.variant === variant,
+    (item) => item.productId === input.product.id && item.variant === variant &&
+      (item.packageType ?? item.product.packageType ?? item.product.stockUnit ?? 'Pieces') === packageType &&
+      (item.piecesPerPackage ?? item.product.piecesPerPackage ?? 1) === piecesPerPackage,
   );
   if (index >= 0) {
     items[index] = {
       ...items[index],
       quantity: items[index].quantity + input.quantity,
       product: input.product,
+      packageType,
+      piecesPerPackage,
     };
   } else {
     items.unshift({
       productId: input.product.id,
       quantity: input.quantity,
       variant,
+      packageType,
+      piecesPerPackage,
       product: input.product,
     });
   }
   saveEditCart({ orderId: current.orderId, items });
 }
 
-export function updateEditCartLine(productId: string, variant: string, quantity: number) {
+export function updateEditCartLine(productId: string, variant: string, quantity: number, packageType?: string, piecesPerPackage?: number) {
   const current = readEditCart();
   if (!current) return;
+  const matches = (item: EditCartLine) => item.productId === productId && item.variant === variant &&
+    (packageType === undefined || (item.packageType ?? item.product.packageType ?? item.product.stockUnit ?? 'Pieces') === packageType) &&
+    (piecesPerPackage === undefined || (item.piecesPerPackage ?? item.product.piecesPerPackage ?? 1) === piecesPerPackage);
   const items =
     quantity < 1
-      ? current.items.filter((item) => !(item.productId === productId && item.variant === variant))
+      ? current.items.filter((item) => !matches(item))
       : current.items.map((item) =>
-          item.productId === productId && item.variant === variant
+          matches(item)
             ? { ...item, quantity }
             : item,
         );

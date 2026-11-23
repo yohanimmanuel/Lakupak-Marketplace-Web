@@ -353,7 +353,7 @@ export default async function OrderDetailsPage({ params }: { params: Params }) {
                     })
                   : null;
             return (
-            <li key={`${item.productId ?? index}`} className="flex gap-3 py-3 first:pt-0">
+            <li key={`${item.productId ?? "unknown"}-${item.variantNameSnapshot ?? "Default"}-${item.packageType ?? "Pieces"}-${item.piecesPerPackage ?? 1}-${index}`} className="flex gap-3 py-3 first:pt-0">
               <div className="relative size-16 shrink-0 overflow-hidden rounded-lg bg-laku-chip">
                 {item.images?.[0] ? (
                   <Image

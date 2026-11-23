@@ -33,9 +33,9 @@ type Props = {
   editOrderId?: string | null;
 };
 
-function editLineId(productId: string, variant: string): number {
+function editLineId(productId: string, variant: string, packageType: string, piecesPerPackage: number): number {
   let hash = 2166136261;
-  const key = `${productId}\0${variant}`;
+  const key = JSON.stringify([productId, variant, packageType, piecesPerPackage]);
   for (let i = 0; i < key.length; i += 1) {
     hash ^= key.charCodeAt(i);
     hash = Math.imul(hash, 16777619);
@@ -50,10 +50,10 @@ function editSessionToCartItems(
   if (!session || session.orderId !== orderId) return [];
   const now = new Date().toISOString();
   return session.items.map((item) => ({
-    id: editLineId(item.productId, item.variant),
+    id: editLineId(item.productId, item.variant, item.packageType ?? item.product.packageType ?? item.product.stockUnit ?? 'Pieces', item.piecesPerPackage ?? item.product.piecesPerPackage ?? 1),
     productId: item.productId,
     productData: item.product,
-    metadata: { quantity: item.quantity, variant: item.variant, selected: true },
+    metadata: { quantity: item.quantity, variant: item.variant, packageType: item.packageType ?? item.product.packageType ?? item.product.stockUnit ?? 'Pieces', piecesPerPackage: item.piecesPerPackage ?? item.product.piecesPerPackage ?? 1, selected: true },
     createdAt: now,
     updatedAt: now,
   }));
@@ -146,7 +146,7 @@ export default function CartView({ items: serverItems, appendOrderId, editOrderI
       setError(null);
       if (sessionMatches) {
         const line = items.find((item) => item.id === itemId);
-        if (line) updateEditCartLine(line.productId, getCartVariant(line), next);
+        if (line) updateEditCartLine(line.productId, getCartVariant(line), next, line.metadata?.packageType, line.metadata?.piecesPerPackage);
         return true;
       }
       const result = await updateCartItemAction(itemId, next);
@@ -196,7 +196,7 @@ export default function CartView({ items: serverItems, appendOrderId, editOrderI
     startTransition(async () => {
       if (sessionMatches) {
         const line = items.find((item) => item.id === itemId);
-        if (line) updateEditCartLine(line.productId, getCartVariant(line), 0);
+        if (line) updateEditCartLine(line.productId, getCartVariant(line), 0, line.metadata?.packageType, line.metadata?.piecesPerPackage);
         return;
       }
       const result = await removeCartItemAction(itemId);

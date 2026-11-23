@@ -567,7 +567,7 @@ export default function CheckoutForm({
                   const lineTotal = lineTotalFor(line);
                   return (
                     <li
-                      key={`${line.product.id}-${line.variant ?? "Default"}-${lineIndex}`}
+                      key={`${line.product.id}-${line.variant ?? "Default"}-${line.packageType ?? "Pieces"}-${line.piecesPerPackage ?? 1}-${lineIndex}`}
                       className="flex gap-4 px-5 py-4"
                     >
                       <div className="relative size-16 shrink-0 overflow-hidden rounded-lg bg-laku-chip">
