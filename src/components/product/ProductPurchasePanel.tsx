@@ -72,7 +72,7 @@ export default function ProductPurchasePanel({
   const purchaseQuantity = Math.min(maxQuantity, Math.max(minQuantity, quantity));
   const moqMet = !moq || purchaseQuantity * pieces >= moq;
   const outOfStock = stockStatus === "Out of Stock" || stock <= 0;
-  const canPurchase = !pending && !outOfStock && moqMet;
+  const canPurchase = !pending && !outOfStock && stock >= pieces && moqMet;
   const variantName = formatVariantName(selected, option);
   const loginHref = `/login?next=${encodeURIComponent(`/product/${product.id}`)}`;
   const distributorName =
@@ -133,7 +133,7 @@ export default function ProductPurchasePanel({
 
   const handleAddToPo = () => {
     if (!signedIn) return requireAuth();
-    if (!moqMet) return;
+    if (!moqMet || stock < pieces) return;
 
     setError(null);
     if (appendOrderId) {
