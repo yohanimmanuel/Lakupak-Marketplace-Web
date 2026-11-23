@@ -48,7 +48,12 @@ export default function ProductPurchasePanel({
     [product, selected],
   );
 
-  const pieces = Math.max(1, Number(product.piecesPerPackage) || 1);
+  const stockLevels = product.stockLevels?.length
+    ? product.stockLevels
+    : [{ name: product.stockUnit || product.packageType || "Pieces", piecesPerUnit: Math.max(1, Number(product.piecesPerPackage) || 1) }];
+  const [selectedLevelName, setSelectedLevelName] = useState(stockLevels[0].name);
+  const selectedLevel = stockLevels.find((level) => level.name === selectedLevelName) ?? stockLevels[0];
+  const pieces = selectedLevel.piecesPerUnit;
   const moq = getSelectedMoq(product, option);
   const stock = getSelectedStock(product, option);
   const stockStatus = getSelectedStockStatus(product, option);
@@ -159,6 +164,8 @@ export default function ProductPurchasePanel({
       productId: product.id,
       quantity: String(purchaseQuantity),
     });
+    params.set("packageType", selectedLevel.name);
+    params.set("piecesPerPackage", String(pieces));
     if (variantName && variantName !== "Default") {
       params.set("variant", variantName);
     }
@@ -182,6 +189,15 @@ export default function ProductPurchasePanel({
 
   return (
     <div className="mt-8 rounded-2xl border border-laku-line p-5">
+      {stockLevels.length > 1 ? (
+        <div className="mb-5">
+          <label htmlFor="purchase-stock-level" className="mb-2 block text-xs font-semibold text-laku-muted">Stock level</label>
+          <select id="purchase-stock-level" value={selectedLevel.name} onChange={(event) => { setSelectedLevelName(event.target.value); setQuantity(1); }} className="w-full rounded-lg border border-laku-line bg-white px-3 py-2 text-sm text-laku-ink">
+            {stockLevels.map((level) => <option key={level.name} value={level.name}>{level.name} ({level.piecesPerUnit} pieces)</option>)}
+          </select>
+          <p className="mt-1 text-xs text-laku-muted">1 {selectedLevel.name} = {pieces} pieces</p>
+        </div>
+      ) : null}
       {hasVariants ? (
         <div className="mb-5 space-y-4">
           {definitions.map((definition) => (
