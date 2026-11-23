@@ -208,7 +208,6 @@ export default function ProductPurchasePanel({
               );
             })}
           </div>
-          <p className="mt-2 text-xs text-laku-muted">1 {selectedLevel.name} = {pieces} pieces</p>
         </div>
       ) : null}
       {hasVariants ? (
@@ -290,7 +289,7 @@ export default function ProductPurchasePanel({
           <p className="text-2xl font-bold text-laku-ink">
             {t("product.poQuantityCount", {
               count: purchaseQuantity,
-              unit: displayStockUnit(product.stockUnit ?? product.packageType),
+              unit: displayStockUnit(selectedLevel.name),
             })}
           </p>
           <p className="text-xs text-laku-muted">
