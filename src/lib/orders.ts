@@ -65,7 +65,7 @@ export function getDistributorUserId(order: Order): number | null {
 export function getItemCount(order: Order): number {
   return order.orderItems.reduce(
     (total, item) =>
-      total + (item.packageQuantity ?? 1) + getOrderItemFreeQuantity(item),
+      total + Math.max(1, Number(item.packageQuantity) || 1) * Math.max(1, Number(item.piecesPerPackage) || 1),
     0,
   );
 }
