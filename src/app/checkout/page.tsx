@@ -138,6 +138,8 @@ export default async function CheckoutPage({
             product: item.productData,
             quantity: getCartQuantity(item),
             variant: item.metadata?.variant?.trim() || "Default",
+            packageType: item.metadata?.packageType,
+            piecesPerPackage: item.metadata?.piecesPerPackage,
           })),
         ),
     getProfile({ userId: session.user.id, token: session.token }),
