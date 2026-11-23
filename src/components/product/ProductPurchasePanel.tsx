@@ -208,7 +208,6 @@ export default function ProductPurchasePanel({
               );
             })}
           </div>
-          <p className="mt-2 text-xs text-laku-muted">1 {selectedLevel.name} = {pieces} pieces</p>
         </div>
       ) : null}
       {hasVariants ? (
