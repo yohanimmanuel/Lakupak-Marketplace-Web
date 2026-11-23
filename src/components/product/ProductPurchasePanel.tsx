@@ -138,7 +138,7 @@ export default function ProductPurchasePanel({
     setError(null);
     if (appendOrderId) {
       beginEditCart(appendOrderId);
-      addEditCartItem({ product, quantity: purchaseQuantity, variant: variantName });
+      addEditCartItem({ product, quantity: purchaseQuantity, variant: variantName, packageType: selectedLevel.name, piecesPerPackage: pieces });
       setAdded(true);
       setTimeout(() => setAdded(false), 2500);
       return;
