@@ -320,9 +320,9 @@ export default function CartView({ items: serverItems, appendOrderId, editOrderI
                           {variant}
                         </p>
                       ) : null}
-                      {packageType ? (
+                      {(
                         <p className="mt-0.5 text-xs text-laku-muted">
-                          {t("cart.packageInfo", { packageType })}
+                          {packageType || "Pieces"}
                         </p>
                       ) : null}
 
