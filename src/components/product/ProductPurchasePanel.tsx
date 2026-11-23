@@ -57,7 +57,7 @@ export default function ProductPurchasePanel({
   const moq = getSelectedMoq(product, option);
   const stock = getSelectedStock(product, option);
   const stockStatus = getSelectedStockStatus(product, option);
-  const minQuantity = moq ? Math.max(1, Math.ceil(moq / pieces)) : 1;
+  const minQuantity = getMinPackageQuantity(product, formatVariantName(selected, option), pieces, selectedLevel.name);
   const maxQuantity =
     stock > 0 ? Math.max(1, Math.floor(stock / pieces)) : 9999;
 
@@ -70,7 +70,7 @@ export default function ProductPurchasePanel({
   }
 
   const purchaseQuantity = Math.min(maxQuantity, Math.max(minQuantity, quantity));
-  const moqMet = !moq || purchaseQuantity * pieces >= moq;
+  const moqMet = purchaseQuantity >= minQuantity;
   const outOfStock = stockStatus === "Out of Stock" || stock <= 0;
   const canPurchase = !pending && !outOfStock && stock >= pieces && moqMet;
   const variantName = formatVariantName(selected, option);
