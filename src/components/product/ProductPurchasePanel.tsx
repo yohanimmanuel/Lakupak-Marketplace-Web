@@ -293,6 +293,9 @@ export default function ProductPurchasePanel({
             })}
           </p>
           <p className="text-xs text-laku-muted">
+            1 {displayStockUnit(selectedLevel.name)} = {pieces.toLocaleString()} pieces
+          </p>
+          <p className="text-xs text-laku-muted">
             {t("product.pricingConfirmedBy", { distributor: distributorName })}
           </p>
         </div>
