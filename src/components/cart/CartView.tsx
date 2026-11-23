@@ -273,7 +273,6 @@ export default function CartView({ items: serverItems, appendOrderId, editOrderI
                 const { option } = resolveVariantPricing(product, variant);
                 const packageType = displayPackageType(item.metadata?.packageType ?? product.packageType);
                 const piecesPerPackage = item.metadata?.piecesPerPackage ?? product.piecesPerPackage ?? 1;
-                const moq = getSelectedMoq(product, option);
                 const minQuantity = getMinPackageQuantity(product, getCartVariant(item), piecesPerPackage, packageType);
                 const maxQuantity = Math.max(1, Math.floor((Number(option?.stockQuantity) || Number(product.stock) || 0) / piecesPerPackage));
                 const moqMet = quantity >= minQuantity;
@@ -345,7 +344,7 @@ export default function CartView({ items: serverItems, appendOrderId, editOrderI
                           {t("cart.remove")}
                         </button>
                       </div>
-                      {moq ? (
+                      {minQuantity > 1 ? (
                         <p
                           className={`mt-2 text-xs font-medium ${
                             moqMet ? "text-laku-muted" : "text-laku-alert"
