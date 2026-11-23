@@ -62,6 +62,9 @@ export function normalizeVariantOptions(
       sellingPrice: Number(row.sellingPrice) || 0,
       originalSellingPrice: Number(row.originalSellingPrice) || null,
       moq: row.moq ?? null,
+      moqByStockLevel: row.moqByStockLevel && typeof row.moqByStockLevel === "object" && !Array.isArray(row.moqByStockLevel)
+        ? row.moqByStockLevel
+        : {},
       stockQuantity: Number(row.stockQuantity) || 0,
       lowStockThreshold: Number(row.lowStockThreshold) || 0,
       stockStatus: row.stockStatus ?? "In Stock",
