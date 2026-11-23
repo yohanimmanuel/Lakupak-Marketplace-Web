@@ -133,7 +133,7 @@ export default function CheckoutForm({
   const lineTotalFor = (line: CheckoutLine) =>
     typeof line.displaySubtotal === "number"
       ? line.displaySubtotal
-      : getBaseLineTotal(line.product, line.variant, line.quantity);
+      : getBaseLineTotal(line.product, line.variant, line.quantity, line.piecesPerPackage);
   const distributorSummaries = [...groups.entries()].map(([key, group]) => ({
     key,
     distributor: group.label || t("product.distributorFallback"),
