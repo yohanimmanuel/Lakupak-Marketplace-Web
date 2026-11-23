@@ -54,6 +54,8 @@ export default function EditCartCheckout({
     product: item.product,
     quantity: Math.max(1, item.quantity),
     variant: item.variant || "Default",
+    packageType: item.packageType ?? item.product.packageType ?? item.product.stockUnit ?? "Pieces",
+    piecesPerPackage: item.piecesPerPackage ?? item.product.piecesPerPackage ?? 1,
   }));
 
   if (addedLines.length === 0) {
