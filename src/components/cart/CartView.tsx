@@ -270,7 +270,8 @@ export default function CartView({ items: serverItems, appendOrderId, editOrderI
                 const quantity = quantityFor(item);
                 const variant = getCartVariant(item);
                 const { option } = resolveVariantPricing(product, variant);
-                const packageType = displayPackageType(product.packageType);
+                const packageType = displayPackageType(item.metadata?.packageType ?? product.packageType);
+                const piecesPerPackage = item.metadata?.piecesPerPackage ?? product.piecesPerPackage ?? 1;
                 const moq = getSelectedMoq(product, option);
                 const minQuantity = getMinPackageQuantity(product, variant);
                 const maxQuantity = getMaxPackageQuantity(product);
@@ -324,6 +325,7 @@ export default function CartView({ items: serverItems, appendOrderId, editOrderI
                         </p>
                       ) : null}
 
+                      <p className="mt-2 text-xs text-laku-muted">{(quantity * piecesPerPackage).toLocaleString()} pieces</p>
                       <div className="mt-3 flex flex-wrap items-center gap-2.5">
                         <QuantityStepper
                           size="sm"
