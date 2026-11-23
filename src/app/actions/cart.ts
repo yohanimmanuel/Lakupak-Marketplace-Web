@@ -14,6 +14,8 @@ export async function addToCartAction(
   productId: string,
   quantity: number,
   variant?: string,
+  packageType?: string,
+  piecesPerPackage?: number,
 ): Promise<ActionState> {
   const session = await getSession();
   if (!session) return { ok: false, error: "unauthenticated" };
@@ -31,6 +33,8 @@ export async function addToCartAction(
     product,
     quantity: Math.max(minQuantity, Math.trunc(quantity) || 1),
     variant: variantLabel,
+    packageType,
+    piecesPerPackage,
   });
 
   if (!result.ok) return { ok: false, error: result.error };
