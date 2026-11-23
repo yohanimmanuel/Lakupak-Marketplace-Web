@@ -333,7 +333,7 @@ export type CartItem = {
   id: number;
   productId: string;
   productData: MarketplaceProduct;
-  metadata?: { quantity?: number; variant?: string; selected?: boolean } | null;
+  metadata?: { quantity?: number; variant?: string; selected?: boolean; packageType?: string; piecesPerPackage?: number } | null;
   createdAt: string;
   updatedAt: string;
 };
