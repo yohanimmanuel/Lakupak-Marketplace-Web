@@ -119,7 +119,7 @@ export default function CartView({ items: serverItems, appendOrderId, editOrderI
   }
 
   const lineTotalFor = (item: CartItem) =>
-    getBaseLineTotal(item.productData, getCartVariant(item), quantityFor(item));
+    getBaseLineTotal(item.productData, getCartVariant(item), quantityFor(item), item.metadata?.piecesPerPackage);
 
   const itemCount = items.reduce((total, item) => total + quantityFor(item), 0);
   const subtotal = items.reduce((total, item) => total + lineTotalFor(item), 0);
