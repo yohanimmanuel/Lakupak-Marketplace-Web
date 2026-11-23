@@ -33,12 +33,16 @@ type SearchParams = Promise<{
   appendOrderId?: string;
   editOrderId?: string;
   editCart?: string;
+  packageType?: string;
+  piecesPerPackage?: string;
 }>;
 
 export type CheckoutLine = {
   product: MarketplaceProduct;
   quantity: number;
   variant?: string;
+  packageType?: string;
+  piecesPerPackage?: number;
   /** Saved line total for products already on the order. */
   displaySubtotal?: number;
 };
@@ -60,7 +64,7 @@ export default async function CheckoutPage({
     );
   }
 
-  const { productId, quantity, variant, appendOrderId, editOrderId, editCart } = await searchParams;
+  const { productId, quantity, variant, appendOrderId, editOrderId, editCart, packageType, piecesPerPackage } = await searchParams;
   const editingOrderId = editOrderId?.trim() || "";
   const appendToOrderId = editingOrderId ? null : appendOrderId?.trim() || null;
   const orderIdForLines = editingOrderId || appendToOrderId || "";
@@ -101,6 +105,8 @@ export default async function CheckoutPage({
           quantity: Math.max(1, Number(item.packageQuantity) || 1),
           variant: item.variantNameSnapshot?.trim() || "Default",
           displaySubtotal: Number(item.subtotal) || 0,
+          packageType: item.packageType ?? undefined,
+          piecesPerPackage: item.piecesPerPackage ?? undefined,
         };
       }),
     );
@@ -122,6 +128,8 @@ export default async function CheckoutPage({
                 getMinPackageQuantity(product, variantName),
               ),
               variant: variantName,
+              packageType,
+              piecesPerPackage: Number(piecesPerPackage) || undefined,
             },
           ];
         })

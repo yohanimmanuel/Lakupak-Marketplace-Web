@@ -44,6 +44,7 @@ const PRODUCT_FIELDS = `
   unit
   publishedAt
   piecesPerPackage
+  stockLevels
   packageType
   stockUnit
   variants

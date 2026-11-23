@@ -245,6 +245,8 @@ export default function CheckoutForm({
                 productId: line.product.id,
                 quantity: line.quantity,
                 variant: line.variant ?? "Default",
+                packageType: line.packageType,
+                piecesPerPackage: line.piecesPerPackage,
               })),
           )}
         />
@@ -255,6 +257,8 @@ export default function CheckoutForm({
       {productId && directVariant ? (
         <input type="hidden" name="variant" value={directVariant} />
       ) : null}
+      {productId && submittedLine?.packageType ? <input type="hidden" name="packageType" value={submittedLine.packageType} /> : null}
+      {productId && submittedLine?.piecesPerPackage ? <input type="hidden" name="piecesPerPackage" value={submittedLine.piecesPerPackage} /> : null}
       <input type="hidden" name="paymentMethod" value={paymentMethod} />
       <input type="hidden" name="checkoutAttemptId" value={checkoutAttemptId} />
       <input type="hidden" name="shippingByDistributor" value={shippingPayload} />
@@ -547,7 +551,7 @@ export default function CheckoutForm({
               <ul className="divide-y divide-laku-line border-b border-laku-line">
                 {group.lines.map((line, lineIndex) => {
                   const stockUnit = displayStockUnit(
-                    line.product.stockUnit ?? line.product.packageType,
+                    line.packageType ?? line.product.stockUnit ?? line.product.packageType,
                   );
                   const { option } = resolveVariantPricing(
                     line.product,

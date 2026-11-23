@@ -38,6 +38,8 @@ type LineItem = {
   product: MarketplaceProduct;
   quantity: number;
   variant?: string;
+  packageType?: string;
+  piecesPerPackage?: number;
 };
 
 type GroupShippingInput = {
@@ -46,11 +48,12 @@ type GroupShippingInput = {
   preferredTime?: string;
 };
 
-function toOrderItem({ product, quantity, variant }: LineItem): CreateOrderItemPayload {
-  const piecesPerPackage = Number(product.piecesPerPackage) || 1;
-  const { variantOptionId } = resolveVariantPricing(product, variant);
+function toOrderItem({ product, quantity, variant, packageType, piecesPerPackage: requestedRatio }: LineItem): CreateOrderItemPayload {
+  const configured = product.stockLevels?.find(level => level.name === packageType && level.piecesPerUnit === requestedRatio);
+  const piecesPerPackage = configured?.piecesPerUnit ?? (Number(product.piecesPerPackage) || 1);
+  const { variantOptionId, option } = resolveVariantPricing(product, variant);
   const packageQuantity = Math.max(
-    getMinPackageQuantity(product, variant),
+    Math.max(1, Math.ceil((Number(option?.moq) || Number(product.moq) || 1) / piecesPerPackage)),
     Math.trunc(quantity) || 1,
   );
   const variantLabel = variant?.trim() || "Default";
@@ -63,7 +66,7 @@ function toOrderItem({ product, quantity, variant }: LineItem): CreateOrderItemP
     quantity: packageQuantity * piecesPerPackage,
     priceAtPurchase: "0",
     subtotal: 0,
-    packageType: product.packageType ?? product.stockUnit ?? "Pieces",
+    packageType: configured?.name ?? product.packageType ?? product.stockUnit ?? "Pieces",
     piecesPerPackage,
     packageQuantity,
     pricePerPackage: 0,
@@ -84,6 +87,8 @@ async function resolveLineItems(params: {
   productId?: string | null;
   quantity?: number;
   variant?: string | null;
+  packageType?: string | null;
+  piecesPerPackage?: number;
 }): Promise<LineItem[]> {
   if (params.source === "direct" && params.productId) {
     const product = await getProductById(params.productId);
@@ -95,6 +100,8 @@ async function resolveLineItems(params: {
         product,
         quantity: Math.max(requested, getMinPackageQuantity(product, variant)),
         variant,
+        packageType: params.packageType ?? undefined,
+        piecesPerPackage: params.piecesPerPackage,
       },
     ];
   }
@@ -118,7 +125,7 @@ async function resolveEditCartLines(raw: string): Promise<LineItem[]> {
   const lines: LineItem[] = [];
   for (const entry of parsed) {
     if (!entry || typeof entry !== "object") continue;
-    const record = entry as { productId?: unknown; quantity?: unknown; variant?: unknown };
+    const record = entry as { productId?: unknown; quantity?: unknown; variant?: unknown; packageType?: unknown; piecesPerPackage?: unknown };
     const productId = String(record.productId ?? "").trim();
     if (!productId) continue;
     const product = await getProductById(productId);
@@ -129,6 +136,8 @@ async function resolveEditCartLines(raw: string): Promise<LineItem[]> {
       product,
       quantity: Math.max(requested, getMinPackageQuantity(product, variant)),
       variant,
+      packageType: String(record.packageType ?? "") || undefined,
+      piecesPerPackage: Number(record.piecesPerPackage) || undefined,
     });
   }
   return lines;
@@ -227,6 +236,8 @@ export async function placeOrderAction(
   const productId = formData.get("productId")?.toString() || null;
   const quantity = Number(formData.get("quantity") ?? 1);
   const variant = formData.get("variant")?.toString() || null;
+  const packageType = formData.get("packageType")?.toString() || null;
+  const piecesPerPackage = Number(formData.get("piecesPerPackage")) || undefined;
   const paymentMethodId = String(formData.get("paymentMethod") ?? "") as PaymentMethodId;
   const contactPerson = String(formData.get("contactPerson") ?? "").trim();
   const contactPhone = String(formData.get("contactPhone") ?? "").trim();
@@ -265,6 +276,8 @@ export async function placeOrderAction(
     productId,
     quantity,
     variant,
+    packageType,
+    piecesPerPackage,
   });
 
   if (lineItems.length === 0) {
