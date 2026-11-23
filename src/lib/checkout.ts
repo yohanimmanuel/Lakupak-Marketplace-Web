@@ -198,8 +198,9 @@ export function meetsMoq(
   product: MarketplaceProduct,
   packageQuantity: number,
   variantName?: string | null,
+  piecesPerPackage?: number,
 ): boolean {
-  const pieces = Math.max(1, Number(product.piecesPerPackage) || 1);
+  const pieces = Math.max(1, Number(piecesPerPackage ?? product.piecesPerPackage) || 1);
   const { option } = resolveVariantPricing(product, variantName);
   const moq = Number(option?.moq);
   if (Number.isFinite(moq) && moq > 0) {
