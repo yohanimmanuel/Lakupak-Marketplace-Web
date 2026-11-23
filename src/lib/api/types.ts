@@ -72,6 +72,7 @@ export type ProductVariantOption = {
   sellingPrice?: number | null;
   originalSellingPrice?: number | null;
   moq?: number | null;
+  moqByStockLevel?: Record<string, number> | null;
   stockQuantity?: number | null;
   lowStockThreshold?: number | null;
   stockStatus?: string | null;
