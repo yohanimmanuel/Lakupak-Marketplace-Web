@@ -25,7 +25,7 @@ import {
   meetsMoq,
 } from "@/lib/checkout";
 import { displayPackageType } from "@/lib/packageLabel";
-import { getSelectedMoq, resolveVariantPricing } from "@/lib/variants";
+import { resolveVariantPricing } from "@/lib/variants";
 
 type Props = {
   items: CartItem[];
