@@ -191,11 +191,24 @@ export default function ProductPurchasePanel({
     <div className="mt-8 rounded-2xl border border-laku-line p-5">
       {stockLevels.length > 1 ? (
         <div className="mb-5">
-          <label htmlFor="purchase-stock-level" className="mb-2 block text-xs font-semibold text-laku-muted">Stock level</label>
-          <select id="purchase-stock-level" value={selectedLevel.name} onChange={(event) => { setSelectedLevelName(event.target.value); setQuantity(1); }} className="w-full rounded-lg border border-laku-line bg-white px-3 py-2 text-sm text-laku-ink">
-            {stockLevels.map((level) => <option key={level.name} value={level.name}>{level.name} ({level.piecesPerUnit} pieces)</option>)}
-          </select>
-          <p className="mt-1 text-xs text-laku-muted">1 {selectedLevel.name} = {pieces} pieces</p>
+          <p className="mb-2 text-xs font-semibold text-laku-muted">Stock level</p>
+          <div className="flex flex-wrap gap-2" role="group" aria-label="Stock level">
+            {stockLevels.map((level) => {
+              const active = selectedLevel.name === level.name;
+              return (
+                <button
+                  key={level.name}
+                  type="button"
+                  aria-pressed={active}
+                  onClick={() => { setSelectedLevelName(level.name); setQuantity(1); }}
+                  className={`rounded-md border px-3 py-2 text-xs font-medium transition-colors ${active ? "border-laku-blue bg-laku-blue/10 text-laku-blue" : "border-laku-line bg-white text-laku-ink hover:border-laku-blue"}`}
+                >
+                  {level.name}
+                </button>
+              );
+            })}
+          </div>
+          <p className="mt-2 text-xs text-laku-muted">1 {selectedLevel.name} = {pieces} pieces</p>
         </div>
       ) : null}
       {hasVariants ? (
