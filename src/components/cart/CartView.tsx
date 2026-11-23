@@ -274,9 +274,9 @@ export default function CartView({ items: serverItems, appendOrderId, editOrderI
                 const packageType = displayPackageType(item.metadata?.packageType ?? product.packageType);
                 const piecesPerPackage = item.metadata?.piecesPerPackage ?? product.piecesPerPackage ?? 1;
                 const moq = getSelectedMoq(product, option);
-                const minQuantity = Math.max(1, Math.ceil((moq || 1) / piecesPerPackage));
+                const minQuantity = getMinPackageQuantity(product, getCartVariant(item), piecesPerPackage, packageType);
                 const maxQuantity = Math.max(1, Math.floor((Number(option?.stockQuantity) || Number(product.stock) || 0) / piecesPerPackage));
-                const moqMet = quantity * piecesPerPackage >= (moq || 1);
+                const moqMet = quantity >= minQuantity;
                 const lineTotal = lineTotalFor(item);
 
                 return (
