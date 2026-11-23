@@ -130,7 +130,7 @@ export default function CartView({ items: serverItems, appendOrderId, editOrderI
   }));
 
   const allMoqMet = items.every((item) =>
-    meetsMoq(item.productData, quantityFor(item), getCartVariant(item)),
+    meetsMoq(item.productData, quantityFor(item), getCartVariant(item), item.metadata?.piecesPerPackage),
   );
 
   const persistQuantity = (
@@ -237,6 +237,7 @@ export default function CartView({ items: serverItems, appendOrderId, editOrderI
         item.productData,
         overrides[item.id] ?? quantityOf(item),
         getCartVariant(item),
+        item.metadata?.piecesPerPackage,
       ),
     );
     if (!stillMoqMet) {
