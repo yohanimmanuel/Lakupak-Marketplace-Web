@@ -50,8 +50,10 @@ type GroupShippingInput = {
 
 function toOrderItem({ product, quantity, variant, packageType, piecesPerPackage: requestedRatio }: LineItem): CreateOrderItemPayload {
   const configured = product.stockLevels?.find(level => level.name === packageType && level.piecesPerUnit === requestedRatio);
-  if (packageType && requestedRatio && !configured) {
-    throw new Error("The selected stock level is no longer available. Please review your cart.");
+  if (packageType !== undefined || requestedRatio !== undefined) {
+    if (!configured) {
+      throw new Error("The selected stock level is no longer available. Please review your cart.");
+    }
   }
   const piecesPerPackage = configured?.piecesPerUnit ?? (Number(product.piecesPerPackage) || 1);
   const { variantOptionId, option } = resolveVariantPricing(product, variant);
@@ -362,7 +364,16 @@ export async function placeOrderAction(
       return { ok: false, error: t("checkout.errors.delivery") };
     }
 
-    const orderItems = groupLines.map(toOrderItem);
+    let orderItems: CreateOrderItemPayload[];
+    try {
+      orderItems = groupLines.map(toOrderItem);
+    } catch (error) {
+      if (orderIds.length > 0) await finishPlacedOrders(true);
+      return {
+        ok: false,
+        error: error instanceof Error ? error.message : "Please review your cart's stock levels.",
+      };
+    }
     const totalOrders = orderItems.reduce(
       (sum, item) => sum + item.packageQuantity * item.piecesPerPackage,
       0,

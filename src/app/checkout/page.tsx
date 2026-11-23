@@ -125,7 +125,7 @@ export default async function CheckoutPage({
               product,
               quantity: Math.max(
                 requested,
-                Math.max(1, Math.ceil(getMinPackageQuantity(product, variantName) * (Number(product.piecesPerPackage) || 1) / (Number(piecesPerPackage) || 1))),
+                getMinPackageQuantity(product, variantName, Number(piecesPerPackage) || undefined),
               ),
               variant: variantName,
               packageType,
