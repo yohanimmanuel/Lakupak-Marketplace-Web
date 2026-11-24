@@ -4,7 +4,6 @@
  */
 
 import type { MarketplaceProduct, PromotionDetails } from "@/lib/api/types";
-import { getPromotion } from "@/lib/format";
 
 export type PromotionGift = {
   freeQty: number;
@@ -89,18 +88,35 @@ export function calculatePromotionGift(
   return null;
 }
 
-/** Live cart/PDP/checkout: packages × piecesPerPackage, with variant MOQ. */
+/**
+ * Approved order-line promotion context. This is never populated from a
+ * public product catalog response: private buyer rates remain distributor-only.
+ */
+export type ApprovedPromotionContext = {
+  promotionDetails: PromotionDetails | null;
+  variantOptionId: number | null;
+  selectedVariantOptionId: number | null;
+  eligibleStockLevels: string[] | null;
+  stockLevelName: string;
+  piecesPerPackage: number;
+};
+
+/** Existing live preview entry point, gated by approved order-line data. */
 export function calculateProductPromotionGift(
   product: MarketplaceProduct | null | undefined,
   quantityInPackages: number,
   moq: number | null | undefined,
+  approved?: ApprovedPromotionContext | null,
 ): PromotionGift | null {
-  const promotion = product ? getPromotion(product) : null;
-  if (!promotion || quantityInPackages <= 0) return null;
-
-  const piecesPerPackage = Math.max(1, Number(product?.piecesPerPackage) || 1);
+  if (!product || !approved?.promotionDetails || quantityInPackages <= 0) return null;
+  if (approved.variantOptionId != null &&
+      approved.variantOptionId !== approved.selectedVariantOptionId) return null;
+  if (approved.eligibleStockLevels !== null &&
+      !approved.eligibleStockLevels.includes(approved.stockLevelName)) return null;
+  const piecesPerPackage = Number(approved.piecesPerPackage);
+  if (!Number.isFinite(piecesPerPackage) || piecesPerPackage <= 0) return null;
   return calculatePromotionGift(
-    promotion,
+    approved.promotionDetails,
     quantityInPackages * piecesPerPackage,
     moq,
   );
