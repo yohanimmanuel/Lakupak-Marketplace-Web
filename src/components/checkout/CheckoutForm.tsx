@@ -31,7 +31,6 @@ import {
 import { getBaseLineTotal } from "@/lib/cartPricing";
 import { formatCurrency } from "@/lib/format";
 import { displayStockUnit } from "@/lib/packageLabel";
-import { calculateProductPromotionGift } from "@/lib/promotion";
 import { getSelectedMoq, resolveVariantPricing } from "@/lib/variants";
 
 type Props = {
@@ -557,13 +556,8 @@ export default function CheckoutForm({
                     line.product,
                     line.variant,
                   );
-                  const moq = getSelectedMoq(line.product, option);
-                  const freeQty =
-                    calculateProductPromotionGift(
-                      line.product,
-                      line.quantity,
-                      moq,
-                    )?.freeQty ?? 0;
+                  // Private free-item promotions are revealed only in approved order snapshots.
+                  const freeQty = 0;
                   const lineTotal = lineTotalFor(line);
                   return (
                     <li
