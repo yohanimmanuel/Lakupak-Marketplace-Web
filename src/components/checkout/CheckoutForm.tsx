@@ -31,7 +31,6 @@ import {
 import { getBaseLineTotal } from "@/lib/cartPricing";
 import { formatCurrency } from "@/lib/format";
 import { displayStockUnit } from "@/lib/packageLabel";
-import { getSelectedMoq, resolveVariantPricing } from "@/lib/variants";
 
 type Props = {
   lines: CheckoutLine[];
@@ -551,10 +550,6 @@ export default function CheckoutForm({
                 {group.lines.map((line, lineIndex) => {
                   const stockUnit = displayStockUnit(
                     line.packageType ?? line.product.stockUnit ?? line.product.packageType,
-                  );
-                  const { option } = resolveVariantPricing(
-                    line.product,
-                    line.variant,
                   );
                   // Private free-item promotions are revealed only in approved order snapshots.
                   const freeQty = 0;
