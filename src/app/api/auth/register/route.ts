@@ -20,7 +20,6 @@ type RegisterBody = {
   countryCode?: string;
   countryDialCode?: string;
   referralCode?: string;
-  inviteToken?: string;
 };
 
 export async function POST(request: Request) {
@@ -40,7 +39,6 @@ export async function POST(request: Request) {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       referralCode: typeof body.referralCode === "string" ? body.referralCode.trim() : undefined,
-      inviteToken: typeof body.inviteToken === "string" ? body.inviteToken.trim() : undefined,
       name,
       storeName: body.storeName?.trim() || name,
       bio: body.bio?.trim() || undefined,
@@ -61,6 +59,7 @@ export async function POST(request: Request) {
   const payload = (await upstream.json().catch(() => ({}))) as {
     token?: string;
     user?: { id: number; name: string; email: string; address?: string };
+    membershipAccess?: "active" | "pending";
     error?: string;
     code?: string;
   };
@@ -75,7 +74,10 @@ export async function POST(request: Request) {
     );
   }
 
-  const response = NextResponse.json({ user: payload.user });
+  const response = NextResponse.json({
+    user: payload.user,
+    membershipAccess: payload.membershipAccess ?? "pending",
+  });
   applySessionCookies(response, payload.token, payload.user);
   return response;
 }

@@ -57,7 +57,7 @@
     "specialOffers": "Special Offers",
     "featured": "Featured Products",
     "emptyCatalog": "The catalog is unavailable right now. Please reload this page shortly.",
-    "closedCatalog": "Products and prices are only visible to retailers invited by their distributor. Log in or sign up with your distributor's referral code.",
+    "closedCatalog": "Products and prices are only visible after your distributor approves your access request. Log in or sign up with their referral code.",
     "distributorCta": {
       "title": "Have products to distribute?",
       "body": "Distributors manage their catalog, pricing, and orders in the Lakupak Dashboard.",
@@ -1188,14 +1188,12 @@
       "required": "Enter the referral code from your distributor.",
       "invalid": "This referral code is not valid. Check it with your distributor."
     },
-    "invite": {
-      "banner": "You were invited by {distributor} as {store}. Your client pricing will apply after you finish.",
-      "lockedReferralHint": "Referral code filled from your invite.",
-      "invalid": "This invite link is invalid.",
-      "expired": "This invite has expired. Ask your distributor for a new one.",
-      "used": "This invite was already used.",
-      "alreadyLinked": "This client is already linked to another marketplace account.",
-      "revoked": "Your access to this storefront was revoked."
+    "membership": {
+      "pending": "Your access request is waiting for distributor approval.",
+      "pendingTitle": "Waiting for approval",
+      "pendingBody": "Your distributor received your request as a Prospect. They will set your market segment and approve access. After that, you can browse their products and prices.",
+      "revoked": "Your access to this storefront was revoked by the distributor.",
+      "backHome": "Back to home"
     },
     "loginFailed": "Could not log in. Please try again.",
     "registerError": "Sign up failed.",

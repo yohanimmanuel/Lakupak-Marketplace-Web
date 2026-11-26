@@ -1,63 +1,18 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState, type FormEvent } from "react";
+import { useRouter } from "next/navigation";
+import { useState, type FormEvent } from "react";
 
 import { useTranslations } from "@/i18n/client";
-import { LAKU_API_BASE_URL } from "@/lib/config";
 
 import AuthField from "./AuthField";
 
 export default function LoginForm({ redirectTo = "/" }: { redirectTo?: string }) {
   const t = useTranslations();
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const inviteToken = (searchParams.get("invite") || "").trim();
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
-  const [inviteBanner, setInviteBanner] = useState<string | null>(null);
-  const [referralCode, setReferralCode] = useState("");
-  const [inviteLocksReferral, setInviteLocksReferral] = useState(false);
-
-  useEffect(() => {
-    if (!inviteToken) return;
-    let cancelled = false;
-    (async () => {
-      try {
-        const response = await fetch(
-          `${LAKU_API_BASE_URL}/api/mobile/auth/invite/preview?token=${encodeURIComponent(inviteToken)}`,
-          { cache: "no-store" },
-        );
-        const payload = (await response.json().catch(() => ({}))) as {
-          distributorName?: string;
-          clientStoreName?: string;
-          referralCode?: string | null;
-          error?: string;
-        };
-        if (cancelled) return;
-        if (!response.ok) {
-          setError(payload.error ?? t("auth.invite.invalid"));
-          return;
-        }
-        setInviteBanner(
-          t("auth.invite.banner", {
-            distributor: payload.distributorName || "Distributor",
-            store: payload.clientStoreName || "your store",
-          }),
-        );
-        setInviteLocksReferral(true);
-        if (payload.referralCode) {
-          setReferralCode(String(payload.referralCode).toUpperCase());
-        }
-      } catch {
-        if (!cancelled) setError(t("auth.networkError"));
-      }
-    })();
-    return () => {
-      cancelled = true;
-    };
-  }, [inviteToken, t]);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -73,19 +28,24 @@ export default function LoginForm({ redirectTo = "/" }: { redirectTo?: string })
         body: JSON.stringify({
           username: formData.get("username"),
           password: formData.get("password"),
-          referralCode:
-            referralCode.trim() ||
-            String(formData.get("referralCode") ?? "").trim() ||
-            undefined,
-          inviteToken: inviteToken || undefined,
+          referralCode: String(formData.get("referralCode") ?? "").trim() || undefined,
         }),
       });
 
+      const payload = (await response.json().catch(() => ({}))) as {
+        error?: string;
+        code?: string;
+        membershipAccess?: "active" | "pending";
+      };
+
       if (!response.ok) {
-        const payload = (await response.json().catch(() => ({}))) as {
-          error?: string;
-        };
         setError(payload.error ?? t("auth.loginError"));
+        return;
+      }
+
+      if (payload.membershipAccess === "pending") {
+        router.replace("/access-pending");
+        router.refresh();
         return;
       }
 
@@ -100,12 +60,6 @@ export default function LoginForm({ redirectTo = "/" }: { redirectTo?: string })
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      {inviteBanner ? (
-        <div className="rounded-xl border border-laku-blue/20 bg-laku-blue/5 px-3 py-2 text-sm text-laku-ink">
-          {inviteBanner}
-        </div>
-      ) : null}
-
       <AuthField
         label={t("auth.usernameOrEmail")}
         name="username"
@@ -124,14 +78,7 @@ export default function LoginForm({ redirectTo = "/" }: { redirectTo?: string })
         autoComplete="off"
         maxLength={24}
         placeholder={t("auth.referralCode.placeholder")}
-        hint={
-          inviteLocksReferral
-            ? t("auth.invite.lockedReferralHint")
-            : t("auth.referralCode.loginHint")
-        }
-        value={referralCode}
-        onChange={(value) => setReferralCode(value.toUpperCase())}
-        disabled={inviteLocksReferral}
+        hint={t("auth.referralCode.loginHint")}
       />
 
       <div className="-mt-2 flex justify-end">
@@ -159,10 +106,7 @@ export default function LoginForm({ redirectTo = "/" }: { redirectTo?: string })
 
       <p className="pt-2 text-center text-sm text-laku-muted">
         {t("auth.noAccount")}{" "}
-        <Link
-          href={inviteToken ? `/register?invite=${encodeURIComponent(inviteToken)}` : "/register"}
-          className="font-semibold text-laku-blue hover:underline"
-        >
+        <Link href="/register" className="font-semibold text-laku-blue hover:underline">
           {t("nav.registerFree")}
         </Link>
       </p>

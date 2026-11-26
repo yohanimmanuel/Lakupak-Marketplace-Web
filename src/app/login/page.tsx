@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Suspense } from "react";
 import { redirect } from "next/navigation";
 
 import LoginForm from "@/components/auth/LoginForm";
@@ -15,7 +14,7 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-type SearchParams = Promise<{ next?: string; invite?: string }>;
+type SearchParams = Promise<{ next?: string }>;
 
 /** Only same-site paths are honoured, so `next` cannot be used as an open redirect. */
 function safeRedirect(next?: string): string {
@@ -39,9 +38,7 @@ export default async function LoginPage({
       <p className="mt-2 text-sm/6 text-laku-muted">{t("auth.loginSubtitle")}</p>
 
       <div className="mt-8 rounded-2xl bg-white p-6">
-        <Suspense fallback={null}>
-          <LoginForm redirectTo={destination} />
-        </Suspense>
+        <LoginForm redirectTo={destination} />
       </div>
     </div>
   );

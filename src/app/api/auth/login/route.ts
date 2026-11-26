@@ -24,6 +24,7 @@ export async function POST(request: Request) {
   const payload = (await upstream.json().catch(() => ({}))) as {
     token?: string;
     user?: { id: number; name: string; email: string; address?: string };
+    membershipAccess?: "active" | "pending";
     error?: string;
     code?: string;
   };
@@ -38,7 +39,10 @@ export async function POST(request: Request) {
     );
   }
 
-  const response = NextResponse.json({ user: payload.user });
+  const response = NextResponse.json({
+    user: payload.user,
+    membershipAccess: payload.membershipAccess ?? "active",
+  });
   applySessionCookies(response, payload.token, payload.user);
   return response;
 }

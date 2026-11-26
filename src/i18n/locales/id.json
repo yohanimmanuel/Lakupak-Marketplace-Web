@@ -57,7 +57,7 @@
     "specialOffers": "Penawaran Spesial",
     "featured": "Produk Unggulan",
     "emptyCatalog": "Katalog belum tersedia. Coba muat ulang halaman ini sebentar lagi.",
-    "closedCatalog": "Produk dan harga hanya terlihat oleh retailer yang diundang distributornya. Masuk atau daftar dengan kode referral dari distributor Anda.",
+    "closedCatalog": "Produk dan harga hanya terlihat setelah distributor menyetujui permintaan akses Anda. Masuk atau daftar dengan kode referral mereka.",
     "distributorCta": {
       "title": "Punya produk untuk didistribusikan?",
       "body": "Distributor mengelola katalog, harga, dan pesanan lewat Lakupak Dashboard.",
@@ -1188,14 +1188,12 @@
       "required": "Masukkan kode referral dari distributor Anda.",
       "invalid": "Kode referral ini tidak valid. Periksa kembali dengan distributor Anda."
     },
-    "invite": {
-      "banner": "Anda diundang oleh {distributor} sebagai {store}. Harga klien Anda berlaku setelah pendaftaran selesai.",
-      "lockedReferralHint": "Kode referral diisi dari undangan Anda.",
-      "invalid": "Tautan undangan ini tidak valid.",
-      "expired": "Undangan ini sudah kedaluwarsa. Minta undangan baru ke distributor Anda.",
-      "used": "Undangan ini sudah digunakan.",
-      "alreadyLinked": "Klien ini sudah terhubung ke akun marketplace lain.",
-      "revoked": "Akses Anda ke toko ini telah dicabut."
+    "membership": {
+      "pending": "Permintaan akses Anda menunggu persetujuan distributor.",
+      "pendingTitle": "Menunggu persetujuan",
+      "pendingBody": "Distributor Anda menerima permintaan sebagai Prospek. Mereka akan mengatur segmen pasar lalu menyetujui akses. Setelah itu Anda bisa melihat produk dan harga mereka.",
+      "revoked": "Akses Anda ke toko ini telah dicabut oleh distributor.",
+      "backHome": "Kembali ke beranda"
     },
     "loginFailed": "Gagal masuk. Coba lagi.",
     "registerError": "Pendaftaran gagal.",
