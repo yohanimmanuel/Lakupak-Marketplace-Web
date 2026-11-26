@@ -1,13 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useCallback, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useCallback, useEffect, useState } from "react";
 import { ArrowLeft, Check } from "lucide-react";
 
 import LakuLogo from "@/components/brand/LakuLogo";
 import { useCurrentLocationLookup } from "@/hooks/useCurrentLocationLookup";
 import { useTranslations } from "@/i18n/client";
+import { LAKU_API_BASE_URL } from "@/lib/config";
 
 import AuthField from "./AuthField";
 import AddressMapPreview from "./AddressMapPreview";
@@ -55,10 +56,54 @@ const INITIAL: SignupData = {
 export default function RegisterForm() {
   const t = useTranslations();
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const inviteToken = (searchParams.get("invite") || "").trim();
   const [step, setStep] = useState(0);
   const [data, setData] = useState<SignupData>(INITIAL);
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const [inviteBanner, setInviteBanner] = useState<string | null>(null);
+  const [inviteLocksReferral, setInviteLocksReferral] = useState(false);
+
+  useEffect(() => {
+    if (!inviteToken) return;
+    let cancelled = false;
+    (async () => {
+      try {
+        const response = await fetch(
+          `${LAKU_API_BASE_URL}/api/mobile/auth/invite/preview?token=${encodeURIComponent(inviteToken)}`,
+          { cache: "no-store" },
+        );
+        const payload = (await response.json().catch(() => ({}))) as {
+          distributorName?: string;
+          clientStoreName?: string;
+          referralCode?: string | null;
+          error?: string;
+          code?: string;
+        };
+        if (cancelled) return;
+        if (!response.ok) {
+          setError(payload.error ?? t("auth.invite.invalid"));
+          return;
+        }
+        setInviteBanner(
+          t("auth.invite.banner", {
+            distributor: payload.distributorName || "Distributor",
+            store: payload.clientStoreName || "your store",
+          }),
+        );
+        setInviteLocksReferral(true);
+        if (payload.referralCode) {
+          setData((prev) => ({ ...prev, referralCode: String(payload.referralCode).toUpperCase() }));
+        }
+      } catch {
+        if (!cancelled) setError(t("auth.networkError"));
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [inviteToken, t]);
 
   const onAddressChange = useCallback((address: string) => {
     setError(null);
@@ -122,7 +167,7 @@ export default function RegisterForm() {
       if (data.password !== data.confirmPassword) {
         return t("auth.signup.errors.passwordMismatch");
       }
-      if (!data.referralCode.trim()) {
+      if (!inviteToken && !data.referralCode.trim()) {
         return t("auth.referralCode.required");
       }
     }
@@ -172,7 +217,8 @@ export default function RegisterForm() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          referralCode: data.referralCode.trim(),
+          referralCode: data.referralCode.trim() || undefined,
+          inviteToken: inviteToken || undefined,
           name: data.name.trim(),
           email: data.email.trim().toLowerCase(),
           storeName: data.storeName.trim() || undefined,
@@ -194,7 +240,7 @@ export default function RegisterForm() {
           error?: string;
           code?: string;
         };
-        if (payload.code?.startsWith("REFERRAL_CODE_")) setStep(4);
+        if (payload.code?.startsWith("REFERRAL_CODE_") || payload.code?.startsWith("INVITE_")) setStep(4);
         setError(payload.error ?? t("auth.registerError"));
         return;
       }
@@ -242,7 +288,10 @@ export default function RegisterForm() {
           </button>
 
           <p className="mt-6 text-center text-sm text-laku-muted">
-            <Link href="/login" className="font-semibold text-laku-blue hover:underline">
+            <Link
+              href={inviteToken ? `/login?invite=${encodeURIComponent(inviteToken)}` : "/login"}
+              className="font-semibold text-laku-blue hover:underline"
+            >
               {t("auth.signup.alreadyHaveAccount")}
             </Link>
           </p>
@@ -266,6 +315,12 @@ export default function RegisterForm() {
           <p className="mt-2 text-sm/6 text-laku-muted">{t("auth.signup.subtitle")}</p>
 
           <StepIndicator current={step} label={t("auth.signup.stepAria", { step })} />
+
+          {inviteBanner ? (
+            <div className="mt-4 rounded-xl border border-laku-blue/20 bg-laku-blue/5 px-3 py-2 text-sm text-laku-ink">
+              {inviteBanner}
+            </div>
+          ) : null}
 
           <div key={step} className="laku-rise mt-2 space-y-4">
             {step === 1 ? (
@@ -455,10 +510,15 @@ export default function RegisterForm() {
                   name="referralCode"
                   autoComplete="off"
                   placeholder={t("auth.referralCode.placeholder")}
-                  hint={t("auth.referralCode.signupHint")}
+                  hint={
+                    inviteLocksReferral
+                      ? t("auth.invite.lockedReferralHint")
+                      : t("auth.referralCode.signupHint")
+                  }
                   maxLength={24}
                   value={data.referralCode}
                   onChange={(value) => setField("referralCode")(value.toUpperCase())}
+                  disabled={inviteLocksReferral}
                 />
               </>
             ) : null}

@@ -1,6 +1,9 @@
 /**
- * Buy-X-get-Y free-item math, aligned with Laku-Marketplace/utils/promotionUtils.ts.
- * Quantities are piece-based for calculation; the UI never labels them as "pcs".
+ * Buy-X-get-Y free-item math, aligned with Laku-Marketplace/utils/promotionUtils.ts
+ * and Lakupak-Dashboard/src/utils/promotionUtils.ts.
+ *
+ * Offer form stores X/Y in packages of the ordered stock level; convert to pieces
+ * before applying from_zero / after_moq set math. MOQ is already in pieces.
  */
 
 import type { MarketplaceProduct, PromotionDetails } from "@/lib/api/types";
@@ -45,9 +48,32 @@ function normalizePromotionSnapshot(
   return { ...parsed, minQuantity: buyQuantity };
 }
 
+/** Resolve product MOQ into pieces for the ordered stock level. */
+export function resolveMoqInPieces(opts: {
+  packageType?: string | null;
+  piecesPerPackage: number;
+  moqPieces?: number | null;
+  moqByStockLevel?: Record<string, number> | null;
+}): number | null {
+  const piecesPerPackage = Math.max(1, Math.trunc(Number(opts.piecesPerPackage) || 1));
+  const level = String(opts.packageType || "").trim();
+  const byLevel = opts.moqByStockLevel;
+  if (level && level.toLowerCase() !== "pieces" && byLevel && typeof byLevel === "object") {
+    const levelMoq = Number(byLevel[level]);
+    if (Number.isFinite(levelMoq) && levelMoq > 0) {
+      return Math.trunc(levelMoq) * piecesPerPackage;
+    }
+  }
+  const piecesMoq = opts.moqPieces;
+  if (piecesMoq != null && Number.isFinite(Number(piecesMoq)) && Number(piecesMoq) > 0) {
+    return Math.trunc(Number(piecesMoq));
+  }
+  return null;
+}
+
 /**
- * @param quantityInPieces - Ordered quantity in pieces
- * @param moq - MOQ in pieces (null = treat as from_zero / no MOQ gate)
+ * Calculate promotion free items (PIECE-BASED SYSTEM).
+ * Callers must pass minQuantity / freeQuantity / moq already in pieces.
  */
 export function calculatePromotionGift(
   promotionDetails: PromotionDetails | null | undefined,
@@ -56,36 +82,71 @@ export function calculatePromotionGift(
 ): PromotionGift | null {
   if (!promotionDetails) return null;
 
-  const minQty = promotionDetails.minQuantity || 1;
-  const freeQty = promotionDetails.freeQuantity || 0;
+  const minQty = Math.max(1, Math.trunc(promotionDetails.minQuantity || 1));
+  const freeQty = Math.max(0, Math.trunc(promotionDetails.freeQuantity || 0));
   const applyMode = normalizeApplyMode(promotionDetails.applyMode);
+  const qty = Math.max(0, Math.trunc(quantityInPieces || 0));
+  if (freeQty <= 0 || qty <= 0) return null;
 
-  if (applyMode === "from_zero" || moq == null) {
-    const completeSets = Math.floor(quantityInPieces / minQty);
+  if (applyMode === "from_zero" || moq === null || moq === undefined) {
+    const completeSets = Math.floor(qty / minQty);
     const totalFreeItems = completeSets * freeQty;
     if (totalFreeItems > 0) {
       return {
         freeQty: totalFreeItems,
-        totalReceived: quantityInPieces + totalFreeItems,
+        totalReceived: qty + totalFreeItems,
       };
     }
     return null;
   }
 
-  if (quantityInPieces < moq) return null;
+  const moqPieces = Math.max(0, Math.trunc(moq));
+  if (qty < moqPieces) return null;
 
-  const quantityAboveMOQ = quantityInPieces - moq;
+  const quantityAboveMOQ = qty - moqPieces;
   const completeSets = Math.floor(quantityAboveMOQ / minQty);
   const totalFreeItems = completeSets * freeQty;
 
   if (totalFreeItems > 0) {
     return {
       freeQty: totalFreeItems,
-      totalReceived: quantityInPieces + totalFreeItems,
+      totalReceived: qty + totalFreeItems,
     };
   }
 
   return null;
+}
+
+/**
+ * Order / product helpers: offer X/Y are packages → convert to pieces with piecesPerPackage.
+ */
+export function calculateOrderItemPromotion(
+  promotionDetails: PromotionDetails | string | null | undefined,
+  quantityInPackages: number,
+  piecesPerPackage: number,
+  moq: number | null | undefined,
+): PromotionGift | null {
+  const parsedPromotionDetails = normalizePromotionSnapshot(promotionDetails);
+  if (!parsedPromotionDetails) return null;
+
+  const ppp = Math.max(1, Math.trunc(Number(piecesPerPackage) || 1));
+  const packages = Math.max(0, Number(quantityInPackages) || 0);
+  const totalPieces = Math.trunc(packages * ppp);
+
+  const moqPieces =
+    parsedPromotionDetails.moq != null && Number(parsedPromotionDetails.moq) > 0
+      ? Math.trunc(Number(parsedPromotionDetails.moq))
+      : moq != null && Number(moq) > 0
+        ? Math.trunc(Number(moq))
+        : null;
+
+  const piecePromotion: PromotionDetails = {
+    ...parsedPromotionDetails,
+    minQuantity: Math.max(1, Math.trunc(parsedPromotionDetails.minQuantity || 1)) * ppp,
+    freeQuantity: Math.max(0, Math.trunc(parsedPromotionDetails.freeQuantity || 0)) * ppp,
+  };
+
+  return calculatePromotionGift(piecePromotion, totalPieces, moqPieces);
 }
 
 /**
@@ -99,6 +160,7 @@ export type ApprovedPromotionContext = {
   eligibleStockLevels: string[] | null;
   stockLevelName: string;
   piecesPerPackage: number;
+  moq?: number | null;
 };
 
 /** Existing live preview entry point, gated by approved order-line data. */
@@ -109,16 +171,25 @@ export function calculateProductPromotionGift(
   approved?: ApprovedPromotionContext | null,
 ): PromotionGift | null {
   if (!product || !approved?.promotionDetails || quantityInPackages <= 0) return null;
-  if (approved.variantOptionId != null &&
-      approved.variantOptionId !== approved.selectedVariantOptionId) return null;
-  if (approved.eligibleStockLevels !== null &&
-      !approved.eligibleStockLevels.includes(approved.stockLevelName)) return null;
+  if (
+    approved.variantOptionId != null &&
+    approved.variantOptionId !== approved.selectedVariantOptionId
+  ) {
+    return null;
+  }
+  if (
+    approved.eligibleStockLevels !== null &&
+    !approved.eligibleStockLevels.includes(approved.stockLevelName)
+  ) {
+    return null;
+  }
   const piecesPerPackage = Number(approved.piecesPerPackage);
   if (!Number.isFinite(piecesPerPackage) || piecesPerPackage <= 0) return null;
-  return calculatePromotionGift(
+  return calculateOrderItemPromotion(
     approved.promotionDetails,
-    quantityInPackages * piecesPerPackage,
-    moq,
+    quantityInPackages,
+    piecesPerPackage,
+    approved.moq ?? moq,
   );
 }
 
@@ -143,9 +214,10 @@ export function getOrderItemFreeQuantity(item: OrderItemPromotionSource): number
   const piecesPerPackage =
     item.piecesPerPackage && item.piecesPerPackage > 0 ? item.piecesPerPackage : 1;
 
-  const gift = calculatePromotionGift(
+  const gift = calculateOrderItemPromotion(
     normalizePromotionSnapshot(item.promotionDetailsSnapshot),
-    packageQuantity * piecesPerPackage,
+    packageQuantity,
+    piecesPerPackage,
     resolveOrderItemMoq(item),
   );
 
@@ -201,7 +273,10 @@ export function getOrderOfferDisplay(item: OrderOfferLine): OrderOfferDisplay {
     freePieces: getOrderItemFreeQuantity(item),
     percentOff: showPriceDiscount && Number.isFinite(percent) && percent > 0 ? percent : null,
     amountOff:
-      showPriceDiscount && !(Number.isFinite(percent) && percent > 0) && Number.isFinite(amount) && amount > 0
+      showPriceDiscount &&
+      !(Number.isFinite(percent) && percent > 0) &&
+      Number.isFinite(amount) &&
+      amount > 0
         ? amount
         : null,
     originalLineTotal: showPriceDiscount ? originalLineTotal : null,

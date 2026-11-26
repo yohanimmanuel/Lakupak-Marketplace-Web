@@ -1188,6 +1188,15 @@
       "required": "Enter the referral code from your distributor.",
       "invalid": "This referral code is not valid. Check it with your distributor."
     },
+    "invite": {
+      "banner": "You were invited by {distributor} as {store}. Your client pricing will apply after you finish.",
+      "lockedReferralHint": "Referral code filled from your invite.",
+      "invalid": "This invite link is invalid.",
+      "expired": "This invite has expired. Ask your distributor for a new one.",
+      "used": "This invite was already used.",
+      "alreadyLinked": "This client is already linked to another marketplace account.",
+      "revoked": "Your access to this storefront was revoked."
+    },
     "loginFailed": "Could not log in. Please try again.",
     "registerError": "Sign up failed.",
     "registerFailed": "Sign up failed. Please check your details.",

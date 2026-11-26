@@ -1188,6 +1188,15 @@
       "required": "Masukkan kode referral dari distributor Anda.",
       "invalid": "Kode referral ini tidak valid. Periksa kembali dengan distributor Anda."
     },
+    "invite": {
+      "banner": "Anda diundang oleh {distributor} sebagai {store}. Harga klien Anda berlaku setelah pendaftaran selesai.",
+      "lockedReferralHint": "Kode referral diisi dari undangan Anda.",
+      "invalid": "Tautan undangan ini tidak valid.",
+      "expired": "Undangan ini sudah kedaluwarsa. Minta undangan baru ke distributor Anda.",
+      "used": "Undangan ini sudah digunakan.",
+      "alreadyLinked": "Klien ini sudah terhubung ke akun marketplace lain.",
+      "revoked": "Akses Anda ke toko ini telah dicabut."
+    },
     "loginFailed": "Gagal masuk. Coba lagi.",
     "registerError": "Pendaftaran gagal.",
     "registerFailed": "Pendaftaran gagal. Periksa kembali data Anda.",

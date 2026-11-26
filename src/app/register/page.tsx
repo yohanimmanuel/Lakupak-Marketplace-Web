@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { redirect } from "next/navigation";
 
 import RegisterForm from "@/components/auth/RegisterForm";
@@ -20,7 +21,9 @@ export default async function RegisterPage() {
 
   return (
     <div className="mx-auto max-w-md px-4 py-10 md:px-6 md:py-16">
-      <RegisterForm />
+      <Suspense fallback={null}>
+        <RegisterForm />
+      </Suspense>
     </div>
   );
 }

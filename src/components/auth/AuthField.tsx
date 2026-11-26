@@ -18,6 +18,7 @@ type Props = {
   multiline?: boolean;
   rows?: number;
   maxLength?: number;
+  disabled?: boolean;
   inputMode?:
     | "text"
     | "email"
@@ -42,6 +43,7 @@ export default function AuthField({
   multiline = false,
   rows = 3,
   maxLength,
+  disabled = false,
   inputMode,
 }: Props) {
   const t = useTranslations();
@@ -50,7 +52,7 @@ export default function AuthField({
   const inputType = isPassword ? (revealed ? "text" : "password") : type;
 
   const sharedClassName =
-    "w-full rounded-lg border border-laku-line bg-white px-4 text-sm text-laku-ink outline-none transition-colors placeholder:text-laku-faint focus:border-laku-blue";
+    "w-full rounded-lg border border-laku-line bg-white px-4 text-sm text-laku-ink outline-none transition-colors placeholder:text-laku-faint focus:border-laku-blue disabled:bg-laku-surface disabled:text-laku-muted";
 
   return (
     <label className="block">
@@ -63,6 +65,7 @@ export default function AuthField({
           placeholder={placeholder}
           rows={rows}
           maxLength={maxLength}
+          disabled={disabled}
           value={value}
           onChange={onChange ? (event) => onChange(event.target.value) : undefined}
           className={`${sharedClassName} py-2.5`}
@@ -77,6 +80,7 @@ export default function AuthField({
             placeholder={placeholder}
             maxLength={maxLength}
             inputMode={inputMode}
+            disabled={disabled}
             value={value}
             onChange={onChange ? (event) => onChange(event.target.value) : undefined}
             className={`h-11 ${sharedClassName} ${isPassword ? "pr-11" : ""}`}
