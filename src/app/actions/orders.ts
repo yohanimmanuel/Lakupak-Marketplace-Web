@@ -576,12 +576,19 @@ export async function requestReturnAction(params: {
   const session = await getSession();
   if (!session) return { ok: false, error: t("checkout.errors.sessionExpired") };
 
+  const imageUrls = (params.imageUrls ?? []).filter(
+    (url) => typeof url === "string" && url.trim().length > 0
+  );
+  if (imageUrls.length === 0) {
+    return { ok: false, error: t("orderReason.errors.photosRequired") };
+  }
+
   const result = await createReturnRequest({
     orderId: params.orderId,
     token: session.token,
     reason: params.reason,
     reasonDetail: params.reasonDetail?.trim() || undefined,
-    imageUrls: params.imageUrls,
+    imageUrls,
   });
   if (!result.ok) return { ok: false, error: result.error };
 

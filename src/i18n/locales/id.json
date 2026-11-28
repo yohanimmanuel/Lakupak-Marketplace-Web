@@ -721,12 +721,14 @@
     "backToOrder": "Kembali ke detail pesanan",
     "selectReason": "Pilih alasan",
     "detailLabel": "Keterangan tambahan",
-    "photosLabel": "Foto (opsional, maks {{max}})",
-    "photosHint": "Tambahkan foto jelas tentang masalahnya agar permintaan lebih cepat diproses.",
+    "photosLabel": "Foto (wajib, maks {{max}})",
+    "photosHint": "Tambahkan minimal satu foto jelas tentang masalahnya agar permintaan dapat diproses.",
+    "photosRequiredHint": "Unggah minimal satu foto sebelum mengirim permintaan retur.",
     "submitCancel": "Batalkan pesanan",
     "submitReturn": "Kirim permintaan retur",
     "errors": {
-      "detailRequired": "Mohon jelaskan alasan Anda."
+      "detailRequired": "Mohon jelaskan alasan Anda.",
+      "photosRequired": "Mohon tambahkan minimal satu foto sebagai bukti."
     }
   },
   "orderReview": {

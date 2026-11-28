@@ -721,12 +721,14 @@
     "backToOrder": "Back to order details",
     "selectReason": "Select a reason",
     "detailLabel": "Additional details",
-    "photosLabel": "Photos (optional, max {{max}})",
-    "photosHint": "Add clear photos of the issue to help us process your request faster.",
+    "photosLabel": "Photos (required, max {{max}})",
+    "photosHint": "Add at least one clear photo of the issue so we can process your request.",
+    "photosRequiredHint": "Upload at least one photo before submitting your return request.",
     "submitCancel": "Cancel order",
     "submitReturn": "Submit return request",
     "errors": {
-      "detailRequired": "Please describe your reason."
+      "detailRequired": "Please describe your reason.",
+      "photosRequired": "Please add at least one photo as proof."
     }
   },
   "orderReview": {

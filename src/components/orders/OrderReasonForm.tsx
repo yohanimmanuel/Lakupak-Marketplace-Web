@@ -39,12 +39,18 @@ export default function OrderReasonForm({
 
   const namespace = mode === "cancel" ? "cancelReasons" : "returnReasons";
   const backHref = `/orders/${encodeURIComponent(orderId)}`;
-  const actionsDisabled = pending || photosBusy;
+  const photosRequired = mode === "return" && imageUrls.length === 0;
+  const submitDisabled = pending || photosBusy || photosRequired;
+  const leaveDisabled = pending || photosBusy;
 
   const submit = () => {
-    if (actionsDisabled) return;
+    if (submitDisabled) return;
     if (reason === "other" && !detail.trim()) {
       setError(t("orderReason.errors.detailRequired"));
+      return;
+    }
+    if (mode === "return" && imageUrls.length === 0) {
+      setError(t("orderReason.errors.photosRequired"));
       return;
     }
 
@@ -137,7 +143,7 @@ export default function OrderReasonForm({
             urls={imageUrls}
             onUrlsChange={setImageUrls}
             onBusyChange={setPhotosBusy}
-            disabled={pending}
+            disabled={leaveDisabled}
             label={t("orderReason.photosLabel", { max: 5 })}
             hint={t("orderReason.photosHint")}
             addLabel={t("photoUpload.add")}
@@ -153,12 +159,14 @@ export default function OrderReasonForm({
 
         {photosBusy ? (
           <p className="mt-3 text-sm text-laku-muted">{t("photoUpload.waitToSubmit")}</p>
+        ) : mode === "return" && imageUrls.length === 0 ? (
+          <p className="mt-3 text-sm text-laku-muted">{t("orderReason.photosRequiredHint")}</p>
         ) : null}
 
         <div className="mt-5 flex flex-wrap gap-3">
           <button
             type="button"
-            disabled={actionsDisabled}
+            disabled={submitDisabled}
             onClick={submit}
             className={`rounded-lg px-5 py-3 text-sm font-bold text-white transition-colors disabled:cursor-not-allowed disabled:opacity-60 ${
               mode === "cancel"
@@ -174,7 +182,7 @@ export default function OrderReasonForm({
                   ? t("orderReason.submitCancel")
                   : t("orderReason.submitReturn")}
           </button>
-          {actionsDisabled ? (
+          {leaveDisabled ? (
             <span
               aria-disabled="true"
               className="rounded-lg border border-laku-line bg-white px-5 py-3 text-sm font-semibold text-laku-ink opacity-60"
